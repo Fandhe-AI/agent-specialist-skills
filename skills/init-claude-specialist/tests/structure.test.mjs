@@ -25,6 +25,53 @@ function extractFrontmatter(md) {
   return lines.slice(1, end).join("\n");
 }
 
+// 雛形ファイル（sample/specialist-agent-template.md）は説明文の後に
+// ```markdown フェンスで agent 本体（frontmatter 込み）を埋め込む構成。
+// フェンス内のみを対象にしないと、説明文中の語句が frontmatter 検証に混ざる。
+function extractFirstMarkdownFence(md) {
+  const match = md.match(/```markdown\n([\s\S]*?)\n```/);
+  assert.ok(match, "```markdown コードフェンスが見つからない");
+  return match[1];
+}
+
+// frontmatter の `tools:` フィールドの値を、ブロックリスト形式
+// (`tools:\n  - Read\n  - Bash`) とフロー形式 (`tools: [Read, Bash]`) の
+// 両方に対応して抽出し、Set で返す。行頭の `- ` グレップ単独では
+// フロー形式や tools 以外の箇所（本文の箇条書き等）を見落とす／誤検出するため、
+// 必ず `tools:` 行を起点にどちらの表記かを判定してから走査する。
+function parseToolsSet(fm) {
+  const lines = fm.split("\n");
+  const toolsIdx = lines.findIndex((line) => /^tools:/.test(line));
+  assert.notEqual(toolsIdx, -1, "frontmatter に 'tools:' が無い");
+
+  const stripInlineCommentAndQuotes = (s) =>
+    s
+      .replace(/#.*$/, "") // YAML インラインコメント（`# ...`）を除去
+      .trim()
+      .replace(/^["']|["']$/g, ""); // 前後の引用符を除去
+
+  const inlineValue = lines[toolsIdx].replace(/^tools:\s*/, "").trim();
+  let rawItems;
+  if (inlineValue.startsWith("[")) {
+    // フロー形式: `tools: [Read, Glob, ...]`
+    const flowMatch = inlineValue.match(/^\[([\s\S]*?)\]/);
+    assert.ok(flowMatch, `tools のフロー形式が閉じていない: ${inlineValue}`);
+    rawItems = flowMatch[1].split(",");
+  } else {
+    // ブロック形式: 次行以降の `- ` 始まり行を、該当パターンが途切れるまで収集
+    rawItems = [];
+    for (let i = toolsIdx + 1; i < lines.length; i += 1) {
+      const itemMatch = lines[i].match(/^\s*-\s*(.+)$/);
+      if (!itemMatch) break;
+      rawItems.push(itemMatch[1]);
+    }
+  }
+
+  const cleaned = rawItems.map(stripInlineCommentAndQuotes).filter((s) => s.length > 0);
+  assert.ok(cleaned.length > 0, "tools フィールドから値を抽出できなかった");
+  return new Set(cleaned);
+}
+
 test("SKILL.md の frontmatter に name / description / user-invocable が揃っている", () => {
   const fm = extractFrontmatter(skillMd);
   assert.match(fm, /^name:\s*init-claude-specialist\s*$/m);
@@ -53,17 +100,34 @@ for (const rel of sampleFiles) {
 
 test("specialist-agent-template.md に agent frontmatter の必須フィールドが揃っている", () => {
   const tpl = readFileSync(path.join(skillDir, "sample/specialist-agent-template.md"), "utf8");
-  assert.match(tpl, /^model:\s*\{\{specialist_model_or_default_sonnet\}\}\s*$/m);
-  assert.match(tpl, /^effort:\s*\{\{specialist_effort_or_default_low\}\}\s*$/m);
-  assert.match(tpl, /^tools:/m);
-  // 相談用途の読み取り専用 agent を作る設計のため、編集系ツールを許容しない
+  const fence = extractFirstMarkdownFence(tpl);
+  const fm = extractFrontmatter(fence);
+
+  assert.match(fm, /^name:\s*\{\{name\}\}\s*$/m);
+  assert.match(
+    fm,
+    /^description:\s*".*\{\{skill_description_summary\}\}.*\{\{trigger_phrases\}\}.*"\s*$/m,
+  );
+  assert.match(fm, /^model:\s*\{\{specialist_model_or_default_sonnet\}\}\s*$/m);
+  assert.match(fm, /^effort:\s*\{\{specialist_effort_or_default_low\}\}\s*$/m);
+
+  // 相談用途の読み取り専用 agent を作る設計のため、tools は許可リストの完全一致のみ許容する
   // （init-claude-specialist SKILL.md「注意事項」節・agent-authoring.md の最小権限方針）。
-  for (const forbidden of ["Edit", "Write", "Bash"]) {
-    assert.doesNotMatch(
-      tpl,
-      new RegExp(`^\\s*-\\s*${forbidden}\\s*$`, "m"),
-      `${forbidden} が tools に含まれてはならない`,
-    );
+  // ブロック形式の `- Bash` 単独行グレップでは `tools: [Read, Bash]` のようなフロー形式や
+  // 許可ツールへの誤字混入（例: `Read2`）を見落とすため、フィールド値全体を集合として
+  // 抽出し、許可リストとの集合一致（過不足なし）で検証する。
+  const allowedTools = new Set(["Read", "Glob", "Grep", "WebFetch", "WebSearch"]);
+  const actualTools = parseToolsSet(fm);
+  assert.equal(
+    actualTools.size,
+    allowedTools.size,
+    `tools の件数が許可リストと不一致: [${[...actualTools].join(", ")}]`,
+  );
+  for (const tool of allowedTools) {
+    assert.ok(actualTools.has(tool), `tools に必須ツール ${tool} が含まれていない`);
+  }
+  for (const tool of actualTools) {
+    assert.ok(allowedTools.has(tool), `tools に許可外のツール ${tool} が含まれている`);
   }
 });
 
