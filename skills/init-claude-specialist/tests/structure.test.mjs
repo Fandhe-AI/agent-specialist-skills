@@ -123,10 +123,13 @@ test("specialist-agent-template.md に agent frontmatter の必須フィール�
   // ブロック形式の `- Bash` 単独行グレップでは `tools: [Read, Bash]` のようなフロー形式や
   // 許可ツールへの誤字混入（例: `Read2`）を見落とすため、フィールド値全体を集合として
   // 抽出し、許可リストとの集合一致（過不足なし）で検証する。この検証は基本形ブロックに
-  // 限らず、tools を持つ全ブロック（「例外: 複数 skill を束ねる場合」ブロック含む）に適用する。
+  // 限らず、全 agent ブロック（「例外: 複数 skill を束ねる場合」ブロック含む）に適用する。
+  // tools フィールド省略のブロックを skip すると、省略時に Claude Code が全ツール
+  // （Edit / Write / Bash 含む）を既定付与するため検査が素通りになる。雛形内の
+  // markdown フェンスは全て agent 定義なので、tools の存在自体も必須として検証する
+  // （欠落は parseToolsSet 内の assert が検出する）。
   const allowedTools = new Set(["Read", "Glob", "Grep", "WebFetch", "WebSearch"]);
   for (const [index, fence] of fences.entries()) {
-    if (!/^tools:/m.test(fence)) continue;
     const blockFm = extractFrontmatter(fence);
     const actualTools = parseToolsSet(blockFm);
     assert.equal(
