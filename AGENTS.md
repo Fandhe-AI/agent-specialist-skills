@@ -92,5 +92,38 @@ reusable workflow を `@latest` で呼び出す wrapper）は、PR の base コ�
 
 ## リポジトリ固有の観点
 
-<!-- テンプレート差替枠: このリポジトリ固有のレビュー観点（対象言語・スクリプト・固有の安全弁など）を書く -->
-<このリポ固有のレビュー観点を書く>
+本リポジトリ（`Fandhe-AI/agent-specialist-skills`）は「スペシャリスト skill（専門家ペルソナ）
++ それを 1 agent 1 skill 化する `init-claude-specialist`」に特化した配布物である。以下は
+`skills/*/SKILL.md` 一般規約（`skill-authoring.md`）に加えて、この特化に固有の観点。
+
+- **`specialist: true` の宣言漏れ（P0）**: 新規スペシャリスト skill の frontmatter に
+  `specialist: true` が無いと `init-claude-specialist` の検出ロジック（frontmatter を
+  1 キーで判定する awk）が拾えず、agent 化が静かに欠落する。新規スキル追加 PR ではこの
+  キーの有無を必ず確認する
+- **`specialist-model` / `specialist-effort` の選定妥当性（P1）**: 既定は
+  `sonnet`/`low`（トークン消費抑制優先）。`.claude/rules/specialist-authoring.md` の選定表に
+  沿わない `opus`/`high` 以上への引き上げは、経営・戦略判断が本質のスキルであるという
+  根拠が本文に無い限り指摘する。逆に判断が本質のスキルを `haiku`/`low` に据え置く
+  過度な倹約も品質低下として指摘する
+- **1 agent 1 skill 原則からの逸脱（P1）**: `init-claude-specialist` SKILL.md の「例外」節が
+  定める 2 条件（同一ドメイン・相談が実務上ほぼ常に両方の知識を横断する）を満たさずに
+  複数 skill を 1 agent へ束ねる変更、または自動生成フロー側で例外判定を自動化しようとする
+  変更（例外適用は手動編集限定という設計方針への違反）は指摘する
+- **skill-tests ジョブの空回帰化（P0）**: `skills/*/tests/**/*.test.mjs` を全削除・空にする
+  変更は CI の `shopt -s globstar failglob` により skill-tests ジョブ自体がエラー終了する
+  （0 件成功への fail-open ではなく確実に落ちる設計だが、いずれにせよ回帰テストというゲートを
+  失う）。スキルを削除・統合する場合は代替テストを 1 本以上残すか、ジョブ自体の要否を
+  PR で明示する
+- **sample/ 雛形とテンプレート契約の整合（P1）**: `sample/specialist-agent-template.md` の
+  `{{ }}` プレースホルダ（`model`/`effort`/`tools` 等）と `sample/specialist-skill-example.md`
+  の `specialist-model`/`specialist-effort` は、`init-claude-specialist` SKILL.md の
+  Step 3 フィールド表・`skills/init-claude-specialist/tests/structure.test.mjs` の回帰テストが
+  前提とする表記に依存する。雛形側だけを変更してテスト・SKILL.md 本文が追随しない差分は指摘する
+- **生成 agent への編集系ツール付与（P0）**: `init-claude-specialist` が生成する
+  `.claude/agents/specialists/<name>.md` は相談用途の読み取り専用 agent であり、
+  `tools` に `Edit`/`Write`/`Bash` を含めてはならない設計（副作用のある操作をさせない安全弁）。
+  この安全弁を緩める変更は P0
+- **導入先 `.claude/rules/specialist-authoring.md` への依存明示（P2）**: 生成物
+  （agent 本文・委譲 rule）が参照する規約ファイルは導入先に必ず存在するとは限らないため、
+  「このリポにスキル著作規約が存在する場合」等の条件付き文言を外す変更は導入先互換性の
+  観点で指摘する
