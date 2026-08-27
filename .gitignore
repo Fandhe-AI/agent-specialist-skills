@@ -1,0 +1,19 @@
+# Local env files
+.env*
+!.env.example
+
+# Misc
+.DS_Store
+*.pem
+
+# Python bytecode cache（検証スクリプトをローカル実行すると生成される）
+__pycache__/
+*.pyc
+
+# implement-issue-tree の並列実装が作る作業ツリー
+.claude/worktrees/
+
+# Codex CLI のローカル状態
+.codex/
+
+_/

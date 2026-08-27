@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # --------------------------------------------------
+  # スキル構造検証（依存なし・全 PR / push 共通）
+  # --------------------------------------------------
+  # 各 skills/<name>/SKILL.md の frontmatter (name / description)、
+  # name とディレクトリ名の一致、skills-lock.json の JSON 妥当性を bash で検証する。
+  # 検証スクリプト本体は .github/scripts/check-skill-structure.sh に置く。
+  structure:
+    name: Skill structure check
+    runs-on: ubuntu-latest
+    # bash + grep のみの軽量ジョブ。hang 検知の保険として 5 分で打ち切る。
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        # actions/checkout v5.0.1
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+
+      - name: Validate skill structure
+        run: bash .github/scripts/check-skill-structure.sh
+
+  # --------------------------------------------------
+  # skill-tests（各スキルの node:test 回帰テスト）
+  # --------------------------------------------------
+  # skills/*/tests/*.test.mjs を実行する。ubuntu-latest には Node.js が
+  # 同梱されるため setup-node の追加（新規 action の SHA 固定管理）は不要。
+  # 本テンプレートは sample-skill にダミーテストを 1 本同梱しており、
+  # 初期状態からグロブが必ず 1 件以上マッチする（下記 failglob 前提）。
+  skill-tests:
+    name: Skill tests (node:test)
+    runs-on: ubuntu-latest
+    # 外部依存なしの静的検査・挙動テストのみを想定した軽量ジョブ。
+    # structure job と同じ 5 分打ち切りを踏襲する。
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        # actions/checkout v5.0.1
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+
+      - name: Run node:test
+        # `shopt -s failglob` で skills/*/tests/*.test.mjs が1件もマッチしない場合に
+        # シェルを即座にエラー終了させる。failglob なしだとグロブがマッチしない場合
+        # 展開されずリテラル文字列のまま node --test に渡り、node は該当ファイルを
+        # 発見できず 0 tests / 0 pass / 0 fail・終了コード0 で「成功」してしまう
+        # （回帰テストというゲート自体が無自覚に無効化される fail-open）。
+        # sample-skill のダミーテストを削除する場合は、代わりのテストを 1 本以上
+        # 残すこと。テストを完全に廃止するならこのジョブごと削除する（failglob を
+        # 外して空マッチを黙認する緩和はしない）。globstar で tests/ 配下の
+        # サブディレクトリも再帰探索する（`**` は 0 階層にもマッチするため
+        # tests/ 直下も引き続き対象。agent-cli-skills#447 の横展開）。
+        run: |
+          shopt -s globstar failglob
+          node --test skills/*/tests/**/*.test.mjs
+
+  # --------------------------------------------------
+  # lint-docs（ドキュメント／設定ファイル系 lint）
+  # --------------------------------------------------
+  # Fandhe-AI/actions の lint-docs reusable workflow（lint ツールバージョンは共通側で
+  # 固定）を呼び出す薄い wrapper。markdownlint の設定は `.markdownlint.jsonc`、除外は
+  # `.markdownlintignore`、その他はそれぞれ `.editorconfig` / `.yamllint` /
+  # `commitlint.config.mjs` を参照する。structure 等リポジトリ固有ジョブは個別実装。
+  lint-docs:
+    # Fandhe-AI/actions は可変タグ latest（main へ自動追従）で参照する
+    uses: Fandhe-AI/actions/.github/workflows/lint-docs.yml@latest
+    permissions:
+      contents: read
+    with:
+      # public リポジトリのため GitHub ホステッド runner を明示指定（組織 runner 方針）
+      runner-label: ubuntu-latest
+      markdownlint: true
+      editorconfig: true
+      yamllint: true
+      # commitlint は PR の base/head から commit 範囲を取るため pull_request 専用
+      # （reusable 側は他イベントを fail-closed で拒否する）。push でも動く本
+      # workflow では event で切り替え、main への push では実行しない
+      commitlint: ${{ github.event_name == 'pull_request' }}
