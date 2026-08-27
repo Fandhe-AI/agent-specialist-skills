@@ -4,20 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-<!-- テンプレート差替枠: このリポジトリの概要を書く -->
-<このリポの概要を書く>
-
-Claude Code 向けのスキル集リポジトリ。スキルは `skills/<name>/SKILL.md` を実体とし、
-`npx skills add` で導入先リポジトリへ配布される。インストールは
+「スペシャリスト skill」（ゲームプロデューサー等、専門家ペルソナ + 専門知の相談用スキル）を
+配布するリポジトリ。スキルは `skills/<name>/SKILL.md` を実体とし、`npx skills add` で
+downstream リポジトリへ配布される。インストールは
 [vercel-labs/skills](https://github.com/vercel-labs/skills) CLI を使用。
+
+downstream リポジトリでは **1 agent 1 skill** の原則で、導入した各スペシャリスト skill ごとに
+専用 sub-agent を生成する。ユーザーが専門領域の質問をしたとき main はその sub-agent を起動して
+回答させ、main 自身のトークン消費を抑える。この sub-agent 生成・委譲設定の初期セットアップを
+担うのが本リポジトリの中核スキル `init-claude-specialist` である。
+
+初期状態でこのリポジトリが配布する実スペシャリスト skill は 0 件。まず箱
+（`init-claude-specialist` と著作規約）を整備し、スペシャリスト skill は今後追加していく。
 
 ## Repository Structure
 
 ```
 skills/                               -- スキル本体（各ディレクトリに SKILL.md）
-  sample-skill/                       -- テンプレート同梱のサンプルスキル（利用時に置換する）
+  init-claude-specialist/             -- スペシャリスト skill の 1 agent 1 skill セットアップ
     SKILL.md
-    tests/                            -- node:test 回帰テスト（CI の skill-tests ジョブ用の最小テスト）
+    sample/                           -- agent/委譲 rule の雛形テンプレートと skill 著作見本
+      specialist-agent-template.md    -- .claude/agents/specialists/<name>.md の雛形
+      specialist-delegation-template.md -- .claude/rules/specialist-delegation.md の雛形
+      specialist-skill-example.md     -- スペシャリスト skill 著作の見本（game-producer 例）
 .claude/
   agents/
     research/
@@ -37,7 +46,8 @@ skills/                               -- スキル本体（各ディレクトリ
   rules/
     delegation.md                     -- 委譲の原則（調査・設計フェーズ）
     delegation-impl.md                -- 委譲マッピング（作成・編集フェーズ）
-    skill-authoring.md                -- スキル著作規約
+    skill-authoring.md                -- 汎用スキル著作規約
+    specialist-authoring.md           -- スペシャリスト skill 固有の著作規約（1 agent 1 skill・model/effort 選定）
     agent-authoring.md                -- エージェント著作規約
     conventional-commits.md           -- Conventional Commits 詳細規約
     security.md                       -- セキュリティチェック規約
@@ -48,7 +58,7 @@ skills/                               -- スキル本体（各ディレクトリ
     debugging.md                      -- 根本原因デバッグ規約（修正前の原因調査・3回失敗でエスカレーション）
     code-comment-style.md             -- コード内コメント・ドキュメンテーションコメント規約
   skills/
-    sample-skill                      -- ../../skills/sample-skill への symlink
+    init-claude-specialist            -- ../../skills/init-claude-specialist への symlink
   settings.json                       -- hooks 設定（SessionStart リマインダー）
   settings.local.json                 -- ローカル権限設定（git 管理対象外）
 skills-lock.json                      -- vendored スキルの台帳（初期状態は空）
@@ -110,13 +120,25 @@ main の役割は **対話・計画・委譲・報告** に徹する。token を
 | `frontmatter-linter` | Haiku | frontmatter・symlink の機械検証 |
 | `plan-verifier` | Sonnet | 計画ファイルの完了検証 |
 
+## Specialist Agents
+
+このリポジトリ自体は downstream リポジトリではないため sub-agent 化対象のスペシャリスト skill
+を持たない。以下は `init-claude-specialist` が downstream リポジトリで生成する
+`.claude/agents/specialists/<name>.md` の一覧表フォーマットの参考（実データは
+downstream リポジトリの CLAUDE.md に記載される）。
+
+| subagent_type | model | effort | 対応 skill | 相談領域 |
+|---------------|-------|--------|-----------|---------|
+| （今後追加。現在 0 件） | - | - | - | - |
+
 ## Rules
 
 | ファイル | 対象 | 概要 |
 |---------|------|------|
 | `delegation.md` | main | 調査・設計フェーズの委譲原則 |
 | `delegation-impl.md` | main / author 系 Agent | 作成・編集フェーズの委譲マッピング |
-| `skill-authoring.md` | skill-author / skill-reviewer | スキル著作フォーマット・品質基準 |
+| `skill-authoring.md` | skill-author / skill-reviewer | 汎用スキル著作フォーマット・品質基準 |
+| `specialist-authoring.md` | skill-author / init-claude-specialist | スペシャリスト skill 固有の著作規約（1 agent 1 skill・model/effort 選定・誠実性の原則） |
 | `agent-authoring.md` | agent-author | エージェント著作フォーマット・品質基準 |
 | `conventional-commits.md` | create-commit / create-pr 等 | Conventional Commits 詳細規約 |
 | `security.md` | security-auditor / create-pr 等 | OWASP Top 10 セキュリティチェック基準 |
@@ -129,11 +151,16 @@ main の役割は **対話・計画・委譲・報告** に徹する。token を
 
 ## Current Skills (1)
 
-<!-- テンプレート差替枠: sample-skill を置換・削除し、実スキルの一覧に更新する（update-docs スキルで同期可） -->
+### セットアップ (1)
 
 | スキル | 説明 |
 |--------|------|
-| sample-skill | テンプレート同梱のサンプルスキル。新スキル作成時の雛形（利用時に置換する） |
+| init-claude-specialist | 導入済みスペシャリスト skill を検出し、1 agent 1 skill で専用 sub-agent・委譲 rule を生成する |
+
+### スペシャリスト (0)
+
+今後追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
+（見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
 
 ## Conventions
 
@@ -153,9 +180,9 @@ main の役割は **対話・計画・委譲・報告** に徹する。token を
 
 コミット・PR 作成・レビューを行うスキルで OWASP Top 10・ハードコードされた秘密情報・XSS・入力バリデーション・認証認可を必須チェック。セキュリティ問題がある場合はマージをブロック。
 
-### ユーザー承認フロー
+### スペシャリスト skill の誠実性原則
 
-implement-issue（導入している場合）は計画作成後にユーザー承認を必須とする。承認なしで実装を開始してはならない。
+全スペシャリスト skill は「skill に無い事実は推測と明示する」「個別の非公開データに基づく断定はできない」旨を注意事項に必ず含める（詳細は `.claude/rules/specialist-authoring.md`）。
 
 ### 日本語出力
 
@@ -169,7 +196,6 @@ implement-issue（導入している場合）は計画作成後にユーザー�
 - 作業は subagent へ委譲し main の token 消費を抑える（delegation.md / delegation-impl.md）
 - `.claude/` 配下の編集は `_/dotclaude/` 経由（dotclaude-via-temp）
 - Conventional Commits 厳守（`--no-verify` 禁止）
-- implement-issue は計画承認後に実装
 
 ## Skill Anatomy
 
@@ -182,6 +208,8 @@ description: <one-line description>
 ---
 ```
 
+スペシャリスト skill はこれに加え `specialist: true` を必須で持つ（`.claude/rules/specialist-authoring.md` 参照）。
+
 ## Adding a New Skill
 
 1. `create-skill` スキルを呼び出す（scaffold・symlink・update-docs まで自動化）。
@@ -190,6 +218,18 @@ description: <one-line description>
    2. `.claude/skills/<name>` にシンボリックリンクを作成:
       `ln -s ../../skills/<name> .claude/skills/<name>`
    3. `update-docs` スキルで CLAUDE.md のスキル一覧・構成を更新
+
+## Adding a New Specialist Skill
+
+1. `skills/<name>/SKILL.md` を作成する。`.claude/rules/specialist-authoring.md` の規約
+   （`specialist: true` 必須・ペルソナ→専門領域→回答スタイル→知識体系→注意点の構成・
+   誠実性の原則）に従う。著作の見本は
+   `skills/init-claude-specialist/sample/specialist-skill-example.md` を参照
+2. `.claude/skills/<name>` にシンボリックリンクを作成:
+   `ln -s ../../skills/<name> .claude/skills/<name>`
+3. `update-docs` スキルで CLAUDE.md の Current Skills（スペシャリスト節）を更新
+4. downstream リポジトリでは `npx skills add Fandhe-AI/agent-specialist-skills` で再導入後、
+   `init-claude-specialist` を再実行すると新しいスペシャリスト skill 用の sub-agent が生える
 
 ## Adding a New Agent
 
