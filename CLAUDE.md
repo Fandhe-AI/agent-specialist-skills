@@ -27,6 +27,8 @@ skills/                               -- スキル本体（各ディレクトリ
       specialist-agent-template.md    -- .claude/agents/specialists/<name>.md の雛形
       specialist-delegation-template.md -- .claude/rules/specialist-delegation.md の雛形
       specialist-skill-example.md     -- スペシャリスト skill 著作の見本（game-producer 例）
+.agents/
+  skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
   agents/
     research/
@@ -59,9 +61,10 @@ skills/                               -- スキル本体（各ディレクトリ
     code-comment-style.md             -- コード内コメント・ドキュメンテーションコメント規約
   skills/
     init-claude-specialist            -- ../../skills/init-claude-specialist への symlink
+    anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
   settings.json                       -- hooks 設定（SessionStart リマインダー）
   settings.local.json                 -- ローカル権限設定（git 管理対象外）
-skills-lock.json                      -- vendored スキルの台帳（初期状態は空）
+skills-lock.json                      -- vendored スキルの台帳（source: Fandhe-AI/agent-cli-skills・agent-reference-skills）
 AGENTS.md                             -- レビュー観点集（codex-review が参照）
 ```
 
