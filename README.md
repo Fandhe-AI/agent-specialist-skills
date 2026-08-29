@@ -23,7 +23,7 @@ npx skills add Fandhe-AI/agent-specialist-skills --all
 
 ## リポジトリ構成
 
-Claude Code の Claude Skills として使用するスキルは、原則として `skills/` 配下に実体があり、`.claude/skills/` からシンボリックリンクで参照されます。加えて本リポジトリでは開発用に、姉妹リポジトリの CLI ワークフロースキル（create-commit / create-pr 等）や参照スキル（github-docs / anthropic-claude-code 等）を `npx skills add` で `.agents/skills/` に vendor し、`.claude/skills/` からシンボリックリンクしています（台帳は `skills-lock.json`）。これらは本リポジトリの配布対象ではありません。Agents・Rules・その他ディレクトリツリーの詳細は [CLAUDE.md](./CLAUDE.md) を参照してください（構成ツリーの正は CLAUDE.md に一本化し、本 README には置きません）。
+Claude Code の Claude Skills として使用するスキルは、原則として `skills/` 配下に実体があり、`.claude/skills/` からシンボリックリンクで参照されます。加えて本リポジトリでは開発用に、姉妹リポジトリの CLI ワークフロースキル（create-commit / create-pr 等）や参照スキル（github-docs / anthropic-claude-code 等）を `npx skills add` で `.agents/skills/` に vendor し、`.claude/skills/` からシンボリックリンクしています（台帳は `skills-lock.json`）。これらは本リポジトリの配布対象ではありません。vercel-labs/skills CLI はこのリポジトリの `skills/` 配下のみをスキルとして検出するため、`.agents/skills/` の vendored スキルは `--list` にも `--all` にも含まれません。実測では `npx skills add Fandhe-AI/agent-specialist-skills --list` の検出は `init-claude-specialist` の 1 件です。開発用スキルを使いたい場合は、配布元の Fandhe-AI/agent-cli-skills / agent-reference-skills から導入してください。Agents・Rules・その他ディレクトリツリーの詳細は [CLAUDE.md](./CLAUDE.md) を参照してください（構成ツリーの正は CLAUDE.md に一本化し、本 README には置きません）。
 
 ## スキル一覧
 
