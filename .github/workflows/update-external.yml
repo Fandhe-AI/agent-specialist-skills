@@ -9,11 +9,8 @@
 # 日次で追従する。submodule は持たない前提のため、上流の submodule ジョブは
 # 存在判定で skip される（submodule を導入した場合も追加設定なしで動く）。
 #
-# skills-auto-merge はマージ可否を左右する**リポジトリ別判断**である。有効化には
-# branch ruleset（required checks・bypass なし）の整備と、同期 PR が実際に
-# required checks 待ちでブロックされることの実測が前提になるため、テンプレート既定は
-# 'false'（fail-closed）とする。前提を実測確認したリポジトリでのみ、組織変数追従
-# （${{ vars.SKILLS_AUTO_MERGE || 'false' }}）等へ切り替えること。
+# skills-auto-merge は組織変数 vars.SKILLS_AUTO_MERGE に追従する（2026-08-30 オーナー判断で
+# Fandhe-AI 全リポを統一）。リポジトリ単位で無効化したい場合のみ 'false' へ固定する。
 #
 # runner 選択の根拠:
 # public リポジトリのため、組織の runner 方針に従い GitHub ホステッド
@@ -64,8 +61,10 @@ jobs:
       # 明示的に 'false' へフォールバックしオプトイン運用とする。
       submodule-auto-merge: ${{ vars.SUBMODULE_AUTO_MERGE || 'false' }}
       submodule-auto-merge-allowlist: ${{ vars.SUBMODULE_AUTO_MERGE_ALLOWLIST }}
-      # リポジトリ別判断（冒頭コメント参照）。前提の実測が済むまで fail-closed に固定する。
-      skills-auto-merge: 'false'
+      # 組織変数 vars.SKILLS_AUTO_MERGE に追従する（2026-08-30 オーナー判断で Fandhe-AI 全リポを統一）。
+      # 未設定（null/空）を有効と解釈する composite action の非対称設計に合わせ、
+      # 明示的に 'false' へフォールバックする。
+      skills-auto-merge: ${{ vars.SKILLS_AUTO_MERGE || 'false' }}
       skills-auto-merge-allowlist: ${{ vars.SKILLS_AUTO_MERGE_ALLOWLIST }}
     secrets:
       # 未登録の secret は空文字となり、共通側のガードが checkout 前に fail-closed で止める。
