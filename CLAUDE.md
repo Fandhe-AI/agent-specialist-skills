@@ -65,7 +65,7 @@ skills/                               -- スキル本体（各ディレクトリ
   settings.json                       -- hooks 設定（SessionStart リマインダー）
   settings.local.json                 -- ローカル権限設定（git 管理対象外）
 skills-lock.json                      -- vendored スキルの台帳（source: Fandhe-AI/agent-cli-skills・agent-reference-skills）
-AGENTS.md                             -- レビュー観点集（codex-review が参照）
+AGENTS.md                             -- レビュー観点集（ai-review が参照）
 ```
 
 ## 委譲方針（必読）
