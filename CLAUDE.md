@@ -59,6 +59,7 @@ skills/                               -- スキル本体（各ディレクトリ
     verification.md                   -- 完了ゲート規約（証拠なき完了宣言の禁止・5段階検証）
     debugging.md                      -- 根本原因デバッグ規約（修正前の原因調査・3回失敗でエスカレーション）
     code-comment-style.md             -- コード内コメント・ドキュメンテーションコメント規約
+    github-actions.md                 -- GitHub Actions のキャッシュ方針（保存は main だけ・ルートの lockfile だけをハッシュ）
   skills/
     init-claude-specialist            -- ../../skills/init-claude-specialist への symlink
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
@@ -151,6 +152,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `verification.md` | 副作用を伴う全スキル・Agent | 完了ゲート（証拠なき完了宣言の禁止・5段階検証） |
 | `debugging.md` | 実装系スキル / sub-investigator | 根本原因デバッグ（修正前の原因調査・3回失敗でエスカレーション） |
 | `code-comment-style.md` | 実装系スキル / 全 author Agent | コード内コメント・ドキュメンテーションコメント規約（役割・境界・文脈） |
+| `github-actions.md` | `.github/workflows/` を変更する作業 / `skills/` の lockfile を変更する作業 | GitHub Actions のキャッシュ方針（容量上限と課金の前提・効果測定・保存は main への push だけ・ルートの lockfile だけをハッシュ・PR チェックリスト・配布物の lockfile が利用側のキャッシュキーに与える影響） |
 
 ## Current Skills (1)
 
