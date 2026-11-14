@@ -31,6 +31,7 @@ skills/                               -- スキル本体（各ディレクトリ
     SKILL.md
     references/
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
+    examples/                         -- 制作例（LP・スライド・アプリ画面・ダッシュボード・ハードウェア UI・アニメーション・アンチ例。9 件）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
@@ -178,7 +179,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 
 | スキル | 説明 |
 |--------|------|
-| designer-apple | Apple 流プロダクトデザイン相談役。説明不要の UI・HIG・Liquid Glass・Jony Ive 等の考え方でデザインをレビュー |
+| designer-apple | Apple 流プロダクトデザイン相談役。説明不要の UI・HIG・Liquid Glass・Jony Ive 等の考え方でデザインをレビュー・サイト/スライド等を制作 |
 
 今後も追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
