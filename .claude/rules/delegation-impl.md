@@ -4,6 +4,7 @@ paths:
   - "skills/**"
   - ".claude/agents/**"
   - ".claude/rules/**"
+  - ".claude/skills/**"
   - "CLAUDE.md"
   - "README.md"
 ---
@@ -18,6 +19,7 @@ paths:
 |-----|--------------|-------|-----------|
 | `skills/<name>/SKILL.md` の作成・編集 | `skill-author` | sonnet | `./skill-authoring.md` |
 | `.claude/agents/` の作成・編集 | `agent-author` | sonnet | `./agent-authoring.md` |
+| `.claude/skills/<管理スキル>/SKILL.md`・`sample/` の作成・編集（リポジトリ管理スキル。create-skill・update-skill・create-agent 等の実ディレクトリ。配布対象外） | `skill-author` | sonnet | `./skill-authoring.md`・`./dotclaude-via-temp.md` |
 | `.claude/rules/` の作成・編集 | `rules-author` | sonnet | — |
 | `CLAUDE.md`・`README.md` の一覧・ツリー更新 | `docs-writer` | haiku | — |
 | SKILL.md の品質レビュー（読み取り専用） | `skill-reviewer` | sonnet | `./skill-authoring.md` |
@@ -49,3 +51,6 @@ prompt: |
 ## .claude/ 配下の編集について
 
 `.claude/agents/`・`.claude/rules/` を編集する Agent は `./dotclaude-via-temp.md` に従い、**直接書き込まず `_/dotclaude/` を経由**して最終配置する。
+
+- `.claude/skills/<管理スキル>/` も `_/dotclaude/skills/<name>/` で編集する。既存ディレクトリへはディレクトリ単位で `mv` せず、**ファイル単位で `mv`** する（ディレクトリ単位の `mv` は既存ディレクトリ内に入れ子になる）
+- `.claude/skills/` 配下の vendored スキル（`.agents/skills/` への symlink）は上流管理のため直接編集しない。修正が必要な場合は `contribute-skill` で上流へ返す

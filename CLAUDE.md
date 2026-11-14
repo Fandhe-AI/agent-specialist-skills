@@ -60,6 +60,8 @@ skills/                               -- スキル本体（各ディレクトリ
     debugging.md                      -- 根本原因デバッグ規約（修正前の原因調査・3回失敗でエスカレーション）
     code-comment-style.md             -- コード内コメント・ドキュメンテーションコメント規約
     github-actions.md                 -- GitHub Actions のキャッシュ方針（保存は main だけ・ルートの lockfile だけをハッシュ）
+    out-of-scope-tracking.md          -- 実装対象外の追跡規約（スコープ外事項を Issue で追跡し、現在の PR に混入させない）
+    tool-neutral-skills.md            -- 配布スペシャリスト skill の 3 ツール中立規約（Claude Code / Codex / OpenCode）
   skills/
     init-claude-specialist            -- ../../skills/init-claude-specialist への symlink
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
@@ -156,6 +158,8 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `debugging.md` | 実装系スキル / sub-investigator | 根本原因デバッグ（修正前の原因調査・3回失敗でエスカレーション） |
 | `code-comment-style.md` | 実装系スキル / 全 author Agent | コード内コメント・ドキュメンテーションコメント規約（役割・境界・文脈） |
 | `github-actions.md` | `.github/workflows/` を変更する作業 / `skills/` の lockfile を変更する作業 | GitHub Actions のキャッシュ方針（容量上限と課金の前提・効果測定・保存は main への push だけ・ルートの lockfile だけをハッシュ・PR チェックリスト・配布物の lockfile が利用側のキャッシュキーに与える影響） |
+| `out-of-scope-tracking.md` | implement-issue / implement-issue-tree / implement-review / implement-review-pr / create-pr、実装・修正・レビューを行う全 Agent | 実装対象外の追跡規約（スコープ外事項を見つけたら Issue で追跡し、現在の PR に混入させない） |
+| `tool-neutral-skills.md` | `skills/` のスペシャリスト skill（`init-claude-specialist` は適用外） | 配布スペシャリスト skill を Claude Code / Codex / OpenCode のどれで読まれても同じ内容で使える書き方（ツール固有名・置換変数・固有表記を本文に書かない） |
 
 ## Current Skills (1)
 
@@ -212,6 +216,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 - 作業は subagent へ委譲し main の token 消費を抑える（delegation.md / delegation-impl.md）
 - `.claude/` 配下の編集は `_/dotclaude/` 経由（dotclaude-via-temp）
 - Conventional Commits 厳守（`--no-verify` 禁止）
+- スペシャリスト skill は specialist-authoring.md 準拠（誠実性の原則必須・新規は create-skill・改訂は update-skill）
 
 ## Skill Anatomy
 
@@ -241,7 +246,7 @@ description: <one-line description>
    または手動で行う場合:
    1. `skills/<name>/SKILL.md` を作成する。`.claude/rules/specialist-authoring.md` の規約
       （`specialist: true` 必須・ペルソナ→専門領域→回答スタイル→知識体系→注意点の構成・
-      誠実性の原則）に従う。著作の見本は
+      誠実性の原則）に従い、`.claude/rules/tool-neutral-skills.md` も併せて参照する。著作の見本は
       `skills/init-claude-specialist/sample/specialist-skill-example.md` を参照
    2. `.claude/skills/<name>` にシンボリックリンクを作成:
       `ln -s ../../skills/<name> .claude/skills/<name>`
