@@ -40,7 +40,7 @@ argument-hint: "<skill-name> [check|apply [改訂内容]] (改訂内容を渡す
 
 - 第 2 引数が `check` / `apply` のいずれかならモードとして扱う。それ以外の語で始まる場合は「モード省略 + 改訂内容」と推測せず、処理を進めずに `mode` を指定するよう問い返す
 - `apply` 単独（改訂内容なし）の場合も、Step 1〜3 を再実行して差分を提示し、用途 b・c の候補はユーザー承認を得てから Step 5 へ進む（前回の `check` 結果は引き継がない）
-- `skill-name` は `^[a-z0-9][a-z0-9-]*$` に一致するものだけ受け付ける。`/`・`..`・空白を含む値は、パス解決やシェル展開に使う前に拒否する
+- `skill-name` は `^[a-z][a-z0-9-]+$`（frontmatter-linter の kebab-case 定義と同一）に一致するものだけ受け付ける。`/`・`..`・空白を含む値は、パス解決やシェル展開に使う前に拒否する
 - `skills/<skill-name>/SKILL.md` が存在しない場合は停止する。新規作成なら `create-skill` を案内する
 - `.agents/skills/` 配下の vendored スキルは対象外。上流リポジトリの管理物であり、本リポジトリでは改訂しない。改修を上流へ返す場合は `contribute-skill` を案内する
 
@@ -123,6 +123,8 @@ downstream 影響の列には、変更が Step 8 の再導入対象キー（デ�
 - ユーザーが引数の改訂内容として明示したもの（用途 a）。引数で明示されているため承認済みとして扱い、そのまま適用対象とする
 - Step 3 のレポートの候補のうち、ユーザーが承認したもの（用途 b・c）。`apply` 単独実行でも Step 1〜3 を再実行して差分を提示し、ユーザーの承認を得てから Step 5 へ進む
 
+**改名（ディレクトリ名・`name` の変更）は本スキルの自動適用の対象外**とする。改訂内容（ユーザー指定・候補のいずれも）に改名が含まれる場合は、ここで停止して Step 5 へ進まず、ユーザーに「注意事項」の手動改名手順を案内する。改名以外の改訂が併せて承認されている場合は、改名を除いた範囲だけを適用するか、改名完了後に再実行するかをユーザーに確認する。
+
 承認が無い候補は適用しない。規約違反（用途 c）でも、ユーザー指定の改訂と競合する場合は確認する。対象がスペシャリスト skill（`specialist: true` を持つ）で、ユーザー指定の改訂が誠実性の原則 3 項目や `specialist: true` を削る内容だった場合は、規約違反として停止し、ユーザーに確認する。手順型（`specialist` キーを持たない。init-claude-specialist など）には適用せず、逆に `specialist` キーを追加する改訂は規約違反として停止し確認する。
 
 ### Step 5: 改訂する（skill-author に委譲）
@@ -182,13 +184,13 @@ skill-reviewer への委譲プロンプトには、汎用規約で誤判定さ�
 | `description` | agent の description が古いまま。起動条件の判定がずれる。さらに委譲 rule と CLAUDE.md の Specialist Agents 表の「相談領域」にも反映される（init の Step 4・5）ため、再実行するまでこれらも古いまま |
 | `specialist-model` / `specialist-effort` | agent の model / effort が古いまま。CLAUDE.md の Specialist Agents 表の model / effort 列も再実行まで古いまま。キーを削除した場合は既定（`sonnet` / `low`）に戻る |
 | `specialist` | `true` を外すと検出対象から外れるが、init は既存 agent を削除しない。旧 agent は残り、委譲 rule・CLAUDE.md の表の行も残るため、委譲され続ける。手動削除が必要 |
-| ディレクトリ名（= `name`。規約で一致必須）を変更した場合 | 新しいディレクトリ名で agent が別に生成され、旧 agent ファイルと委譲 rule・CLAUDE.md の旧行が downstream に残る。手動削除が必要 |
+| ディレクトリ名（= `name`。規約で一致必須）を手動で改名した場合（本スキルは改名を自動適用しない） | 新しいディレクトリ名で agent が別に生成され、旧 agent ファイルと委譲 rule・CLAUDE.md の旧行が downstream に残る。手動削除が必要 |
 
 案内する手順。
 
 1. downstream で `npx skills add Fandhe-AI/agent-specialist-skills` を実行して再導入する
 2. `init-claude-specialist` を再実行する（既存 agent の手動カスタマイズが疑われる場合は上書き前にユーザー確認される）
-3. ディレクトリ名（= `name`）の変更時は、旧名の `.claude/agents/specialists/<旧名>.md` と、`.claude/rules/specialist-delegation.md`・CLAUDE.md の表の旧行を手動で削除する。可能なら名前の変更は避ける
+3. ディレクトリ名（= `name`）を手動で改名した場合は、旧名の `.claude/agents/specialists/<旧名>.md` と、`.claude/rules/specialist-delegation.md`・CLAUDE.md の表の旧行を手動で削除する。可能なら名前の変更は避ける
 4. `specialist: true` を外した場合も、該当 agent ファイルと委譲 rule・CLAUDE.md の行を手動で削除する
 
 本文（ペルソナ・専門領域・回答スタイル・知識体系・注意事項）のみの改訂は、agent が起動時に skill を読み込むため再セットアップ不要で、再導入だけで反映される。
@@ -219,6 +221,15 @@ skill-reviewer への委譲プロンプトには、汎用規約で誤判定さ�
 - 付属ファイル（`sample/` 配下など）の改訂が必要な場合も、対象は `skills/<skill-name>/` 配下に限る。他スキル・`.claude/` 配下は触らない
 - シークレット・トークンを改訂内容や出典メモに混入させない。検出した場合は処理を中止して報告する（`.claude/rules/security.md`）
 - `--no-verify` などのフック回避は使わない（`.claude/rules/conventional-commits.md`）
+- **改名は手動で行う**（本スキルは自動適用しない）。ディレクトリ移動と `.claude/skills/` の symlink 更新を同時に行わないと、`name` とディレクトリ名の不一致や旧 symlink の切れが起きるため、次の順で実施する
+  1. 新名を `^[a-z][a-z0-9-]+$` で検証し、`skills/`・`.agents/skills/`・`.claude/skills/` に同名のディレクトリ・symlink が無いことを確認する（`create-skill` Step 1・3 と同じ）
+  2. `git mv "skills/<old>" "skills/<new>"`
+  3. `skills/<new>/SKILL.md` の frontmatter `name` を新名にする
+  4. 旧 symlink を削除する。事前に `[ -L ".claude/skills/<old>" ]` で symlink であることを確認し、`rm ".claude/skills/<old>"` を実行する（symlink 1 本のみ。`-r` は付けない）
+  5. `ln -s "../../skills/<new>" ".claude/skills/<new>"`
+  6. `bash .github/scripts/check-skill-structure.sh` で検証する
+  7. `update-docs` で CLAUDE.md を更新する
+  8. Step 8 の downstream 案内（旧 agent・委譲 rule・CLAUDE.md 旧行の手動削除）を行う
 - 本スキルの手順そのものを変更したい場合は、`_/dotclaude/skills/update-skill/` で編集し、ファイル単位の `mv _/dotclaude/skills/update-skill/SKILL.md .claude/skills/update-skill/SKILL.md` で配置する。ディレクトリ単位の `mv` は既存ディレクトリの内側へ入れ子で移動する（`.claude/skills/update-skill/update-skill/`）ため使わない
 
 ## 関連

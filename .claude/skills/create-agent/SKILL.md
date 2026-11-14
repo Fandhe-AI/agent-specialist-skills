@@ -64,13 +64,13 @@ argument-hint: "<category>/<agent-name> (例: create-agent quality/lint-runner)"
 
 - カテゴリは `research`・`author`・`quality` の完全一致のみ受け付ける（前後の `/`・大文字・別名は不可）
 - `specialists/` は「対象外: specialists/」に従い拒否する。それ以外のカテゴリは、ユーザーに確認して 3 つから選ばせる
-- `<agent-name>` は正規表現 `^[a-z][a-z0-9-]*$` で検証する。`/`・`..`・空白・空文字を含む名前は拒否してユーザーへ問い返す（名前は `mv` 先のパスに使われるため、パストラバーサルとコマンドインジェクションを防ぐ。`.claude/rules/security.md` A03）
+- `<agent-name>` は正規表現 `^[a-z][a-z0-9-]+$`（frontmatter-linter の kebab-case 定義と同一）で検証する。`/`・`..`・空白・空文字を含む名前は拒否してユーザーへ問い返す（名前は `mv` 先のパスに使われるため、パストラバーサルとコマンドインジェクションを防ぐ。`.claude/rules/security.md` A03）
 - 検証を通った名前について、既存 Agent と重複しないことを `ls .claude/agents/*/"<agent-name>.md"` で確認する（ヒットすれば重複。該当なしで `ls` が非 0 終了すれば重複なし）
 - Agent の責務（担当スコープ、委譲される場面、隣接 Agent との境界）をユーザーに確認する
 
 ### Step 2: agent-author に委譲してファイルを作成する
 
-`agent-author`（subagent_type: agent-author）に委譲する。`.claude/rules/dotclaude-via-temp.md` に従い、`_/dotclaude/agents/<category>/<name>.md` で作成し、完了後に `mv` で `.claude/agents/<category>/<name>.md` へ配置させる（`.claude/agents/` への直接書き込みは行わない）。
+`agent-author`（subagent_type: agent-author）に委譲する。`.claude/rules/dotclaude-via-temp.md` に従い、agent-author は `_/dotclaude/agents/<category>/<name>.md` に作成して報告する。`mv` による最終配置は agent-author では行わず、Step 3 で main（本スキル）が行う（`.claude/agents/` への直接書き込みは行わない）。
 
 委譲プロンプトには、Step 1 で検証済みのカテゴリと名前だけを渡す。未検証の入力をそのまま渡さない。
 
@@ -86,9 +86,8 @@ prompt: |
     - 役割・責務: <ユーザーから受け取った内容>
     - 雛形: .claude/skills/create-agent/sample/agent.sample.md
     - 既存 Agent の参考: .claude/agents/ 配下の同カテゴリのファイル
-  出力先: /<リポジトリの絶対パス>/.claude/agents/<category>/<agent-name>.md
-    （作成は _/dotclaude/agents/<category>/<agent-name>.md → mv。パスは "…" でクォートする。
-     例: mv "_/dotclaude/agents/<category>/<agent-name>.md" ".claude/agents/<category>/<agent-name>.md"）
+  出力先: /<リポジトリの絶対パス>/_/dotclaude/agents/<category>/<agent-name>.md
+    （一時パスに作成して報告する。mv による .claude/agents/ への配置は行わない。呼び出し元が行う）
   観点: tools 最小権限、委譲場面を具体化した description
   適用ルール:
     - .claude/rules/agent-authoring.md
@@ -98,12 +97,27 @@ prompt: |
   必須項目:
     - frontmatter: name（kebab-case）, description, model, tools
     - 本文: 役割 → 対象スコープ → 遵守する規約 → 手順 / 観点 → 完了条件 → 報告フォーマット
-    - 後片付けは自分が作成したパスのみ削除し、空の _/dotclaude は rmdir（rm -rf _/dotclaude は禁止）
+    - mv と後片付けは行わない（作成したファイルを _/dotclaude に残したまま、パスを報告する）
 ```
 
-### Step 3: model と tools を確認する
+### Step 3: 最終配置する（main が実施）
 
-作成結果を読み、以下を確認する。
+agent-author の報告で、`_/dotclaude/agents/<category>/<agent-name>.md` が作成されたことを確認してから、main が配置する。`<category>` と `<agent-name>` は Step 1 で検証済みの値のみ使い、パスは `"…"` でクォートする。
+
+```bash
+# 配置先が既に存在する場合は上書きせず中止する
+[ ! -e ".claude/agents/<category>/<agent-name>.md" ] || { echo "中止: 配置先が既に存在する"; exit 1; }
+mkdir -p ".claude/agents/<category>"
+mv "_/dotclaude/agents/<category>/<agent-name>.md" ".claude/agents/<category>/<agent-name>.md"
+# 自分が作った空ディレクトリのみ削除する（rm -rf は使わない。空でなければ rmdir は失敗し、残る）
+rmdir "_/dotclaude/agents/<category>" "_/dotclaude/agents" "_/dotclaude" "_" 2>/dev/null
+```
+
+以降の Step は配置後のパス `.claude/agents/<category>/<agent-name>.md` を対象にする。
+
+### Step 4: model と tools を確認する
+
+配置後のファイルを読み、以下を確認する。
 
 - `model` がカテゴリ・用途に合っているか
 - `tools` が最小権限を守っているか。research/・quality/ に `Edit`・`Write` が無いこと
@@ -111,7 +125,7 @@ prompt: |
 
 tools の過剰が疑わしい場合は `security-auditor`（読み取り専用）に権限レビューを委譲する。
 
-### Step 4: frontmatter-linter で検証する
+### Step 5: frontmatter-linter で検証する
 
 `frontmatter-linter`（subagent_type: frontmatter-linter）は機械的検証のみを担う。以下の項目だけを渡す。
 
@@ -124,11 +138,11 @@ tools の過剰が疑わしい場合は `security-auditor`（読み取り専用�
 判断系の観点は linter に渡さず、main が目視で確認する。
 
 - `description` が委譲される場面を具体的に説明しているか
-- `tools` が最小権限を超えていないか（Step 3 と同じ。疑わしければ `security-auditor`）
+- `tools` が最小権限を超えていないか（Step 4 と同じ。疑わしければ `security-auditor`）
 
 問題があれば `agent-author` に差し戻して修正させ、再検証する。同一指摘が 3 回解消しない場合は修正を続けず、試行内容と行き詰まりの理由をユーザーに報告して判断を仰ぐ（`.claude/rules/debugging.md`）。
 
-### Step 5: CLAUDE.md 更新を案内する
+### Step 6: CLAUDE.md 更新を案内する
 
 ```
 .claude/agents/<category>/<agent-name>.md を作成した。
@@ -148,12 +162,12 @@ CLAUDE.md の Sub-agents 表・構造ツリーを更新するには update-docs 
 1. `ls ".claude/agents/<category>/<agent-name>.md"` で配置を確認する
 2. frontmatter の `name:` が `<agent-name>` と一致することを確認する
 3. `tools` がカテゴリの最小権限ポリシーに沿うことを確認する
-4. `ls "_/dotclaude/agents/<category>/"` 等で、自分の作業ファイルが残っていないことを確認する
+4. `ls "_/dotclaude/agents/<category>/<agent-name>.md"` が失敗する（一時パスに作業ファイルが残っていない）ことを確認する。Step 3 の `mv` 後に配置先が存在し、一時パスに無いことが両方成立して初めて配置完了とする
 5. frontmatter-linter 等の結果は、指摘が無い旨（FAIL 0 件）を示す本文を引用して確認する。「問題なさそう」といった要約や推測で完了としない
 
 ## 注意事項
 
-- **dotclaude-via-temp 必須**: 作成は `_/dotclaude/agents/` 経由で行い、`mv` で最終配置する。`create-agent` 側で別途 `mv` する必要はない
+- **dotclaude-via-temp 必須**: 作成は `_/dotclaude/agents/` 経由で行う。最終配置の `mv` は本スキル（main）が Step 3 で行う。agent-author は `mv` しない
 - **本スキル自身の編集**: `.claude/skills/create-agent/` を編集する場合も dotclaude-via-temp に従い、`_/dotclaude/skills/create-agent/` で作業してファイル単位で `mv` する。ディレクトリ単位で `mv` すると既存ディレクトリ内に入れ子になる
 - **`rm -rf _/dotclaude` は禁止**: 並行作業との共有ディレクトリのため、自分のファイルのみ削除し、空ディレクトリのみ `rmdir` する
 - **name の解決**: `subagent_type:` は frontmatter の `name:` で解決される。カテゴリを移動しても呼び出しコードの変更は不要

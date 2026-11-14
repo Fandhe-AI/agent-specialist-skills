@@ -44,7 +44,7 @@ main（このスキル自身）は計画・ヒアリング・委譲・統合・�
 
 引数から種別・スキル名を決める。省略されている場合はユーザーに確認する。種別の既定はスペシャリスト skill。スキル名は kebab-case とし、ディレクトリ名と frontmatter の `name` を一致させる。
 
-- `skill-name` は `^[a-z0-9][a-z0-9-]*$` に一致するものだけ受け付ける。`/`・`..`・空白等を含む値は、パス解決やシェル展開に使う前に拒否して問い返す（`.claude/rules/security.md` A03）
+- `skill-name` は `^[a-z][a-z0-9-]+$`（frontmatter-linter の kebab-case 定義と同一。英小文字始まり・2 文字以上）に一致するものだけ受け付ける。`/`・`..`・空白等を含む値は、パス解決やシェル展開に使う前に拒否して問い返す（`.claude/rules/security.md` A03）
 - 種別が手順型の場合は、続行前にユーザーへ確認する。`.claude/rules/specialist-authoring.md` は「このリポジトリが配布するスキルは全てスペシャリスト skill」としており、手順型を `skills/` に置くと配布対象になる。「配布対象の例外（先例は `init-claude-specialist` のみ）になるが良いか」を確認し、了承が得られない場合はスペシャリスト skill への変更か作成中止を提案する
 
 ### Step 2: 要件をヒアリングする
@@ -90,7 +90,10 @@ prompt: |
   出力: 重複なし / 重複あり（ファイルパスと既存スキルの概要）
 ```
 
-重複が見つかった場合はユーザーに通知し、新規作成か既存スキルの改訂（update-skill）かを確認してから続行する。
+結果を次の 2 種類に分けて扱う。
+
+- **同名衝突**（`skills/`・`.agents/skills/`・`.claude/skills/` のいずれかに同名のディレクトリ・symlink がある）: 同じ名前での新規作成は許さない。ユーザーに通知し、(a) 別名を決めて Step 1 の名前検証と本 Step の重複確認をやり直す、(b) 既存スキルの改訂（update-skill）へ移行する、のいずれかを選ばせる。いずれも選ばれない場合は作成を中止する
+- **類似のみ**（類似名・機能の類似はあるが同名ではない）: ユーザーに通知し、確認が取れた場合のみ続行する
 
 ### Step 4: SKILL.md の作成（skill-author に委譲）
 
@@ -131,6 +134,8 @@ prompt: |
 skill-author の完了後、シンボリックリンクを作成して確認する。
 
 ```bash
+# 既存のディレクトリ・symlink（壊れた symlink を含む）があれば中止する。存在するまま ln -s すると内側へリンクが作られる
+if [ -e ".claude/skills/<skill-name>" ] || [ -L ".claude/skills/<skill-name>" ]; then echo "中止: .claude/skills/<skill-name> が既に存在する"; exit 1; fi
 ln -s "../../skills/<skill-name>" ".claude/skills/<skill-name>"
 ls -la ".claude/skills/<skill-name>"
 ```
