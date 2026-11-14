@@ -71,6 +71,8 @@
 | 完了待ち | 設定した長さが終わるのを待たない | S67（減衰が収まるのを待たない） |
 | 開閉時の扱い | 開いたらフォーカスを閉じるボタンへ移し、背景を操作対象から外す。Escape で閉じ、閉じたら開いたボタンへ戻す。`role="dialog"` と `aria-modal` を付ける | 本 skill の実装の目安（出典なし。台帳に根拠となる原文は無い） |
 | 中断された操作 | ポインターの操作が中断（pointercancel）されたら、離したときと同じ扱いで位置を決める | 本 skill の実装の目安（出典なし） |
+| 設定が途中で変わったとき | 動きを減らす設定が、移動中・ドラッグ中に有効になったら、実行中のフレームを止め、ドラッグを中断してキャプチャを解放し、現在の開閉状態の最終位置へ切り替える（ドラッグ中でも投影位置では決めず、現在の状態を維持）。閉じている状態は、フェードで消えてから位置を戻す | S55（移動をフェードに置き換える）。設定の変更を受け取る実装は本 skill の目安（出典なし）。判定の API は S73 |
+| ポインターの入力 | 最初のポインターと主ボタンだけを受け付ける。2 本目の指・別のポインターの move と up は無視する。Escape や閉じるボタンが押されたらドラッグを中断する | 本 skill の実装の目安（出典なし） |
 | つまみの面 | 24 px 以上。閉じるボタン（44 px 以上）を別経路として置く | 24 x 24 CSS px は S72（2.5.8）、44 は S57。ジェスチャーに別経路を置く考え方は S25、S55 |
 | 動きを減らす設定での閉じ方 | フェードで消えてから位置を戻す。0.15 s。ドラッグによる移動は止め、つまみは操作対象にしない（閉じるボタンが別経路） | S55（移動をフェードに置き換える）。0.15 s は本 skill の目安（出典なし） |
 | 離す前の静止 | 最後の移動から 80 ms を超えて静止してから離したら、速度を 0 として開閉を決める | 本 skill の目安（出典なし）。古い速度で閉じる誤りを防ぐ |
@@ -152,9 +154,15 @@ function setOpen(open) {                  // 背景の操作を止め、フォ�
   isOpen = open; sheet.inert = !open; page.inert = open;
   (open ? closeBtn : openBtn).focus({ preventScroll: true });
 }
+function endDrag() {                      // ドラッグを中断し、ポインターキャプチャを解放する
+  if (!drag) return;
+  try { grab.releasePointerCapture(drag.id); } catch (err) { /* 既に解放されている */ }
+  drag = null;
+}
 function go(to, zeta) {
   const open = (to === 0);
-  clearTimeout(fade); setOpen(open); sheet.classList.toggle('shown', open);
+  endDrag(); clearTimeout(fade);          // Escape や閉じるボタンがドラッグ中に押されても、ドラッグを残さない
+  setOpen(open); sheet.classList.toggle('shown', open);
   target = to; tune(zeta, 0.35);
   if (reduce.matches) {                   // 移動の代わりにフェード（CSS 側）。閉じるときは消えてから位置を戻す
     cancelAnimationFrame(raf); raf = 0; v = 0;
@@ -163,22 +171,31 @@ function go(to, zeta) {
   }
   last = performance.now(); if (!raf) raf = requestAnimationFrame(step);
 }
+function settle() {                       // 移動中・ドラッグ中に「動きを減らす」が有効になったとき
+  cancelAnimationFrame(raf); raf = 0; v = 0;
+  endDrag(); clearTimeout(fade);          // ドラッグ中だった場合、開閉は投影位置で決めず、現在の状態（isOpen）を維持する
+  sheet.classList.toggle('shown', isOpen);
+  if (isOpen) { y = 0; draw(); }          // 開いている状態の最終位置へ（移動は伴わない）
+  else { fade = setTimeout(() => { y = CLOSED; draw(); }, 150); }   // 閉じている状態は、フェードで消えてから位置を戻す
+}
+reduce.addEventListener('change', () => { if (reduce.matches) settle(); });
 openBtn.addEventListener('click', () => go(0, 1));      // 弾まない
 closeBtn.addEventListener('click', () => go(CLOSED, 1));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen) go(CLOSED, 1); });
 
 grab.addEventListener('pointerdown', (e) => {
-  if (reduce.matches) return;             // 動きを減らす設定ではドラッグで動かさない（閉じるボタンが別経路）
+  // 動きを減らす設定・二重の pointerdown（2 本目の指）・主ボタン以外は無視する（閉じるボタンが別経路）
+  if (reduce.matches || drag || !e.isPrimary || e.button !== 0) return;
   grab.setPointerCapture(e.pointerId);
-  drag = { dy: e.clientY - y, py: e.clientY, pt: e.timeStamp };
+  drag = { id: e.pointerId, dy: e.clientY - y, py: e.clientY, pt: e.timeStamp };
   v = 0; cancelAnimationFrame(raf); raf = 0; });
-grab.addEventListener('pointermove', (e) => { if (!drag) return;
+grab.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return;
   y = Math.min(Math.max(e.clientY - drag.dy, 0), CLOSED); draw();
   v = (e.clientY - drag.py) / Math.max((e.timeStamp - drag.pt) / 1000, 0.001);
   drag.py = e.clientY; drag.pt = e.timeStamp; });
-function release(e) { if (!drag) return;
+function release(e) { if (!drag || e.pointerId !== drag.id) return;
   if (e.timeStamp - drag.pt > STILL) v = 0;            // 止まってから離したら、古い速度を使わない
-  drag = null;
+  endDrag();
   go(y + v * 0.2 > CLOSED / 2 ? CLOSED : 0, 0.8); }   // 離した速度から投影し、少し弾ませる
 grab.addEventListener('pointerup', release);
 grab.addEventListener('pointercancel', release);      // 中断された場合も、離したときと同じ扱い（投影位置で開閉を決める）
