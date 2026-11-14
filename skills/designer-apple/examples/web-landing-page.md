@@ -171,8 +171,9 @@ a:link, a:visited { color: var(--accent); }
 .site-header, .hero, .site-footer {
   box-sizing: border-box; max-width: calc(var(--w) + 3rem); margin: 0 auto; padding-inline: 1.5rem;
 }
-.site-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.5rem; }
-nav { display: flex; gap: 0.25rem; }
+.site-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 1rem; padding-block: 0.5rem; }
+nav { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.brand, nav a { white-space: nowrap; }                /* 文字 200% でも 1 文字ずつ折り返さない。幅が足りなければ行ごと折り返す */
 
 .hero { padding-block: clamp(4rem, 10vw, 8rem); }
 h1 { font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.25; font-weight: 700; margin: 0 0 1rem;
@@ -186,8 +187,8 @@ h1 { font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.25; font-weight: 700; 
 h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); line-height: 1.3; font-weight: 700; margin-block: 0 1.5rem; }
 h3 { font-size: 1.0625rem; line-height: 1.4; font-weight: 600; margin: 0 0 0.25rem; }
 .steps { list-style: none; margin-block: 0; padding: 0; counter-reset: step;
-         display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.5rem 2rem; }
-.steps li { counter-increment: step; }
+         display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1.5rem 2rem; }
+.steps li { counter-increment: step; }   /* 列の最小幅は min(100%, 14rem)。文字 200% や幅 320 CSS px でも横にあふれない */
 .steps li::before { content: counter(step); display: inline-flex; align-items: center; justify-content: center;
   width: 2rem; height: 2rem; margin-bottom: 0.5rem; border-radius: 50%;
   background: var(--accent); color: var(--on-accent); font-weight: 700; }

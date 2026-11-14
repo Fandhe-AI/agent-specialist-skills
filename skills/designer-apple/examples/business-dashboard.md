@@ -170,7 +170,7 @@ h1 { font-size: 22px; line-height: 28px; font-weight: 700; margin: 0 0 8px; }   
 .meta { color: var(--text-2); font-size: 13px; line-height: 18px; margin: 0 0 16px; }
 .btn { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0 12px;
   color: var(--accent); text-decoration: underline; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 0 0 16px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 12px; margin: 0 0 16px; }
 .kpis div, .card { background: var(--surface); border-radius: 12px; padding: 16px; margin: 0 0 12px; }
 dt { font-size: 13px; line-height: 18px; color: var(--text-2); }
 dd { margin: 4px 0 0; font-size: 34px; line-height: 41px; font-weight: 700; }
