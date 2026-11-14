@@ -72,7 +72,8 @@
 | 開閉時の扱い | 開いたらフォーカスを閉じるボタンへ移し、背景を操作対象から外す。Escape で閉じ、閉じたら開いたボタンへ戻す。`role="dialog"` と `aria-modal` を付ける | 本 skill の実装の目安（出典なし。台帳に根拠となる原文は無い） |
 | 中断された操作 | ポインターの操作が中断（pointercancel）されたら、離したときと同じ扱いで位置を決める | 本 skill の実装の目安（出典なし） |
 | つまみの面 | 24 px 以上。閉じるボタン（44 px 以上）を別経路として置く | 24 x 24 CSS px は S72（2.5.8）、44 は S57。ジェスチャーに別経路を置く考え方は S25、S55 |
-| 動きを減らす設定での閉じ方 | フェードで消えてから位置を戻す。0.15 s | S55（移動をフェードに置き換える）。0.15 s は本 skill の目安（出典なし） |
+| 動きを減らす設定での閉じ方 | フェードで消えてから位置を戻す。0.15 s。ドラッグによる移動は止め、つまみは操作対象にしない（閉じるボタンが別経路） | S55（移動をフェードに置き換える）。0.15 s は本 skill の目安（出典なし） |
+| 離す前の静止 | 最後の移動から 80 ms を超えて静止してから離したら、速度を 0 として開閉を決める | 本 skill の目安（出典なし）。古い速度で閉じる誤りを防ぐ |
 | 直線的な動き | 回転する読み込み指標のような場面だけ | 直線の動きは特殊な道具で、移動には慎重に（S67） |
 | 動きを減らす設定 | 移動・拡大縮小・周辺の動きを減らし、フェードに置き換え、弾みを抑える | S55。Web の判定は `prefers-reduced-motion`（S73） |
 | 自動の動き | 5 秒を超えて自動で始まる動きには停止手段 | S72（2.2.2）。秒数はそこで定義された値 |
@@ -132,6 +133,7 @@ const closeBtn = document.getElementById('close');
 const grab = document.getElementById('grab');
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 const CLOSED = 400;                       // シートを画面外に置く位置（px）
+const STILL = 80;                         // ms。これ以上静止してから離したら速度を 0 にする。本 skill の目安（出典なし）
 let y = CLOSED, v = 0, target = CLOSED, last = 0, raf = 0, fade = 0;
 let k = 0, c = 0, isOpen = false, drag = null;
 function tune(zeta, response) {           // 本 skill の実装例。response = 固有周期（s）として扱う
@@ -166,14 +168,17 @@ closeBtn.addEventListener('click', () => go(CLOSED, 1));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen) go(CLOSED, 1); });
 
 grab.addEventListener('pointerdown', (e) => {
+  if (reduce.matches) return;             // 動きを減らす設定ではドラッグで動かさない（閉じるボタンが別経路）
   grab.setPointerCapture(e.pointerId);
   drag = { dy: e.clientY - y, py: e.clientY, pt: e.timeStamp };
-  cancelAnimationFrame(raf); raf = 0; });
+  v = 0; cancelAnimationFrame(raf); raf = 0; });
 grab.addEventListener('pointermove', (e) => { if (!drag) return;
   y = Math.min(Math.max(e.clientY - drag.dy, 0), CLOSED); draw();
   v = (e.clientY - drag.py) / Math.max((e.timeStamp - drag.pt) / 1000, 0.001);
   drag.py = e.clientY; drag.pt = e.timeStamp; });
-function release() { if (!drag) return; drag = null;
+function release(e) { if (!drag) return;
+  if (e.timeStamp - drag.pt > STILL) v = 0;            // 止まってから離したら、古い速度を使わない
+  drag = null;
   go(y + v * 0.2 > CLOSED / 2 ? CLOSED : 0, 0.8); }   // 離した速度から投影し、少し弾ませる
 grab.addEventListener('pointerup', release);
 grab.addEventListener('pointercancel', release);      // 中断された場合も、離したときと同じ扱い（投影位置で開閉を決める）
@@ -230,6 +235,7 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 16px; }  
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
   .sheet { opacity: 0; transition: opacity 0.15s; }    /* 移動の代わりにフェード */
+  .grab { pointer-events: none; cursor: default; }     /* ドラッグで動かさない。つまみは操作対象にしない */
   .sheet.shown { opacity: 1; }
 }
 ```
@@ -246,9 +252,9 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 16px; }  
 
 ## 点検
 
-- アクセシビリティ: 動きを減らす設定で移動が消え、開くときも閉じるときもフェードだけになる。閉じる手段がジェスチャーだけでない。開いたシートへフォーカスが移り、Escape で閉じ、閉じたら元のボタンへ戻る。シートが閉じている間と、開いている間の背景は操作の対象外にする。1 秒に 3 回を超える点滅が無い（S55、S72）
+- アクセシビリティ: 動きを減らす設定で移動が消え、開くときも閉じるときもフェードだけになる。閉じる手段がジェスチャーだけでない。動きを減らす設定ではつまみで動かせない。開いたシートへフォーカスが移り、Escape で閉じ、閉じたら元のボタンへ戻る。シートが閉じている間と、開いている間の背景は操作の対象外にする。1 秒に 3 回を超える点滅が無い（S55、S72）
 - 可読性: 4 通りの配色で上の比率を満たす。動いている最中も文字が読める
-- やり直し: 開く途中・閉じる途中のどちらでも、次の操作で向きを変えられ、位置が飛ばない。押しっぱなしで画面が固まらない（S68）
+- やり直し: 開く途中・閉じる途中のどちらでも、次の操作で向きを変えられ、位置が飛ばない。素早く動かしたあと止めてから離したときは、古い速度で閉じない。押しっぱなしで画面が固まらない（S68）
 - 失敗パターン: 全てに弾みを付けていないか（約 0.4 超は誇張。S67）。待たせる動きが無いか。動きが落ちたフレームを隠していないか。遅い読み込みや落ちたフレームは、理由を言えなくても体験を悪くする（S70）
 - 推測の明示: 0.35 s・0.2 s・0.1 s・0.15 s は本 skill の目安で、実機の手触りで調整する。端末の性能・ブラウザの実装で結果が変わる
 

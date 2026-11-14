@@ -120,9 +120,9 @@
       <line class="goal" x1="48" y1="88" x2="464" y2="88" stroke-dasharray="6 4"/>
       <text class="tick end" x="464" y="80">目標 25 件</text>
       <line class="axis" x1="48" y1="200" x2="464" y2="200"/>
-      <text class="tick" x="40" y="204" text-anchor="end">0</text>
-      <text class="tick" x="40" y="114" text-anchor="end">20</text>
-      <text class="tick" x="40" y="24" text-anchor="end">40</text>
+      <text class="tick tick-y" x="40" y="204">0</text>
+      <text class="tick tick-y" x="40" y="114">20</text>
+      <text class="tick tick-y" x="40" y="24">40</text>
       <rect class="bar" x="72" y="38" width="56" height="162"/><text class="val" x="100" y="58">36</text>
       <rect class="bar" x="168" y="65" width="56" height="135"/><text class="val" x="196" y="85">30</text>
       <rect class="bar" x="264" y="92" width="56" height="108"/><text class="val" x="292" y="112">24</text>
@@ -180,7 +180,7 @@ svg { width: 100%; height: auto; }
 .bar { fill: var(--accent); }
 .val { fill: var(--on-accent); font-size: 14px; font-weight: 700; text-anchor: middle; }
 .tick { fill: var(--text-2); font-size: 13px; text-anchor: middle; }
-.tick.end { text-anchor: end; }
+.tick.end, .tick-y { text-anchor: end; }              /* y 軸の目盛りと目標ラベルは右揃え（.tick の middle より後に置く） */
 summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 /* 動きは付けない。動きの宣言を書かないので、動きを減らす設定への分岐は不要 */

@@ -39,8 +39,8 @@ after:   +------------------------------+
          |                              |
          | [ 植物を追加 ]               |  主ボタン 1 つ
          +------------------------------+
-         ヒント（植物を追加した後に 1 度だけ・閉じられる）:
-         「水やり日は、植物を開いて変えられます」
+         ヒント（植物を追加した後の画面に 1 度だけ・閉じられる。画面には [ 水やり日を変更 ] がある）:
+         「水やり日は「水やり日を変更」から変えられます」
 ```
 
 - 設定・通知・登録は、必要になった場面で 1 つずつ出す。例: 水やりのリマインダーを設定した瞬間に、通知の許可を尋ねる（S78）
@@ -75,7 +75,7 @@ HIG Onboarding は、速く・楽しく・任意の導入を求める（S16）�
 | ボタン文字 / アクセント | 6.39 | 9.41 | 9.81 | 13.50 |
 | 本文色 / 面（ヒントの面） | 15.40 | 15.17 | 19.26 | 18.69 |
 | アクセント / 面（ヒントの「閉じる」） | 5.86 | 8.12 | 9.00 | 12.02 |
-| アクセント / 背景（非文字。フォーカスの輪） | 6.39 | 8.95 | 9.81 | 13.50 |
+| アクセント / 背景（副ボタンの文字と枠、フォーカスの輪） | 6.39 | 8.95 | 9.81 | 13.50 |
 
 ## 文言
 
@@ -85,7 +85,7 @@ HIG Onboarding は、速く・楽しく・任意の導入を求める（S16）�
 | 説明 | ミズヤリは AI が水やりを最適化する革新的なアプリです | 植物を 1 つ追加すると、次の水やり日をお知らせします。 | 機能の自慢でなく、次の 1 手と得られるものを言う |
 | 主ボタン | はじめましょう | 植物を追加 | ボタンは動詞で始め、短く（S57、S58）。流れの開始に「Get Started」のような語を使う考えもある（S58） |
 | 通知の確認 | 通知を許可してください | 水やりの日にお知らせしますか？ お知らせする / 今はしない | 理由を、必要になった場面で言う。断っても使い続けられる（S78） |
-| ヒント | チュートリアルを見る | 水やり日は、植物を開いて変えられます | 長い導入でなく、文脈の近くの短いヒント（S78） |
+| ヒント | チュートリアルを見る | 水やり日は「水やり日を変更」から変えられます | 長い導入でなく、画面にある操作を指す短いヒント（S78） |
 | 完了 | 設定が完了しました！ | （出さない。次の水やり日を画面に出す） | 期待どおりに成功した操作は確認を省く（S61） |
 
 英語の原文（S78、HIG Onboarding）: "Prefer letting people experience your app or game before prompting them for ratings or purchases." 日本語は要旨で、体験の前に評価や購入を求めない。
@@ -108,8 +108,9 @@ HIG Onboarding は、速く・楽しく・任意の導入を求める（S16）�
 <section class="screen" aria-labelledby="plant-title">
   <h1 id="plant-title">モンステラ</h1>
   <p class="desc">次の水やり日は 6 月 9 日です。</p>
+  <button class="btn-sub" type="button">水やり日を変更</button>
   <div class="hint" role="status">
-    <span>水やり日は、植物を開いて変えられます</span>
+    <span>水やり日は「水やり日を変更」から変えられます</span>
     <button class="hint-close" type="button">閉じる</button>
   </div>
 </section>
@@ -144,6 +145,9 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 12px; }  
 .btn:active { filter: brightness(0.9); }           /* 押下状態 */
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
+.btn-sub { display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%;
+  min-height: 44px; border: 2px solid var(--accent); border-radius: 12px; background: none;
+  color: var(--accent); font-size: 17px; font-weight: 600; }   /* 目立たせない副の操作。主ボタンは 1 つの原則を保つ */
 .hint { display: flex; align-items: center; justify-content: space-between; gap: 12px;
   margin-top: 16px; padding: 4px 4px 4px 12px; background: var(--surface); border-radius: 12px;
   font-size: 13px; line-height: 18px; animation: hint-in 0.2s ease-out; }
