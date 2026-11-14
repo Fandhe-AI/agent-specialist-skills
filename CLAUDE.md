@@ -63,6 +63,9 @@ skills/                               -- スキル本体（各ディレクトリ
   skills/
     init-claude-specialist            -- ../../skills/init-claude-specialist への symlink
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
+    create-agent/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に Agent 雛形・配布対象外）
+    create-skill/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に SKILL 雛形・配布対象外）
+    update-skill/                     -- リポジトリ管理スキル（実ディレクトリ、既存スキルの改訂 check / apply・配布対象外）
   settings.json                       -- hooks 設定（SessionStart リマインダー）
   settings.local.json                 -- ローカル権限設定（git 管理対象外）
 skills-lock.json                      -- vendored スキルの台帳（source: Fandhe-AI/agent-cli-skills・agent-reference-skills）
@@ -167,6 +170,14 @@ downstream リポジトリの CLAUDE.md に記載される）。
 今後追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
 
+### リポジトリ管理スキル（.claude/skills/ に配置・配布対象外）
+
+| スキル | 説明 |
+|--------|------|
+| create-skill | 新規スキルを skills/<name>/SKILL.md として scaffold。スペシャリスト skill（既定）と手順型に対応し、symlink・品質チェックまで行う |
+| create-agent | `.claude/agents/<category>/<name>.md` を scaffold。カテゴリ選定・tools 最小権限・dotclaude-via-temp 経由の配置・frontmatter 検証まで行う |
+| update-skill | 既存スキル（主にスペシャリスト skill）を改訂する。check で差分レポート、apply で承認済みの改訂を適用 |
+
 ## Conventions
 
 ### Conventional Commits
@@ -204,7 +215,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 
 ## Skill Anatomy
 
-各スキルは `skills/<name>/SKILL.md` に YAML frontmatter + 手順を記述する。`.claude/skills/` からシンボリックリンクで参照される。
+各スキルは `skills/<name>/SKILL.md` に YAML frontmatter + 手順を記述する。`.claude/skills/` からシンボリックリンクで参照される。ただし配布しないリポジトリ管理スキル（create-skill / update-skill / create-agent）は `.claude/skills/<name>/` に実ディレクトリとして置く。
 
 ```yaml
 ---
@@ -217,7 +228,7 @@ description: <one-line description>
 
 ## Adding a New Skill
 
-1. `create-skill` スキルを呼び出す（scaffold・symlink・update-docs まで自動化）。
+1. `create-skill` スキルを呼び出す（scaffold・symlink・品質チェックまで自動化し、update-docs を案内）。
    または手動で行う場合:
    1. `skills/<name>/SKILL.md` を作成（frontmatter + 手順）
    2. `.claude/skills/<name>` にシンボリックリンクを作成:
@@ -226,15 +237,25 @@ description: <one-line description>
 
 ## Adding a New Specialist Skill
 
-1. `skills/<name>/SKILL.md` を作成する。`.claude/rules/specialist-authoring.md` の規約
-   （`specialist: true` 必須・ペルソナ→専門領域→回答スタイル→知識体系→注意点の構成・
-   誠実性の原則）に従う。著作の見本は
-   `skills/init-claude-specialist/sample/specialist-skill-example.md` を参照
-2. `.claude/skills/<name>` にシンボリックリンクを作成:
-   `ln -s ../../skills/<name> .claude/skills/<name>`
-3. `update-docs` スキルで CLAUDE.md の Current Skills（スペシャリスト節）を更新
-4. downstream リポジトリでは `npx skills add Fandhe-AI/agent-specialist-skills` で再導入後、
+1. `create-skill` スキルを呼び出す（既定でスペシャリスト skill を scaffold。symlink・品質チェックまで自動化し、update-docs を案内）。
+   または手動で行う場合:
+   1. `skills/<name>/SKILL.md` を作成する。`.claude/rules/specialist-authoring.md` の規約
+      （`specialist: true` 必須・ペルソナ→専門領域→回答スタイル→知識体系→注意点の構成・
+      誠実性の原則）に従う。著作の見本は
+      `skills/init-claude-specialist/sample/specialist-skill-example.md` を参照
+   2. `.claude/skills/<name>` にシンボリックリンクを作成:
+      `ln -s ../../skills/<name> .claude/skills/<name>`
+   3. `update-docs` スキルで CLAUDE.md の Current Skills（スペシャリスト節）を更新
+2. downstream リポジトリでは `npx skills add Fandhe-AI/agent-specialist-skills` で再導入後、
    `init-claude-specialist` を再実行すると新しいスペシャリスト skill 用の sub-agent が生える
+
+## Updating a Skill
+
+既存スキルの改訂は `update-skill` スキルで行う。
+
+1. `/update-skill <name> check` で差分レポートを出す（既定の mode。ファイルは変更しない）
+2. `/update-skill <name> apply` で承認済みの改訂を適用する（改訂内容を続けて渡すこともできる）
+3. downstream への反映: 本文のみの改訂は、downstream で `npx skills add Fandhe-AI/agent-specialist-skills` を再実行すれば反映される。スキルのディレクトリ名（= `name`）・`specialist`・`specialist-model`・`specialist-effort`・`description` を変えた場合は、再導入に加えて `init-claude-specialist` を再実行する（生成済み agent の model・effort・description が古いままになるため）。ディレクトリ名の変更や `specialist: true` の削除では downstream の旧 agent・委譲 rule の行が残るため、手動で削除する
 
 ## Adding a New Agent
 
