@@ -1,6 +1,6 @@
 # designer-material 出典台帳
 
-`SKILL.md` と `design-history.md`（デザイン史）が根拠とした出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。本文から S 番号で参照され、通読せず番号で検索して使う。S01 から S91 までは、Material の歴史（S01〜S13）、現行の M3・Android（S14〜S33）、Material 3 Expressive（S34〜S43）、批判（S44〜S47）、デザインシステム論と運用（S48〜S64）、トークン（S65〜S71）、他の公開デザインシステムと基準（S72〜S85）、歴史（S86〜S91）の順に並ぶ。S92 は欠番（末尾の「区分ごとの件数」を参照）。番号は台帳の中で振り直さない。
+`SKILL.md` と `design-history.md`（デザイン史）が根拠とした出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。本文から S 番号で参照され、通読せず番号で検索して使う。S01 から S91 までは、Material の歴史（S01〜S13）、現行の M3・Android（S14〜S33）、Material 3 Expressive（S34〜S43）、批判（S44〜S47）、デザインシステム論と運用（S48〜S64）、トークン（S65〜S71）、他の公開デザインシステムと基準（S72〜S85）、歴史（S86〜S91）の順に並ぶ。S92 は欠番（末尾の「区分ごとの件数」を参照）。S93 から S102 は、2026-11-16 に足した出典で、トークンと理由を 1 ファイルに持つ形式（S93・S94）、DTCG の色（S95）、CSS の色の機能（S96〜S99）、制作の進め方（S100〜S102）の順に並ぶ。番号は台帳の中で振り直さない。
 
 ## 凡例
 
@@ -13,11 +13,11 @@
 - 研究・調査の結果の扱い: Material 3 Expressive の研究（S34〜S39）は、Google Design のブログ本文と CHI ’26 論文の要旨だけを取得した。**原論文（本文・統計の詳細）は未取得**である。研究の結果を本文で使うときは「原論文未取得」「Google の自己報告」と明記する。デザインシステムの調査（S58）も自己評価の分布で、客観指標ではない
 - 照合の方法（台帳作成時の照合手順。利用時に再実行する必要はない）: URL を `curl -sL -A "Mozilla/5.0"` で取得し、`script` と `style` を除去、タグを空白に置換、HTML エンティティを解除、空白を 1 つに正規化した本文に対し、引用の特徴的な部分文字列（20 文字以上）を `grep -F` で探した。加えて、区分を問わず全引用の全文を、空白を除いた形で本文と突き合わせた。URL が `raw.githubusercontent.com` の Markdown は、タグ除去をせず空白の正規化のみで照合した。自動要約の出力は照合の根拠にしていない
 - 引用量の方針: 引用は本文の根拠の照合に要る最小限の短い文に限り、記事・仕様の本文を通して転載しない。表は根拠に使う行だけを引く
-- 引用の追記: 本文で S 番号を付けて書く事実・年・数値は、その出典の引用ブロックに逐語で含まれるものに限る。備考にしか無い事柄を S 番号で裏づけない。必要な行が引用ブロックに無いときは、既存出典の URL を取り直し、逐語であることを確かめてから引用ブロックへ行を追加した（新しい出典は足していない）。備考で「N 番目の引用」と書くのは、その出典の引用ブロックの N 番目のブロック
+- 引用の追記: 本文で S 番号を付けて書く事実・年・数値は、その出典の引用ブロックに逐語で含まれるものに限る。備考にしか無い事柄を S 番号で裏づけない。必要な行が引用ブロックに無いときは、既存出典の URL を取り直し、逐語であることを確かめてから引用ブロックへ行を追加した（S01〜S91 については、新しい出典は足していない。S93〜S102 は 2026-11-16 に足した新しい出典）。備考で「N 番目の引用」と書くのは、その出典の引用ブロックの N 番目のブロック
 - 日付の欄: 「媒体・日付」の日付は、その出典自体の公開日・版の日付である。引用に年が書かれていない出来事の年（例: ある仕様の発表年）の根拠には使わない。Wayback Machine の保存コピーの日付は公開日ではない
 - 日本語の訳・要旨・備考は本 skill の言葉であり、発言者本人の発言ではない
 - 引用文は英語原文の語句を改変していない。見出しや表のセルは、本文取得の都合で空白でつないだ形（例: 「Useful There is evidence…」「Not successful 4 % Slightly successful 19 %…」）で出る。HTML のタグ境界で入る空白（「word ,」の形）だけ、句読点の前で詰めた
-- 取得日は、出典ごとに最後に本文を確認した日（すべて 2026-11-15）。Wayback Machine の保存コピーを使った出典は、保存コピーの本文を照合した
+- 取得日は、出典ごとに最後に本文を確認した日（S01〜S91 は 2026-11-15、S93〜S102 は 2026-11-16）。Wayback Machine の保存コピーを使った出典は、保存コピーの本文を照合した
 - 数値（dp・sp・px・比率・人数・件数・%）は、区分 A で原文を確認できたものだけを「出典あり」として扱う。原文に無い値は「本 skill の目安（出典なし）」と明記して使う
 
 ## 帰属上の注意
@@ -34,6 +34,8 @@
 - Metro と flat 化の年は出典どうしで合わない（S87 と S88。`design-history.md` の「年が食い違う出典」を参照）
 - CC BY-NC-ND など転載・翻訳を禁じるライセンスの本文は、今回取得した出典には確認していない。確認した範囲では、すべて短い引用にとどめている
 - S18・S21・S22 は material-components-android リポジトリの docs の Markdown。取得した 3 ファイルの本文にライセンスの表示は無かった。同リポジトリ直下の LICENSE は Apache License 2.0（2026-11-15 に取得して確認）。この LICENSE が docs の個別ファイルに及ぶかは確認していない（未確認）
+- S93・S94 は DESIGN.md の形式の README と仕様で、版は alpha（変わりうる）。作者側の文書で、形式の普及度・採用例は取得していない。README は DTCG を「W3C Design Token Format」と呼ぶが、DTCG は W3C 標準ではない（S69）。S93 の備考のとおり、DTCG への書き出しは実行しておらず、出力は未検証。実在のサイトから抽出した DESIGN.md を扱う方法は、取得した 2 文書に書かれていない（本 skill の「勧めない」は本 skill の整理）
+- S101 は AI の提供元の設計指針の文書で、規則ではない。取得時点（2026-11-16）の記述で、書き換わりうる
 - 回想（S09）は当事者の主観を含む。Google の「100 万製品」などの数字は本人の記述で、独立の集計ではない
 - Matias Duarte の発言のうち、直接取得できたのは S12（9to5Google の取材記事）のみ。2014 年の基調講演・インタビューの発言は取得しておらず、末尾の「未検証・伝聞」にある
 
@@ -966,7 +968,7 @@
 - URL: https://www.designtokens.org/tr/2025.10/format/
 - 取得日: 2026-11-15
 - 検証区分: A
-- 備考: エイリアス（他トークンへの参照）、メディアタイプ application/design-tokens+json、拡張子 .tokens / .tokens.json。2・3 番目の引用は、$value を持つオブジェクトがトークンで、親の key がトークン名になるという規則（仕様本文の例では "$type" と "$value" を持つ JSON として書かれる）。6 番目の引用は、波括弧の参照（`{group.token}` の形）が参照先の `$value` に解決されること。7 番目の引用は dimension の値が数値と単位（"px" か "rem"）を持つオブジェクトであること（原文は "px" と "rem" をコード書式で囲む。引用はその書式を外して空白を詰めた）。8 番目の引用は、色の最小例を仕様自身が文章にしたもので、色の値が色空間と成分の配列を持つこと。成分の範囲や hex の扱いは Color module の文面で、未転記（仕様の例には hex を併記したものがある）。9 番目の引用は、グループに置いた $type が、その下のトークンの型として継承されること。10 番目の引用は、グループの $description が任意の文字列であること（仕様のグループの項目表の 1 行）。
+- 備考: エイリアス（他トークンへの参照）、メディアタイプ application/design-tokens+json、拡張子 .tokens / .tokens.json。2・3 番目の引用は、$value を持つオブジェクトがトークンで、親の key がトークン名になるという規則（仕様本文の例では "$type" と "$value" を持つ JSON として書かれる）。6 番目の引用は、波括弧の参照（`{group.token}` の形）が参照先の `$value` に解決されること。7 番目の引用は dimension の値が数値と単位（"px" か "rem"）を持つオブジェクトであること（原文は "px" と "rem" をコード書式で囲む。引用はその書式を外して空白を詰めた）。8 番目の引用は、色の最小例を仕様自身が文章にしたもので、色の値が色空間と成分の配列を持つこと。成分の範囲や hex の扱いは Color module の文面で、S71 では未転記（S95 で転記した。仕様の例には hex を併記したものがある）。9 番目の引用は、グループに置いた $type が、その下のトークンの型として継承されること。10 番目の引用は、グループの $description が任意の文字列であること（仕様のグループの項目表の 1 行）。
 
 ### S72 GOV.UK「Government Design Principles」9. Be consistent, not uniform
 
@@ -1232,6 +1234,196 @@
 - 検証区分: R
 - 備考: 出版社の紹介文（Kholmatova 本人の文ではない）。書籍の逐語引用は載せない。要旨は「引用ではない参照」の節に別に書く。
 
+### S93 DESIGN.md の README（トークンと理由を 1 ファイルに持つ形式）
+
+> A DESIGN.md file combines machine-readable design tokens (YAML front matter or interleaved YAML code blocks) with human-readable design rationale (markdown prose). Tokens give agents exact values. Prose tells them *why* those values exist and how to apply them.
+
+> Any CSS color (hex, `rgb()`, `oklch()`, named, etc.)
+
+> Sections use `##` headings. They can be omitted, but those present must appear in this order:
+
+> | 1 | Overview | Brand & Style |
+
+> | 2 | Colors | |
+
+> | 8 | Do's and Don'ts | |
+
+> DESIGN.md tokens are inspired by the [W3C Design Token Format](https://www.designtokens.org/).
+
+> | `dtcg` | JSON | W3C Design Tokens Format Module |
+
+> Export DESIGN.md tokens to other formats.
+
+> npx @google/design.md export --format dtcg DESIGN.md > tokens.json
+
+> The DESIGN.md format is at version `alpha`. The spec, token schema, and CLI are under active development. Expect changes to the format as it matures.
+
+- 媒体・日付: GitHub リポジトリ google-labs-code/design.md の README（コミット 6e5da53、2026-10-16。リポジトリの homepage 欄は Stitch の文書を指す）。形式の版は alpha
+- URL: https://raw.githubusercontent.com/google-labs-code/design.md/6e5da5382f41edbba9d73b2c62f33f32e9971f15/README.md
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 形式は、機械が読むトークン（YAML）と、人が読む理由（Markdown の散文）を 1 ファイルに持つ。引用の 2 番目は、トークンの型の表の「Color」の行（CSS の色なら `oklch()` も書ける）。3〜6 番目は、本文の `##` の見出し（Overview・Colors・Do's and Don'ts）と順序の規則（表の行の引用）。7 番目と 8 番目は、DTCG との関係。9 番目と 10 番目は、README の CLI の節「export」の説明文と、DTCG への書き出しのコマンド（8 番目の表の行は、書き出す形式の一覧）。README の CLI の節（lint・diff・export・spec）に、DTCG などから DESIGN.md へ取り込む命令は見つからなかった（節の見出しを検索した範囲）。README は DTCG を「W3C Design Token Format」と呼ぶが、DTCG の仕様は Final Community Group Report で W3C 標準ではない（S69）。本 skill は「W3C 標準」と書かない。URL は main ではなく、README を最後に変えたコミットに固定した。同じ本文を main でも確認した（2026-11-16）。形式は alpha で、変わりうる。DTCG への書き出しの機能を README は述べるが、本 skill は実行しておらず、出力は未検証
+
+### S94 DESIGN.md の仕様（docs/spec.md）
+
+> The tokens are the normative values; the prose provides context for how to apply them.
+
+> Specifically, we adopt the concept of typed token groups (colors, typography, spacing) and the `{path.to.token}` reference syntax for cross-referencing values.
+
+> A color value is any valid CSS color string.
+
+> Hex notation (`#RRGGBB`) remains the recommended default for simplicity and broad tooling support.
+
+> All color values are internally converted to sRGB for WCAG contrast checking.
+
+> A dimension value is a string with a unit suffix. Valid units are: px, em, rem.
+
+> For most token groups, the reference must point to a primitive value (e.g., `colors.primary-60`), not a group (e.g., `colors`).
+
+> This suppresses linter warnings for missing sections (e.g. colors, typography, spacing, rounded, components).
+
+> version: <string>          # optional, current version: "alpha"
+
+> name: <string>
+
+> description: <string>      # optional
+
+> placing document metadata like `name` and `description` in the front matter, while placing section tokens like `colors` and `typography` in fenced code blocks inside their respective sections.
+
+> The front matter block must begin with a line containing exactly `---` and end with a line containing exactly `---`.
+
+> The `<scale-level>` placeholder represents a named level in a sizing or spacing scale. Common level names include `xs`, `sm`, `md`, `lg`, `xl`, and `full`. Any descriptive string key is valid.
+
+> These tokens are easily converted from or to `tokens.json`, Figma variables, and Tailwind theme configs.
+
+- 媒体・日付: GitHub リポジトリ google-labs-code/design.md の docs/spec.md（コミット 6e5da53、2026-10-16。版は alpha）
+- URL: https://raw.githubusercontent.com/google-labs-code/design.md/6e5da5382f41edbba9d73b2c62f33f32e9971f15/docs/spec.md
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: トークンが規範の値で、散文が使い方の文脈、という役割分担（1 番目）。DTCG から借りたのは、型つきのトークンのグループと、波括弧の参照の書き方（2 番目）。色は CSS の色の文字列で、hex が推奨の既定（3・4 番目）。寸法は単位つきの文字列で、単位は px・em・rem（6 番目）。参照は、多くのグループで、グループでなく 1 つの値を指す（7 番目）。8 番目は、colors・typography・spacing・rounded・components が、トークンの節（グループ）の名前として並ぶ箇所。9〜11 番目は、先頭の YAML（front matter）のキー `version`・`name`・`description` の書き方（スキーマの行）。12 番目は、`name` と `description` を front matter に置く例の説明、13 番目は、front matter の区切り。14 番目は、余白などの段階の名前（`xs`・`sm` など）。「"1" のような数字だけのキーが descriptive にあたるか」は、取得した引用に無い（本 skill の推測）。15 番目は、トークンが tokens.json などと相互に変換しやすい、という文。変換の道具の有無・向きの詳細は書かれていない。仕様の `colors` の節は、色の名前から値への写像として書かれる。同じ `colors` の中で色が別の色を参照する書き方は、取得した範囲では確認できなかった。ライト・ダークなどの切り替えを表す項目も、取得した README と仕様の本文には見つからなかった（「dark」「theme」で検索。theme は、他形式への書き出しの説明にだけ出る）。URL は、仕様を最後に変えたコミットに固定した（S93 と同じ）。同じ本文を main でも確認した（2026-11-16）
+
+### S95 Design Tokens Color Module 2025.10
+
+> colorSpace (required): A string that specifies the color space or color model.
+
+> components (required): An array representing the color components.
+
+> alpha (optional): A number that represents the alpha value of the color.
+
+> If omitted, the alpha value of the color MUST be assumed to be 1 (fully opaque).
+
+> hex (optional): A string that represents a fallback value of the color. The fallback color MUST be formatted in 6 digit CSS hex color notation format to avoid conflicts with the provided alpha value.
+
+> sRGB "srgb" Red [0 - 1] Green [0 - 1] Blue [0 - 1]
+
+> L: A number between 0 and 1 representing the lightness of the color.
+
+> Hue: A number from 0 up to (but not including) 360 representing the angle of the color on the color wheel.
+
+> OKLCH "oklch" Lightness [0 - 1] Chroma [0 - Infinity] ‡ Hue [0 - 360)
+
+> [L, Chroma, Hue]
+
+> the minimum value of Chroma is 0, which represents a neutral color (gray), and its maximum is theoretically unbounded, but in practice doesn't exceed 0.5.
+
+- 媒体・日付: 2025-10-28（Final Community Group Report）
+- URL: https://www.designtokens.org/tr/2025.10/color/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 色のトークンの値のキー（`colorSpace`・`components`・`alpha`・`hex`）と、sRGB と OKLCH の成分の範囲の根拠。OKLCH の識別子は `"oklch"`（9 番目の引用）で、成分は [明度, 彩度, 色相] の順（10 番目）。明度は 0〜1（7 番目。CSS の `oklch()` の百分率とは書き方が違う）。彩度は 0 以上で上限なし（9 番目）。11 番目の引用の注は、実際には 0.5 を超えないと書く。DTCG の仕様は W3C 標準ではない（S69）。S71 の Format モジュールと対になる
+
+### S96 MDN「light-dark()」
+
+> The light-dark() CSS function accepts two colors or two images and returns a color or an image based on the active color scheme, without needing a prefers-color-scheme media feature.
+
+> The light-dark() function returns the first value if the used color scheme is light or if no preference is set and the second value if the used color scheme is dark.
+
+> To enable support for the light-dark() color function, the color-scheme must have a value of light dark
+
+> Baseline 2024 Newly available Since May 2024, this feature works across the latest devices and browser versions. This feature might not work in older devices or browsers.
+
+- 媒体・日付: MDN Web Docs、取得時点
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 1 つの宣言に、ライトの色とダークの色を並べて書ける。`color-scheme` に `light dark` を指定する必要がある（3 番目）。4 番目の引用は、対応状況の時点情報（Baseline の「Newly available」の表示）。古い環境では動かないことがある、と同ページが書く
+
+### S97 MDN「color-scheme」
+
+> The color-scheme CSS property allows an element to indicate which color schemes it can comfortably be rendered in.
+
+> User agents change the following aspects of the UI chrome to match the used color scheme: The color of the canvas surface. The default colors of scrollbars and other interaction UI. The default colors of form controls.
+
+> It’s been available across browsers since January 2022.
+
+- 媒体・日付: MDN Web Docs、取得時点
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/color-scheme
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: `color-scheme` は、ブラウザーが出す部品（スクロールバー・フォーム部品の既定色など）の配色も、使う配色に合わせる。`light-dark()` の前提（S96）になる。3 番目の引用は対応状況の時点情報（Baseline の「Widely available」の表示）
+
+### S98 MDN「oklch()」
+
+> The oklch() functional notation expresses a given color in the Oklab color space.
+
+> oklch() is the cylindrical form of oklab(), using the same L axis, but with polar Chroma (C) and Hue (h) coordinates.
+
+> oklch(40.1% 0.123 21.57)
+
+> It’s been available across browsers since May 2023.
+
+- 媒体・日付: MDN Web Docs、取得時点
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/oklch
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: `oklch()` は、明度（L）・彩度（C）・色相（h）で色を書く関数（2 番目の引用。MDN ページのメタ情報（`og:` の説明文）では「(C)」「(h)」と空白なしで書かれ、本文では HTML のタグ境界で空白が入る）。3 番目の引用は、同ページの構文の例（明度を百分率で書く形）。4 番目の引用は対応状況の時点情報（Baseline の「Widely available」の表示）。同ページは「一部の機能は対応の程度が違いうる」とも書く（相対色などの細部は本 skill では扱わない）
+
+### S99 MDN「@supports」
+
+> The @supports CSS at-rule lets you specify CSS declarations that depend on a browser's support for CSS features.
+
+> Using this at-rule is commonly called a feature query.
+
+> It’s been available across browsers since September 2015.
+
+- 媒体・日付: MDN Web Docs、取得時点
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@supports
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: ブラウザーが CSS の構文・プロパティ・値に対応しているかで宣言を分ける仕組み。表示装置や利用者の設定（配色・動き）の判定は `@media` の役割で、`@supports` では判定できない（本 skill の整理）。3 番目の引用は対応状況の時点情報（Baseline の「Widely available」の表示）
+
+### S100 GOV.UK（Service Manual）
+
+> Before you start your research, you’ll need to interrogate that solution and reframe it as a problem to be solved.
+
+- 媒体・日付: How the discovery phase works（Service Manual、2016-08-04 公開・2021-06-21 更新）
+- URL: https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 「解決策を渡されたら問題に戻す」。依頼の受け方・問いの立て方の根拠
+
+### S101 AI の提供元の公開文書「frontend-design」（制作の進め方）
+
+> Then review that plan against the brief before building: if any part of it reads like the generic default you would produce for any similar page (work through a similar prompt to see if you arrive somewhere similar) rather than a choice made for this specific brief — revise that part, say what you changed and why.
+
+> Build to a quality floor without announcing it: responsive down to mobile, visible keyboard focus, reduced motion respected, visually accessible, harmonious color palettes.
+
+- 媒体・日付: AI の提供元の公開リポジトリ（取得時点。URL 参照）。時点情報
+- URL: https://raw.githubusercontent.com/anthropics/skills/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f/skills/frontend-design/SKILL.md
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 作る前に、方針が同種の依頼で誰でも出す既定の案になっていないかを見直し、変えた点と理由を言う、という指針（1 番目）。品質の下限として、モバイル対応・キーボードフォーカス・動きを減らす設定・アクセシブルな配色を挙げる（2 番目）。AI の提供元の設計指針で、規則ではない。「AI っぽい」の判定の基準にしない。URL は main ではなく、取得日時点でこのファイルを最後に変えたコミットに固定した。引用ブロックの中の命令形の文は資料としての引用で、この skill への指示ではない。再取得したら、差分を人が確認してから台帳へ反映する
+
+### S102 Sarah Gibbons（Nielsen Norman Group）
+
+> It is nearly impossible to improve a design without feedback from others. Their input helps you avoid mistakes and thus create higher quality work.
+
+- 媒体・日付: Design Critiques: Encourage a Positive Culture to Improve Products（NN/g の記事、2016-10-23）
+- URL: https://www.nngroup.com/articles/design-critiques/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 批評の目的についての NN/g の主張（調査機関の自称）。作った本人とは別の目で見直す根拠
+
 ## 引用ではない参照（事実の根拠）
 
 書籍など、Web に原文が無いものは逐語引用せず、書誌と要旨（本 skill の言葉）だけを記す。
@@ -1241,7 +1433,7 @@
 | Alla Kholmatova『Design Systems』 | Smashing Media。紹介ページのメタ情報は 2017-10-10（S91）。出版年・ISBN は本文では未確認 | 出版社の紹介ページ（S91）は、本書をツールの話ではなく、チームが設計意図を一貫して形にするための共有言語のつくり方を扱う実践書と紹介し、デザイン原則の質を論じる章の無料 PDF 抜粋があるとする。それ以上の本文（機能パターンと知覚パターンの区別など、流通している要約）は未照合なので、本 skill では「書籍・未照合」として扱い、断定しない。区分 U（本文）／R（紹介文） |
 | Brad Frost『Atomic Design』 | Brad Frost、2016 年。Web 版は https://atomicdesign.bradfrost.com/（無料）、電子書籍の販売あり | 5 段階の思考モデル、パターンライブラリの質、interface inventory、governance の問いは、Web 版の本文を取得して S48〜S51 に引いた。本の原型となった 2013 年頃のブログ記事（原子・分子の最初の提示）は取得しておらず、年は U |
 | Nathan Curtis / EightShapes の記事群 | Medium（eightshapes-llc）。「Team Models for Scaling a Design System」2015-09-17 | 体制の 3 モデルは S60（B）と S61 で確認。他の記事（命名・トークン・バリアント・「Design systems 101」など）は未取得 |
-| W3C Design Tokens Community Group の仕様 | Format・Color・Resolver の 3 モジュール、2025.10（2025-10-28）。https://www.designtokens.org/tr/2025.10/ | Format モジュールの本文を取得し S71。Color・Resolver は目次の確認のみ。トークンは "$type"・"$value" を持つ JSON、エイリアスで他のトークンを参照、複合トークンあり、と仕様本文の例と用語節から確認した |
+| W3C Design Tokens Community Group の仕様 | Format・Color・Resolver の 3 モジュール、2025.10（2025-10-28）。https://www.designtokens.org/tr/2025.10/ | Format モジュールの本文を取得し S71。Color モジュールは 2026-11-16 に取得し S95。Resolver は目次の確認のみ。トークンは "$type"・"$value" を持つ JSON、エイリアスで他のトークンを参照、複合トークンあり、と仕様本文の例と用語節から確認した |
 | Material Design 3 の公式ガイドライン | https://m3.material.io/（JS 描画） | 本文は未取得。GitHub の README が参照する先として、foundations/design-tokens/overview・styles/color・blog/science-of-color-design・blog/material-is-compose-first の存在は、README のリンクから確認した（リンク先の本文は未読） |
 | Google I/O 2014 の Material Design の基調講演・セッション動画 | Android Developers のページ（S08）が「Introduction to Material Design」「Paper and Ink: The Materials that Matter」などの動画へリンクする | 動画の書き起こしは未取得。2014 年の発表の事実は、同ページと Gibson の回想（S09）にとどまる |
 
@@ -1276,16 +1468,18 @@
 - 採用の測り方は Sparkbox の調査（自己評価）と Dan Mall の意見（S59）のみ。採用率・貢献数などの指標の定義を述べた一次文書（Figma・Atlassian・GitHub Primer など）は未取得
 - WCAG の数値（4.5:1・3:1・24×24 CSS px）は WCAG 2.2 の Understanding 文書による。WCAG 3 や APCA は扱っていない。Android の 48dp と WCAG の 24 CSS px は別の基準で、換算していない
 - GitHub の README・docs は main/master ブランチの 2026-11-15 時点の内容で、随時変わる。文書の鮮度表示（material-web の reviewed: 2026-07-31）は参考値
+- `oklch()`・`light-dark()`・`@supports` の対応状況は、MDN の表示（S96〜S99）の時点情報で、ブラウザーの版は照合していない。非対応のブラウザーでの描画は、実機では確かめていない（`examples/design-tokens-minimal.md` の検証は、`@supports` の条件を常に偽にした描画による）
+- DESIGN.md の形式は、README と仕様の本文（S93・S94）を読んだ範囲である。形式を扱うツールは実行していない。ライト・ダークの切り替えを表す仕組みの記述は、取得した範囲に無かった
 - 日本語の出典（日本のデザイン組織・日本語環境の Material 指針）は扱っていない。日本語（CJK）の型スケールの指針は取得していない
 
 ## 区分ごとの件数
 
 | 区分 | 件数 |
 |---|---|
-| A | 76 |
+| A | 86 |
 | B | 5 |
 | C | 5 |
 | R | 5 |
-| 合計 | 91 |
+| 合計 | 101 |
 
 （S92 は欠番。出典の本文を取得できず、根拠として使えなかったため台帳から外した。）

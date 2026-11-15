@@ -63,7 +63,7 @@ skills/                               -- スキル本体（各ディレクトリ
     references/
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
       design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
-    examples/                         -- 制作例（Android の list-detail 画面・Button の仕様書・ダークテーマ方針・移行計画・デザイントークン。5 件）
+    examples/                         -- 制作例（Android の list-detail 画面・Button の仕様書・ダークテーマ方針・移行計画・デザイントークン・DESIGN.md と DTCG の対応。6 件）
   designer-dataviz/                   -- データビジュアライゼーションデザイナー（統計グラフ・図表・ダッシュボードの図。スペシャリスト skill）
     SKILL.md
     references/
