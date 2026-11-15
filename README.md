@@ -42,6 +42,7 @@ Claude Code の Claude Skills として使用するスキルは、原則とし�
 | **designer-brand** | ブランドデザイナー・アートディレクター。ロゴ・CI 刷新・ブランドガイドライン・小サイズ単色対応・ブランドの見た目統一を相談 |
 | **designer-ux-research** | UX リサーチャー（ユーザビリティ検証・情報設計）。ユーザビリティテスト・ヒューリスティック評価・インタビュー・カードソート・ツリーテスト・SUS を相談 |
 | **designer-industrial** | インダストリアルデザイナー（物理製品）。形・CMF（色・素材・仕上げ）・射出成形の抜き勾配・人間工学・使用誤り・修理しやすさを相談 |
+| **designer-material** | デザインシステム設計者（Material Design）。Material 3・Android/Compose・デザイントークン（DTCG）・コンポーネント仕様・ガバナンスを相談 |
 
 今後も追加予定です。新規スペシャリスト skill の著作は `.claude/rules/specialist-authoring.md` の規約と `skills/init-claude-specialist/sample/specialist-skill-example.md`（見本）を参照してください。
 
