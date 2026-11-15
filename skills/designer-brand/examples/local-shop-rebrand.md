@@ -108,19 +108,19 @@ Gap は声明で、オンラインのコミュニティと関わる機会を逃�
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 88" role="img" aria-labelledby="shio-t">
   <title id="shio-t">潮風堂</title>
   <style>
-    .frame { fill: none; stroke: var(--shio-navy, #1B2F4A); stroke-width: 4; }
-    .wave  { fill: none; stroke: var(--shio-gold, #7A5A12); stroke-width: 3; stroke-linecap: round; }
-    .mono .frame, .mono .wave { stroke: currentColor; }   /* 単色版（スタンプ・紙袋） */
+    .shio-frame { fill: none; stroke: var(--shio-navy, #1B2F4A); stroke-width: 4; }
+    .shio-wave  { fill: none; stroke: var(--shio-gold, #7A5A12); stroke-width: 3; stroke-linecap: round; }
+    .shio-mono .shio-frame, .shio-mono .shio-wave { stroke: currentColor; }   /* 単色版（スタンプ・紙袋） */
   </style>
-  <rect class="frame" x="2" y="2" width="116" height="84" rx="12"/>
+  <rect class="shio-frame" x="2" y="2" width="116" height="84" rx="12"/>
   <!-- 店名: 現行の筆文字データ（パス化済み）をここへ差し込む。形は変えない -->
   <g id="shopname"></g>
-  <path class="wave" d="M24 62q9-9 18 0t18 0t18 0t18 0"/>
-  <path class="wave" d="M24 72q9-9 18 0t18 0t18 0t18 0"/>
+  <path class="shio-wave" d="M24 62q9-9 18 0t18 0t18 0t18 0"/>
+  <path class="shio-wave" d="M24 72q9-9 18 0t18 0t18 0t18 0"/>
 </svg>
 ```
 
-縮小版は、上の断片から 2 本の `.wave` を除く。
+縮小版は、上の断片から 2 本の `.shio-wave` を除く。
 
 色の継承と変更（表の値と一致させる）:
 
