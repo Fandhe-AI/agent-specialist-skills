@@ -1,11 +1,11 @@
 # designer-brand 出典台帳
 
-`SKILL.md`・`examples/`・`references/design-history.md` が根拠とした出典の台帳。引用原文・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S33 まで（欠番なし）。番号は振り直さない。本文・examples・デザイン史で S 番号を付けて書く事実・年・数値は、この台帳の引用原文（引用ブロック）に逐語で含まれるもの、または各項目の「媒体・日付」の欄に記した日付に限る。
+`SKILL.md`・`examples/`・`references/design-history.md` が根拠とした出典の台帳。引用原文・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S47 まで（欠番なし）。番号は振り直さない。本文・examples・デザイン史で S 番号を付けて書く事実・年・数値は、この台帳の引用原文（引用ブロック）に逐語で含まれるもの、または各項目の「媒体・日付」の欄に記した日付に限る。
 
 ## 凡例
 
 - 検証区分
-  - A: 原典・公式ページ・公式文書・原典の保存コピー（Wayback Machine）の本文を取得し、引用文が逐語で含まれることを機械的に照合した。口頭発言を媒体が文字にしたものは、その書き起こしの精度に依存する。区分 A は 15 件（S06 から S16、S19、S20、S32、S33。各項目の「検証区分」が正）
+  - A: 原典・公式ページ・公式文書・原典の保存コピー（Wayback Machine）の本文を取得し、引用文が逐語で含まれることを機械的に照合した。口頭発言を媒体が文字にしたものは、その書き起こしの精度に依存する。区分 A は 29 件（S06 から S16、S19、S20、S32、S33、S34 から S47。各項目の「検証区分」が正）
   - B: 第三者サイトによる転記、または他媒体経由の引用（原典との照合なし）。本人の発言である可能性は高いが、転記・書き起こしの誤りは排除できない
   - C: 批判・論評側の主張。引用が逐語であることのみを確認し、主張の因果は確認していない
   - R: 記者・機関の地の文。発言者本人の発言ではない（本人発言として引用しない）
@@ -15,11 +15,12 @@
   - ITmedia のページは Shift_JIS のため、`iconv -f CP932 -t UTF-8` を挟む
   - Wayback Machine は短時間の連続アクセスで 429 を返す。再照合は間隔を空けて実行する
   - 区分 B・C・R の引用も、引用文が取得本文に含まれることは確認した。ただし区分 B は原典との照合ではなく、転記・再話の誤りを排除できない
-  - 本文で S 番号を付けた年・数値のうち、元の引用ブロックに無かったものは、同じ URL を再取得して該当する逐語の行を確かめたうえで、当該項目の引用ブロックに追記した（追記した出典と行は各項目の備考に「追記した行」として記す）。新しい出典は足していない
+  - S34 から S41 は、別の skill の台帳から移した出典。原文・URL・区分はそのまま写し、備考にあった他の台帳の番号への参照は外した。2026-11-16 に URL を再取得して、引用文が連続した文字列として含まれることを確かめた（S35・S36 は直接の取得を拒否されたため、以前に取得した保存コピーの本文で照合した。再取得による照合ではない）。S42 から S47 は 2026-11-16 に取得し、同じ方法で照合した
+  - 本文で S 番号を付けた年・数値のうち、元の引用ブロックに無かったものは、同じ URL を再取得して該当する逐語の行を確かめたうえで、当該項目の引用ブロックに追記した（追記した出典と行は各項目の備考に「追記した行」として記す）。この追記の手順では新しい出典は足していない（S34 以降は別に足した出典で、次の項目に書く）
 - 研究結果（実験・調査の数値）は、この skill では根拠に使わない。区分 R の記述を研究の根拠にしない
 - 数値（pt・px・mm・比率・人数・金額・年）は、原文で確認できたものだけを「出典あり」とする。それ以外は本 skill の目安（出典なし）と分けて書く
 - 引用文は原文を改変していない。原文の引用符・ダッシュ・綴りの癖（OCR・転記の誤りを含む）もそのまま残した。日本語の訳・要旨は本 skill の言葉であり、発言者本人の発言ではない。本人の発言として英語・日本語の逐語で示してよいのは区分 A だけで、区分 B・C・R は要旨にして区分を明記する
-- 取得日は、出典ごとに最後に本文を確認した日（すべて 2026-11-15）。時点情報として扱う
+- 取得日は、出典ごとに最後に本文を確認した日。S01 から S33 と S35・S36 は 2026-11-15、S34・S37 から S47 は 2026-11-16。時点情報として扱う
 
 ## 帰属上の注意
 
@@ -46,6 +47,8 @@
 | ブランドの没個性化・一貫性至上主義への批判 | S28、S29、S30、S04 |
 | 法務の境界（商標調査） | S15、S16、S17、S32、S20 |
 | 色のコントラスト比（文字と背景） | S33 |
+| ロゴのライトとダークの版（`<picture>`・`light-dark()`・強制色モード・ロゴとコントラストの基準） | S42、S43、S44、S45、S46、S47 |
+| 進め方（目的の言語化・理由と判断の区別・複数案・批評・既定の点検・参照の扱い） | S34、S35、S36、S37、S38、S39、S40、S41 |
 
 ## 引用の台帳
 
@@ -477,6 +480,174 @@
 - 検証区分: A（W3C の公式文書）
 - 備考: 文字と背景のコントラスト比が 4.5:1 以上という基準（例外あり）の出典。引用が述べるのは 4.5:1 と「例外がある」ことまでで、例外の中身（大きい文字の比率など）は引用の範囲外のため未照合。非文字（UI 部品・図形）の 3:1 は別の達成基準で、この台帳では取得していない。ロゴ・ブランド名の扱いも引用の範囲外のため、本 skill はロゴの合否の根拠に使わず、文字と背景の組を 4.5:1 以上にそろえる判断の根拠にだけ使う。相対輝度の式は WCAG の定義に従って計算する。
 
+### S34 Hikaru Sudo（Goodpatch）
+
+> 目的があいまいなまま進めてしまうと収束が難しくなり、場当たり的なピボットを繰り返して無駄なコストを払うことにもなりかねません。
+
+- 媒体・日付: 生成AIが作るプロトタイプは、本当にサービスづくりの近道になるのか？
+- URL: https://goodpatch.com/blog/2026-08-ai-prototype
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 目的（誰に・どんな課題・どうなるか）を仮説でも先に言葉にしておくと、収束の判断軸になる、という主張
+
+### S35 Michael Bierut（Pentagram パートナー）
+
+> It follows that every design presentation is inevitably, at least in part, an exercise in bullshit. The design process always combines the pursuit of functional goals with countless intuitive, even irrational decisions.
+
+- 媒体・日付: On (Design) Bullshit（Design Observer、2005-05-09）
+- URL: https://designobserver.com/on-design-bullshit/（取得した版: https://web.archive.org/web/20261023042415/https://designobserver.com/on-design-bullshit/）
+- 取得日: 2026-11-15
+- 検証区分: A（本人のエッセイ。Wayback の保存コピーで照合）
+- 備考: 直接の取得は拒否された（403）ため、以前に取得した保存コピーの本文で照合した（2026-11-16 の再取得による照合ではない）。機能の要件（測れる）と直感の判断（説明しきれない）を分け、提示の場では後者が過剰に理屈づけられるという実務者の自己批判。提案と合意形成の注意点
+
+### S36 Michael Bierut（Pentagram パートナー）
+
+> Before I could commit to a design decision, I needed to have an intellectual rationale worked out in my mind. I discovered in short order that most clients seemed grateful for the rationale as well. It put aside arguments about taste; it helped them make the leap of faith that any design decision requires
+
+- 媒体・日付: On (Design) Bullshit（Design Observer、2005-05-09）
+- URL: https://designobserver.com/on-design-bullshit/（取得した版: https://web.archive.org/web/20261023042415/https://designobserver.com/on-design-bullshit/）
+- 取得日: 2026-11-15
+- 検証区分: A（本人のエッセイ。Wayback の保存コピーで照合）
+- 備考: 直接の取得は拒否された（403）ため、以前に取得した保存コピーの本文で照合した（2026-11-16 の再取得による照合ではない）。理屈づけが「趣味の議論を脇に置き、決断の飛躍を助ける」という効用を認めた箇所。提案で根拠を示す価値と限界の両方の根拠
+
+### S37 Sarah Gibbons（Nielsen Norman Group）
+
+> It is nearly impossible to improve a design without feedback from others. Their input helps you avoid mistakes and thus create higher quality work.
+
+- 媒体・日付: Design Critiques: Encourage a Positive Culture to Improve Products（NN/g の記事、2016-10-23）
+- URL: https://www.nngroup.com/articles/design-critiques/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 批評の目的についての NN/g の主張（調査機関の自称）。批評が品質を上げるかを第三者が検証したものではない
+
+### S38 メルカリデザイン
+
+> 実際に作ったプロトタイプは数百種類。試行錯誤を重ねて新しいロゴマークを決定しました。
+
+- 媒体・日付: Hello new logo（メルカリ ロゴ刷新の公開ページ。日付の記載なし）
+- URL: https://design.mercari.com/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: ロゴの刷新で数百の試作から絞った、という企業の自称。複数案を出して絞る型の国内例
+
+### S39 AI の提供元の公開文書「frontend-design」（公開リポジトリの設計指針。Apache License 2.0。制作の進め方）
+
+> Spend your boldness in one place. Let one element be the memorable thing, keep everything around it quiet and disciplined, and cut any decoration that does not serve the brief.
+
+> fade-and-slide-up entrances on each section and hover transitions on every card are the generic default and read as AI-generated.
+
+> The subject's industry, subject matter, materials, and vernacular are where distinctive visual choices come from
+
+> Typography carries the personality of the page.
+
+> Then review that plan against the brief before building: if any part of it reads like the generic default you would produce for any similar page (work through a similar prompt to see if you arrive somewhere similar) rather than a choice made for this specific brief — revise that part, say what you changed and why.
+
+> Build to a quality floor without announcing it: responsive down to mobile, visible keyboard focus, reduced motion respected, visually accessible, harmonious color palettes.
+
+- 媒体・日付: AI の提供元の公開リポジトリ（取得時点。URL 参照）。時点情報
+- URL: https://raw.githubusercontent.com/anthropics/skills/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f/skills/frontend-design/SKILL.md
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 『大胆さは 1 か所に使う』『全セクションのフェードインと全カードのホバーは定型』『被写体の業界・素材・言い回しが、独自の見た目の出どころ』『書体がページの人格を運ぶ』『作る前に、方針が同種の依頼で誰でも出す既定の案になっていないかを見直し、変えた点と理由を言う』という指針。品質の下限として、モバイル対応・キーボードフォーカス・reduced motion・アクセシブルな配色を挙げる（同ファイル）。URL は main ではなく、取得日時点でこのファイルを最後に変えたコミットに固定した。再取得したら、差分を人が確認してから台帳へ反映する。LICENSE は同じ版の skills/frontend-design/LICENSE.txt で Apache License と確認した（2026-11-16）。
+
+### S40 Sam Goree・Bardia Doosti・David Crandall・Norman Su「Investigating the Homogenization of Web Design: A Mixed-Methods Approach」（プロジェクトページ）
+
+> we show that designs have become significantly more similar since 2007, especially for page layouts where the average distance between sites decreased by over 30%.
+
+> Synthesizing interviews from 11 experienced web design professionals with our computational analyses, we discuss causes of this homogenization including overlap in source code and libraries, color scheme standardization, and support for mobile devices.
+
+- 媒体・日付: CHI ’21 の研究の公式プロジェクトページ（cv-web-history.neocities.org）, 2021（ページの日付は未確認）
+- URL: https://cv-web-history.neocities.org/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: Web のデザインの均質化を、2003〜2019 年の代表的サイトの画像で測り（レイアウトの距離が 30% 超縮小）、デザイナー 11 名のインタビューで原因（共有コード・ライブラリ、配色の標準化、モバイル対応）を論じた研究の、著者自身の要約。PDF 本体は取得できず（旧 URL は移転）、取得したのは著者のプロジェクトページの要約。サンプルは英語圏の企業・Webby 候補サイトに偏る（同ページ）
+
+### S41 モノサス（制作会社）「この会社で働きたくなる、採用サイトのつくりかた 第 3 回 デザインイメージの伝え方」
+
+> とにかく、数多く見ることです。多い分には構いませんので、最低30サイトを目標に見てください。
+
+> 気に入ったサイトを3つほど選び、そのサイトのなにが好きなのか、良いと思った点はなにか、を書き出します。
+
+- 媒体・日付: モノサスのマガジン, 2016-09-02
+- URL: https://www.monosus.co.jp/magazine/m47tfwzsgormcunr2gqo7980
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 制作会社の担当者が、発注側に向けて『デザインのイメージを制作会社に伝える準備』を説明した記事（採用サイト向け）。参考サイトを最低 30 見て、好きな 3 つの理由（配色・写真・動き）を書き出す、という手順。『最低 30』は本記事の目安で、研究の裏づけは書かれていない
+
+### S42 MDN「<picture>」
+
+> You can swap image assets for light and dark themes using the prefers-color-scheme media feature:
+
+> <source srcset="logo-dark.png" media="(prefers-color-scheme: dark)" />
+
+- 媒体・日付: MDN Web Docs（ページの最終更新 2026-10-01）
+- URL: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/picture
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: `<picture>` の `<source media="(prefers-color-scheme: dark)">` で、ライトとダークの画像資産を差し替える用法。1 つ目の引用の末尾のコロンの後に、ライト用とダーク用の 2 つの `<source>` を並べる HTML の例が続き、2 つ目の引用はその 1 行目（ダーク用）。端末の配色設定に基づく差し替えで、ページ側の `color-scheme` の指定への追従は、この文からは分からない
+
+### S43 MDN「prefers-color-scheme」
+
+> The prefers-color-scheme CSS media feature is used to detect if a user has requested light or dark color themes.
+
+> It’s been available across browsers since January 2020.
+
+- 媒体・日付: MDN Web Docs（ページの最終更新 2026-11-10）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-color-scheme
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 利用者が求めたライトかダークの配色を CSS で検出するメディア特性。ページの冒頭に Baseline の「Widely available」の表示がある。対応状況は取得日時点の記述で、時点情報
+
+### S44 MDN「light-dark()」
+
+> The light-dark() CSS function accepts two colors or two images and returns a color or an image based on the active color scheme, without needing a prefers-color-scheme media feature.
+
+> To enable support for the light-dark() color function, the color-scheme must have a value of light dark, usually set on the :root pseudo-class.
+
+> Baseline 2024 Newly available Since May 2024, this feature works across the latest devices and browser versions.
+
+- 媒体・日付: MDN Web Docs（ページの最終更新 2026-11-10）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/light-dark
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 有効な配色に応じて 2 つの色（または画像）の一方を返す CSS 関数。使うには `color-scheme` に `light dark` を指定する。Baseline の表示は「Newly available」で、2024 年 5 月以降の最新の端末・ブラウザーで動くと書く（古い版では動かない可能性がある）。画像の形式の対応は、この台帳では確かめていない
+
+### S45 MDN「color-scheme」
+
+> The color-scheme CSS property allows an element to indicate which color schemes it can comfortably be rendered in.
+
+- 媒体・日付: MDN Web Docs（ページの最終更新 2026-07-21）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/color-scheme
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 要素が描画できる配色（ライト・ダーク）を示す CSS プロパティ。`light-dark()` が使う配色は、このプロパティの値に基づく（S44）
+
+### S46 W3C「Understanding Success Criterion 1.4.3: Contrast (Minimum)」（WCAG 2.2。ロゴの扱い）
+
+> Text that is part of a logo or brand name has no contrast requirement.
+
+> Text used as part of a logo or logotype is exempted from contrast requirements, under the assumption that logos/logotypes must comply with stricter color choices mandated by corporate identity or brand guidelines. However, this can be problematic when logos or logotypes act as user interface components (such as a link or other interactive control). While not normatively required, in these cases authors are encouraged to choose a variant of the logo or logotype that has sufficient text contrast, if allowed by the corporate identity or brand guidelines.
+
+- 媒体・日付: W3C「Understanding WCAG 2.2」の達成基準 1.4.3 の解説（掲載日の記載なし）
+- URL: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: S33 と同じページ。ロゴ・ブランド名の文字は文字のコントラスト比の要求から除かれる、ただしロゴがリンクなどの UI 部品のときは、十分なコントラストの版を選ぶことが勧められる（規範ではない）、という記述。S33 の 4.5:1 の基準を、ロゴに当てはめる根拠にはしない。本 skill は、ロゴが載る面とのコントラスト比を、判断のために計算して示す（本 skill の整理）。図形（文字でない部分）への基準は、この台帳では未照合
+
+### S47 MDN「forced-colors」
+
+> The forced-colors CSS media feature is used to detect if the user agent has enabled a forced colors mode where it enforces a user-chosen limited color palette on the page.
+
+> On normal text it will be forced to CanvasText.
+
+> It’s been available across browsers since September 2022.
+
+- 媒体・日付: MDN Web Docs（ページの最終更新 2026-04-20）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 利用者が選んだ限られた配色をブラウザーが強制するモード（例は Windows のハイコントラスト）を、CSS で検出するメディア特性。2 つ目の引用は、強制色モードで通常の文字の色が CanvasText に強制されるという記述。ページの冒頭に Baseline の「Widely available」の表示がある。ページは、強制される値の一覧に「SVG fill attribute」を挙げるが、CSS の規則で指定した `fill` が強制されるかは、この文から分からない（本 skill の描画では、規則で指定した `fill` は強制されなかった。`examples/logo-dark-mode.md` の点検）。`<picture>` の画像の色が強制されるかも、この台帳では確かめていない
+
 ## 引用ではない参照（事実の根拠）
 
 逐語引用はせず、事実（誰が・いつ・何を）の根拠としてだけ使う。
@@ -527,6 +698,8 @@
   - 日本の企業 CI は、亀倉本人の言葉を取得できていない（S21 は出典不明の再話）。田中一光本人の発言、原研哉の著書（『デザインのデザイン』など。書籍のみ）、佐藤可士和の他の発言も未取得
   - 最小サイズ・余白の数値は S14（英国政府）と S07（NASA のデカールのみ）だけ。OSS 団体のガイド（S19、S20）は本文に数値がない
   - 批判は 4 本（S04、S28、S29、S30）。一貫性への批判（S29、S30）は意見記事で、実証は示されていない
+- 進め方の出典（S34 から S41）は、組織・実務者の自称と批評の記事で、進め方の有効性を第三者が確かめたものではない。ブランドに限った進め方の出典は、Bierut の随筆（S35、S36）とロゴ刷新の自称（S38）だけ。S40 は Web の研究の著者の要約で、ロゴへは類比にとどまる。S39 は AI の提供元の公開文書で、更新で書き換わりうる（固定した版で取得した）
+- ロゴのダークモードの出典（S42 から S47）は MDN と W3C の記述。Baseline の表示は取得日時点で、古いブラウザー・端末の対応は未確認。`<picture>` がページの `color-scheme` の指定に追従するかは、MDN の記述から分からず、本 skill が 1 つの環境で描画して確かめた範囲にとどまる（`examples/logo-dark-mode.md` の点検）。メールクライアントや外部サービスでの SVG の扱いは未確認
 - paulrand.design は非公式の転記で、Rand の文章・発言（S01 から S04）は区分 B に留まる。AIGA などの原典の照合は未取得
 - Wayback Machine は短時間の連続アクセスで 429 を返す。S09・S10・S12 は保存コピーで照合した
-- 本台帳の記述は 2026-11-15 時点。ガイドライン（NHS・GOV.UK・CNCF・PSF・USPTO・INPIT）は各組織が随時改訂する
+- 本台帳の記述は、S01 から S33 が 2026-11-15 時点、S34 以降は各項目の取得日の時点。ガイドライン（NHS・GOV.UK・CNCF・PSF・USPTO・INPIT）は各組織が随時改訂する
