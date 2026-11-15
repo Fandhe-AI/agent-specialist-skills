@@ -153,11 +153,17 @@ function sparkline(values, label, w = 96, h = 24, pad = 3, minSpanRatio = 0.1) {
   svg.setAttribute("aria-label", label); // 属性への設定。HTML 文字列を組み立てない
   const line = document.createElementNS(NS, "polyline");
   line.setAttribute("points", pts.map((p) => p.join(",")).join(" "));
+  // 見た目は属性で直接指定する（CSS が無くても、塗りつぶしでなく線として描ける）。値は下の CSS と同じ
+  line.setAttribute("fill", "none");
+  line.setAttribute("stroke", "#1f5f8b");
+  line.setAttribute("stroke-width", "1.5");
+  line.setAttribute("stroke-linejoin", "round");
   const last = pts[pts.length - 1];
   const dot = document.createElementNS(NS, "circle"); // 最新値だけに印を置く
   dot.setAttribute("cx", last[0]);
   dot.setAttribute("cy", last[1]);
   dot.setAttribute("r", 2.5);
+  dot.setAttribute("fill", "#1f5f8b");
   svg.append(line, dot);
   return svg;
 }
@@ -178,8 +184,9 @@ JavaScript が使えない環境でも読めるよう、静的な HTML でも同
   <th scope="row">港店</th><td class="num">260</td><td class="num">−12（−4.4 %）</td><td class="num">260〜310</td>
   <td><svg class="spark" viewBox="0 0 96 24" width="96" height="24" role="img"
        aria-label="港店の 12 週の売上。最初 300、最新 260、最小 260、最大 310（万円）">
-    <polyline points="3.0,6.6 11.2,3.0 19.4,8.4 27.5,4.8 35.7,10.2 43.9,12.0 52.1,7.3 60.3,13.8 68.5,15.6 76.6,18.1 84.8,16.7 93.0,21.0"/>
-    <circle cx="93.0" cy="21.0" r="2.5"/>
+    <polyline points="3.0,6.6 11.2,3.0 19.4,8.4 27.5,4.8 35.7,10.2 43.9,12.0 52.1,7.3 60.3,13.8 68.5,15.6 76.6,18.1 84.8,16.7 93.0,21.0"
+      fill="none" stroke="#1f5f8b" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="93.0" cy="21.0" r="2.5" fill="#1f5f8b"/>
   </svg></td>
   </tr>
 </table>
@@ -189,6 +196,7 @@ JavaScript が使えない環境でも読めるよう、静的な HTML でも同
 ```
 
 ```css
+/* 線と印の色・太さは sparkline() の属性と静的 HTML にも書いてある。ここは同じ値を CSS 側で持つ場合の指定 */
 body { color: #1d1d22; background: #ffffff; }
 .note { color: #4a4a55; }
 .spark polyline { fill: none; stroke: #1f5f8b; stroke-width: 1.5; stroke-linejoin: round; }
