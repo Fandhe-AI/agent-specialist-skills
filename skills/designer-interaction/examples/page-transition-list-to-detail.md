@@ -49,7 +49,7 @@
 | 画像の変形 | 300 ms・`cubic-bezier(0, 0, 0, 1)` | 範囲は S21、曲線は S29（standard-decelerate）。ease-out が基本（S24）。300 ms は本 skill の目安 |
 | 全体の上限 | 300 ms。500 ms を超えない。ページ自体は 1 秒以内に出す | S22・S08 |
 | 戻る | 開くときと同じ長さ・同じ曲線。ブラウザーの戻る・進む、リンクの両方で動く。一覧を離れたときのスクロール位置を復元する | 本 skill の整理 |
-| 中断 | 遷移中に戻る・進むを押すと、新しい遷移が前の遷移に取って代わり、最新の状態へ向かう。DOM の状態は常に最新へ揃える | 完了を待たせない（S68）、中断（S74）。取って代わる挙動は実測（下の「点検」） |
+| 中断 | 遷移中に戻る・進むを押すと、新しい遷移が前の遷移に取って代わり、最新の状態へ向かう。DOM の状態は常に最新へ揃える。遷移の最中（約 300 ms）に、画面内の「一覧へ戻る」を押しても戻れる。Chrome 156 の実測では、演出中はページの要素にクリックが届かず `<html>` が受ける（`::view-transition` 系に `pointer-events: none` を指定しても変わらなかった）ので、`<html>` が受けたクリックの座標の下にある操作対象を探して押す | 完了を待たせない（S68）、中断（S74）。取って代わる挙動とクリックの扱いは実測（下の「点検」）。座標から押す処理は本 skill の実装 |
 | 縮小版 | 画像は変形せず、150 ms のクロスフェードだけ | 必要性は S76・S79。置き換えと 150 ms は本 skill の整理・目安 |
 | 非対応のブラウザー | 即時に切り替える。URL・戻る操作・フォーカスは同じ | 本 skill の整理（機能検出） |
 | フォーカス | 詳細を開いたら題（`tabindex="-1"`）へ。戻ったら開いた記事のリンクへ。リンクが画面の外なら、最小限だけスクロールして見せる（`scrollIntoView` の `nearest`） | 可視のフォーカス・予測できる移動（S101） |
@@ -157,6 +157,7 @@ const thumbOf = (id) => listView.querySelector(`[data-id="${id}"] .thumb`);
 const idFromHash = () => { const m = /^#\/(\d+)$/.exec(location.hash); return m && m[1] in articles ? m[1] : null; };   // 存在する番号だけを通す
 let current = null;                                   // 表示中の記事の番号。一覧なら null
 let seq = 0;                                          // 最新の遷移の通し番号
+let playing = false;                                  // 遷移の演出中か（演出中は、ページの要素にクリックが届かない）
 let listY = 0;                                        // 一覧を離れたときのスクロール位置（戻ったときに復元する）
 history.scrollRestoration = 'manual';                 // 戻るときのスクロール位置は、この例が自分で戻す
 
@@ -191,14 +192,25 @@ function navigate(next, push) {
       card.focus({ preventScroll: true }); card.scrollIntoView({ block: 'nearest' });
     }
   };
-  const finish = () => { if (mine === seq) newEl.style.viewTransitionName = ''; };   // 取って代わられた遷移は触らない
+  const finish = () => { if (mine === seq) { newEl.style.viewTransitionName = ''; playing = false; } };   // 取って代わられた遷移は触らない
   if (!('startViewTransition' in document)) { update(); finish(); return; }   // 非対応: 即時に切り替える
   oldEl.style.viewTransitionName = 'hero';
+  playing = true;
   const t = document.startViewTransition(update);
   t.ready.catch(() => {});                            // 取って代わられた遷移のエラーは無視する
   t.finished.then(finish, finish);
 }
 
+/* 演出中は、実測で、クリックがページの要素に届かず <html> が受ける（`pointer-events` の指定では通らなかった）。
+   座標の下にある操作対象を探して押し、新しい遷移で前の遷移に取って代わらせる */
+document.documentElement.addEventListener('click', (e) => {
+  if (!playing || e.target !== document.documentElement) return;
+  const hit = [...document.querySelectorAll('a[href], button')].find((x) => {
+    const r = x.getBoundingClientRect();
+    return x.offsetParent && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+  });
+  if (hit) hit.click();
+});
 listView.addEventListener('click', (e) => {
   const a = e.target.closest('a[data-id]');
   if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
@@ -225,12 +237,12 @@ if (idFromHash()) { current = idFromHash(); show(current); }
 
 - 目的: どの記事を開いたかが、遷移なしでも題で分かる。遷移は、その対応を見せる強化である
 - 長さ: 背景 200 ms・画像 300 ms で、500 ms を超えない（S22）。ページは 1 秒以内に出る（S08）
-- 中断: 遷移中に戻る・進むを押しても止まらず、DOM は最新の状態へ揃う。操作の完了を待たせない（S68・S74）。同じ名前が 2 つ残って遷移が失敗する状態になっていない
+- 中断: 遷移中に戻る・進むを押しても止まらず、DOM は最新の状態へ揃う。遷移中（300 ms の間）に、画面内の「一覧へ戻る」をクリックして戻れ、前の遷移が取って代わられて終わる（演出中のクリックを `<html>` が受けて座標から押す。キーボードの Tab と Enter は、演出が終わってから「一覧へ戻る」に着く）。操作の完了を待たせない（S68・S74）。同じ名前が 2 つ残って遷移が失敗する状態になっていない
 - 戻る: ブラウザーの戻る・進む、一覧へ戻るリンク、URL の直接入力（`#/2`）で同じ画面になる。戻ると、一覧を離れた位置に戻り、開いた記事のリンクにフォーカスがある。存在しない番号（`#/99`）を直接開いても、一覧が出る
 - 縮小版: 動きを減らす設定で、画像が変形せず、150 ms のクロスフェードだけになる。設定は CSS のメディアクエリで、途中で変えても追従する
 - 非対応: `startViewTransition` が無いブラウザーで、即時に切り替わる。URL・戻る・フォーカスは同じ
 - キーボード: Tab でカードへ着き、Enter で開き、詳細では題にフォーカスがある。「一覧へ戻る」へ Tab で着ける。フォーカスの輪が見える
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 遷移中のアニメーションは、`::view-transition-group(hero)` が 300 ms、`::view-transition-old(root)` と `::view-transition-new(root)` が 200 ms。動きを減らす設定では、hero のアニメーションが消え、背景の 150 ms だけが残る。開く・戻る・遷移中の戻る・進む→戻る→進むの連打のいずれも、最終の画面が URL と一致し、`view-transition-name` の残りは 0 件。詳細ではフォーカスが題、戻ると元のカードにある。`#/2` を付けた URL を直接開くと詳細が開き、存在しない `#/99` を開いても一覧が出る（修正前は例外）。画面の高さ 300 px で、一覧を 200 px スクロールして 4 件目を開き、戻ると、位置が 206 px（200 px を復元し、カードを画面内へ最小限だけ動かした値）、フォーカスは 4 件目のカード、カードの上端は 205 px で画面内。ブラウザーの戻るでも同じ値（修正前は 0 px で、カードは画面の外）。機能検出を偽にした版では、アニメーションが 0 件で即時に切り替わる。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。他のブラウザー・文書間の遷移・実機は未検証
+- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 遷移中のアニメーションは、`::view-transition-group(hero)` が 300 ms、`::view-transition-old(root)` と `::view-transition-new(root)` が 200 ms。動きを減らす設定では、hero のアニメーションが消え、背景の 150 ms だけが残る。開く・戻る・遷移中の戻る・進む→戻る→進むの連打のいずれも、最終の画面が URL と一致し、`view-transition-name` の残りは 0 件。詳細ではフォーカスが題、戻ると元のカードにある。`#/2` を付けた URL を直接開くと詳細が開き、存在しない `#/99` を開いても一覧が出る（修正前は例外）。画面の高さ 300 px で、一覧を 200 px スクロールして 4 件目を開き、戻ると、位置が 206 px（200 px を復元し、カードを画面内へ最小限だけ動かした値）、フォーカスは 4 件目のカード、カードの上端は 205 px で画面内。ブラウザーの戻るでも同じ値（修正前は 0 px で、カードは画面の外）。遷移の最中のクリックを実測した。詳細を開いて約 120 ms 後（演出の 300 ms の最中）に「一覧へ戻る」をクリックすると、修正前は何も起きず（約 300 ms の間、ページの要素へのヒットテストは `<html>` を返し、クリックは詳細のまま）、修正後は戻れた。最初の遷移は 16 ms に始まり、クリックの時点（153 ms）で終わった（取って代わられなければ約 316 ms）。次の遷移は 153 ms から約 486 ms まで動いた。`view-transition-name` の残りは 0 件で、フォーカスは元のカード。この結果は、1440・390・320 px と、動きを減らす設定でも同じだった。`::view-transition` 系に `pointer-events: none` を指定しても、ヒットテストは変わらなかった（指定した版で確認）。機能検出を偽にした版では、アニメーションが 0 件で即時に切り替わる。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。他のブラウザー・文書間の遷移・実機は未検証
 - 推測の明示: 200 ms・300 ms・150 ms は本 skill の目安である。遷移が認知負荷を下げるという効果は MDN の記述で、実験の裏づけを取得していない（S87）。他ブラウザーの対応と、文書間の遷移は未検証である
 
 ## この例の出典
