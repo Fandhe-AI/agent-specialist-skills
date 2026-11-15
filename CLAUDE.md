@@ -31,6 +31,8 @@ skills/                               -- スキル本体（各ディレクトリ
     SKILL.md
     references/
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
+      design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
+      design-history-eras.md          -- デザイン史の時代別の詳細（紙・GUI・Web・Apple の転換点と理由）
     examples/                         -- 制作例（LP・スライド・アプリ画面・ダッシュボード・ハードウェア UI・アニメーション・アンチ例。9 件）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
