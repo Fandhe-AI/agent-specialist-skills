@@ -65,6 +65,8 @@
 | 組み上がる時間 | 2.6 秒。粒子ごとに到着を遅らせる | 長いと待たせる。本 skill の目安 |
 | 回転 | 毎秒約 0.15 rad | ゆっくり |
 | 輪の形 | トーラス（大半径 1、小半径 0.26） | 製品が輪であることを暗示する |
+| varying の精度 | `vA`（0〜1 の値）は、頂点・フラグメントの両方で `varying mediump float vA;` と明示して、同じにする。頂点シェーダーの既定は `highp`、フラグメントは `precision mediump float` で `mediump` になるので、明示しないと両ステージで食い違う | GLSL ES 1.00 は、varying の精度が両ステージで一致することを求めない（S201）。食い違ってもリンクは失敗しない仕様だが、実装の差を避けるため、明示して一致させる（本 skill の安全側の判断） |
+| uniform の精度 | 頂点は `uMvp`・`uProgress`・`uSize`、フラグメントは `uColor` で、同じ名前を両方で宣言する uniform は無い | 共有が無いので、精度の一致の問題が起きない |
 | シェーダーの精度 | フラグメントシェーダーは `mediump`。扱う値は `gl_PointCoord`（0〜1）・色・透明度（0〜1）だけで、範囲を超えない。位置と投影の計算は頂点シェーダー（`highp` が必須）で行う | `mediump` に落ちる実装でも、中間値が範囲内 |
 | 乱数 | 線形合同法（seed 固定）。定数 1664525・1013904223 は広く知られた既存の値で、由来と利用条件は未確認（出典なし） | 同じ見た目を再現できる |
 | 劣化の順序 | (1) 粒子数を減らす (2) DPR の上限を下げる (3) 回転を止めて静止 (4) 層 1 | 軽い順。実機で測って決める。本例のコードは、この順で自動に落とす実装を持たない（手動・未実装。粒子数は読み込み時に 1 回だけ決める） |
@@ -162,7 +164,7 @@
   const VERT = `
 attribute vec3 aStart; attribute vec3 aTarget; attribute float aSeed;
 uniform mat4 uMvp; uniform float uProgress, uSize;
-varying float vA;
+varying mediump float vA;                     // 頂点とフラグメントで同じ精度を明示する（0〜1 の値）
 void main() {
   float k = clamp(uProgress * 1.4 - aSeed * 0.4, 0.0, 1.0);   // 粒子ごとに到着を遅らせる
   k = k * k * (3.0 - 2.0 * k);
@@ -173,7 +175,7 @@ void main() {
 }`;
   const FRAG = `
 precision mediump float;
-uniform vec3 uColor; varying float vA;
+uniform vec3 uColor; varying mediump float vA;
 void main() {
   float d = length(gl_PointCoord - 0.5);
   float a = (1.0 - smoothstep(0.15, 0.5, d)) * vA;               // 中心から外へ弱くする（edge0 < edge1 の順で書く）
@@ -310,7 +312,7 @@ geometry.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
 const material = new THREE.ShaderMaterial({
   uniforms: { uProgress: { value: 0 }, uSize: { value: 40 }, uColor: { value: dark ? new THREE.Vector3(0.95, 0.72, 0.4) : new THREE.Vector3(0.48, 0.29, 0.11) } },   // THREE.Color は色空間の変換が入るので、本体と同じ値を Vector3 で渡す
   vertexShader: `
-    attribute vec3 aStart; attribute float aSeed; uniform float uProgress, uSize; varying float vA;
+    attribute vec3 aStart; attribute float aSeed; uniform float uProgress, uSize; varying mediump float vA;
     void main() {
       float k = clamp(uProgress * 1.4 - aSeed * 0.4, 0.0, 1.0); k = k * k * (3.0 - 2.0 * k);
       vec4 mv = modelViewMatrix * vec4(mix(aStart, position, k), 1.0);
@@ -318,7 +320,7 @@ const material = new THREE.ShaderMaterial({
       gl_PointSize = max(1.0, uSize / -mv.z);   // 単位は描画ピクセル。setPixelRatio の値を掛ける
       vA = 0.35 + 0.65 * k;
     }`,
-  // 本体の FRAG を、uniform vec3 uColor と varying float vA の宣言ごと使う。ShaderMaterial が付けるのは組み込みだけで、
+  // 本体の FRAG を、uniform vec3 uColor と varying mediump float vA の宣言ごと使う（頂点側と同じ精度）。ShaderMaterial が付けるのは組み込みだけで、
   // uColor・uProgress・uSize は自分で宣言する（precision の重複は、実装時に確認する）
   fragmentShader: FRAG,
   transparent: true, depthWrite: false, premultipliedAlpha: true,   // 本体は乗算済みアルファで出している
@@ -355,6 +357,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 - 素材の工程: モデルが届いたら、リトポロジー・ベイク・圧縮の工程が要りうる（S113）。工程の期間と人手を、別に見積もる。3D スキャンのように購入する素材もある（S108）。本例のコードで作れるのは、式で出せる形までである
 - 性能: 粒子数・DPR の上限は目安（出典なし）。実機の fps・消費電力・メモリは測っていない（未検証）。測ってから、劣化の順序を決める
 - 画面での確認（2026-11-16）: ソフトウェア描画の WebGL で 1 枚目（粒子が散らばった状態）が描け、2.5 秒後に輪の形に変わった。「もう一度組み上げる」で粒子が散らばった状態に戻った。トグルを押すと `requestAnimationFrame` が 0 回になり、`aria-pressed` が `true` から `false` に変わり、文言は変わらなかった。動きを減らす設定では、1.5 秒間に `requestAnimationFrame` が 0 回で、前後の画像が一致し、2 つのボタンは隠れた。ソフトウェア描画での 2.5 秒間の描画回数は、実行ごとに 36 回から 150 回まで大きく変わった（実機の fps ではない）。`document.hidden` を真にして `visibilitychange` を送ると、0.6 秒間の `requestAnimationFrame` は 0 回だった。WebGL を無効にした起動では、点線の輪の SVG が見えた。描画 DPR は、画面の倍率 3 のとき 2 に抑えられた（512 px の領域で 1024 px）。1440・390・320 px のライトとダークで、横にはみ出さなかった。Safari・Firefox・実機は未確認
+- 精度の確認（2026-11-16）: シェーダーのリンクは成功した（`getProgramParameter(LINK_STATUS)` が `true`）。本例の `vA` は、頂点・フラグメントとも `mediump` を明示した。修正前（頂点の既定 `highp`・フラグメント `mediump`）も、この確認環境（ソフトウェア描画）ではリンクに成功したので、食い違いでの失敗は再現できない。GLSL ES 1.00 が精度の一致を求めない（S201）ことと合う。他の 4 例のシェーダーも、varying と、両ステージで宣言する uniform の精度の食い違いが 0 であることを、宣言を突き合わせて確かめた（ex1・ex3・ex4 は varying が無く、uniform は片方のステージだけで宣言する。ex5 は `vUv` を明示）
 - 操作の確認（2026-11-16）: 「もう一度組み上げる」と回転のトグルは、上の確認のとおり押して動いた。どちらも `button` で、キーボードの操作は標準の動作に任せている（Tab と Enter・Space の実機の確認は未実施）
 - 直した不具合の再現の確認（2026-11-16）: 組み上がりの途中（0.9 秒）で「回転させる」を切ると、修正前は散らばった状態のまま止まった（輪の外側 235 px より外の粒子の画素が 11,559 のまま変わらない）。修正後は、3.5 秒後に輪が完成し（同じ画素が 0）、そのあとの 0.8 秒間は `requestAnimationFrame` が 0 回で、画像も変わらなかった。回転を止めたまま「もう一度組み上げる」を押すと、修正後は組み上がってから止まり（9,390 から 0、そのあとの rAF は 0 回）、`aria-pressed` は `false` のままだった（修正前は `true` に戻り、回転が再開した）。トグルをもう一度押すと回転が再開した（1.2 秒後に画像が変わった）
 - 文脈の喪失の確認（2026-11-16）: 文脈を擬似的に失わせると、層 1 の SVG に戻り、2 つのボタンが隠れ、可視状態の変化の通知が来ても `requestAnimationFrame` は再開しなかった（0.6 秒間で 0 回）。復帰させると、`gl` のクラスが戻り、描画が再開した（canvas は 512 px）
@@ -363,4 +366,4 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 ## この例の出典
 
-S27、S39、S40、S41、S43、S48、S49、S50、S51、S55、S56、S60、S61、S62、S64、S87、S107、S108、S112、S113、S118、S121、S122、S126、S127、S129、S131、S147、S148、S150、S151、S158、S159、S160。台帳は `../references/sources.md`。
+S27、S39、S40、S41、S43、S48、S49、S50、S51、S55、S56、S60、S61、S62、S64、S87、S107、S108、S112、S113、S118、S121、S122、S126、S127、S129、S131、S147、S148、S150、S151、S158、S159、S160、S201。台帳は `../references/sources.md`。

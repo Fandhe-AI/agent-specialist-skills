@@ -68,6 +68,8 @@
 | ホバーの明るさ | `img` と `canvas` の両方に付ける（効果の出入りで、明るさが跳ねない） | canvas が `img` と入れ替わるため |
 | カーソルが静止したとき | 最後の移動から 150 ms で反応を終え、減衰させて止める | 写真の上で止まったまま描き続けない |
 | 時間 | シェーダーの時間は、波の周期（2π / 9）で巻き戻す | 時間が増え続けて、精度が落ちるのを避ける |
+| varying の精度 | `vUv` は、頂点シェーダー（`vert(prec)`）とフラグメントシェーダー（`frag(prec)`）に、同じ `prec`（highp が使えるときだけ `highp`、そうでなければ `mediump`）を明示する。頂点の既定は `highp` なので、`mediump` に落ちたとき、明示しないと頂点 `highp`・フラグメント `mediump` と食い違う | GLSL ES 1.00 は、varying の精度が両ステージで一致することを求めない（S201）。食い違ってもリンクは失敗しない仕様だが、実装の差を避けるため、明示して一致させる（本 skill の安全側の判断） |
+| uniform の精度 | `uTex`・`uPoint`・`uAmp`・`uTime`・`uAspect` はフラグメントだけで宣言し、頂点と共有しない | 同じ名前の uniform を両方で宣言するときは、型と精度が一致しなければならない（S201）。共有が無いので、問題が起きない |
 | 精度 | `getShaderPrecisionFormat` で `highp` が使えるときだけ `highp`。そうでなければ `mediump` | テクスチャ座標が `mediump` だと、1600 px の写真で 1 画素ほどずれる。ほかの中間値（距離 `r` ≤ 約 1.8、`r * 38` ≤ 約 60、時間 × 9 ≤ 2π）は `mediump` の範囲に収まる |
 | リンク先 | 大きい版の写真ファイル（`photos/rin-01-1600.jpg` など。`img` の `srcset` の大きい側）。クリック・タップ・Enter で開く | 開く先を持たないリンクは、操作できない |
 | 写真ファイルが無い環境 | `img` は枠・下地の色・代替テキストが残る。リンク先は開けない（ブラウザの「見つからない」の表示）。リンク切れを許さない場合は、配信側でファイルを置くか、リンクを外す | 写真が無い状態で、画面が崩れないことと、操作が空振りになることを分けて書く |
@@ -175,12 +177,13 @@ WCAG の相対輝度式で計算した（基準の 4.5:1 は、本台帳に原�
   const PERIOD = 2 * Math.PI / 9;              // uTime の周期（シェーダーの sin の中の 9 に合わせる。巻き戻しても連続する）
   const IDLE_MS = 150;                         // マウスが止まってから、反応を終えるまでの時間
 
-  const VERT = 'attribute vec2 aPos; varying vec2 vUv; void main(){ vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }';
+  // vUv の精度は、頂点とフラグメントで同じ文字列（prec）を使う。選んだ精度は、フラグメントの精度（highp が使えるか）に合わせる
+  const vert = (prec) => `attribute vec2 aPos; varying ${prec} vec2 vUv; void main(){ vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }`;
   // 精度は highp が使えるときだけ highp（テクスチャ座標が 1600 px の写真で mediump だと、1 画素ほどずれる。ほかの中間値は小さい）
   const frag = (prec) => `
 precision ${prec} float;
 uniform sampler2D uTex; uniform vec2 uPoint; uniform float uAmp, uTime, uAspect;
-varying vec2 vUv;
+varying ${prec} vec2 vUv;
 void main() {
   vec2 d = vUv - uPoint; d.x *= uAspect;
   float r = length(d);
@@ -210,8 +213,9 @@ void main() {
     function build() {
       const p = gl.createProgram();
       const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);   // highp が使えるか
-      gl.attachShader(p, compile(gl.VERTEX_SHADER, VERT));
-      gl.attachShader(p, compile(gl.FRAGMENT_SHADER, frag(hp && hp.precision > 0 ? 'highp' : 'mediump')));
+      const prec = hp && hp.precision > 0 ? 'highp' : 'mediump';
+      gl.attachShader(p, compile(gl.VERTEX_SHADER, vert(prec)));
+      gl.attachShader(p, compile(gl.FRAGMENT_SHADER, frag(prec)));
       gl.linkProgram(p);
       if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
       gl.useProgram(p);
@@ -314,7 +318,7 @@ const loader = new THREE.TextureLoader();
 loader.load(img.currentSrc, (texture) => {
   const material = new THREE.ShaderMaterial({
     uniforms: { uTex: { value: texture }, uPoint: { value: new THREE.Vector2(0.5, 0.5) }, uAmp: { value: 0 }, uTime: { value: 0 }, uAspect: { value: 1.5 } },
-    vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+    vertexShader: 'varying highp vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
     // 本体の frag(prec) の結果を、uniform の宣言ごと使う。ShaderMaterial が付けるのは組み込みだけで、uTex・uPoint・uAmp・uTime・uAspect は自分で宣言する。
     // テクスチャの色空間の変換は入れない（本体と同じ見え方にするため）。frag は本体の GLSL の関数をこの module に写す
     fragmentShader: frag('highp')   // highp の有無の確認は、本体の getShaderPrecisionFormat と同じにする
@@ -345,6 +349,7 @@ loader.load(img.currentSrc, (texture) => {
 - 画像: `srcset`・`sizes`・`width`・`height`・`alt`・`loading`・`fetchpriority`・`decoding` を書いた。最初の画面の写真は遅延させない。LCP の目安は 2.5 秒（S69）で、本例では測っていない
 - 権利: 写真の利用条件・肖像は依頼側と確認する。本 skill は判断しない
 - 画面での確認（2026-11-16）: 合成した写真で確認した（実際の写真ファイルは無い）。ソフトウェア描画の WebGL で、画面に入った 3 枚に canvas が付き（効果が出るまで `display: none`）、カーソルを重ねた写真が歪んだ（動かす前と画像が変わった）。カーソルを外して 1.6 秒後には、0.8 秒間で `requestAnimationFrame` が 0 回だった。動きを減らす設定と、WebGL を無効にした起動では、canvas は 0 個で、写真のままだった。写真ファイルが無い状態（390 px）では、下地の色・枠・代替テキストが残り、横にはみ出さなかった。画面の倍率 3 のとき、canvas の解像度は 2 倍までに抑えられた。1440・390・320 px のライトとダークで、横にはみ出さなかった。キーボードの Tab で写真にフォーカスすると波紋が 1 回出て、収まった。タッチ操作の経路は、実機・実操作では確認していない（未検証）。Safari・Firefox も未確認
+- 精度の確認（2026-11-16）: シェーダーのリンクは、3 枚とも成功した（`LINK_STATUS` が `true`）。精度を `highp` に固定した版と、`mediump` に固定した版の両方で確かめた。修正前（`mediump` のとき頂点 `highp`・フラグメント `mediump`）も、この確認環境ではリンクに成功したので、食い違いでの失敗は再現できない（GLSL ES 1.00 は varying の精度の一致を求めない。S201）。実機での低精度の実装は未確認
 - 操作の確認（2026-11-16）: 写真のファイルを置いた状態で、1 枚目をクリックすると `rin-01-1600.jpg`（`image/jpeg`）が開き、3 枚目をクリックすると `rin-03-1600.jpg` が開いた。Tab を 1 回押して Enter で 1 枚目が、Tab を 2 回押して Enter で 2 枚目が開いた。写真のファイルが無い状態（390 px）で 1 枚目をクリックすると、ブラウザの「ファイルにアクセスできませんでした」（`ERR_FILE_NOT_FOUND`）の画面になった。クリックする前は、枠・下地・代替テキストが残っていた（リンク先が空振りになる点は、「仕様」に書いた）
 - 文脈の喪失の確認（2026-11-16）: 歪んでいる写真の文脈を擬似的に失わせると、その canvas は非表示になり（表示の計算値が `none`）、写真だけが見えた。復帰させたあと、カーソルを重ねると再び歪んだ
 - 直した不具合の再現の確認（2026-11-16）: 歪ませたあと、画面の外へスクロールして戻し、カーソルを写真から外すと、修正後は 3 枚とも canvas が隠れ、最初の画像と一致した（差 0 画素）。修正前は、canvas が 3 枚とも表示されたままで、差が 2,475 画素残った。カーソルが写真の上で 1.5 秒静止したあとの 0.7 秒間の `requestAnimationFrame` は、修正前が 30〜42 回（3 回の試行）、修正後が 0 回（3 回とも。canvas も隠れた）。負荷の高い実行では、canvas の追加が遅れ、追加のあとにブラウザが送る合成のマウス移動で効果が遅れて始まり、この値が 0 にならないことがあった。反応中に動きを減らす設定が有効になったあとの 0.6 秒間は、修正前が 36 回、修正後が 0 回。何もしていないときの canvas の表示は、修正前が `block`、修正後が `none` だった。歪みの最中（0.12 秒後）と、静止して 2 秒後の、波紋から離れた隅の平均輝度は、180.6 と 180.3 で、効果の出入りで明るさは跳ねなかった（canvas に明るさの変化を付ける前は、167.3 と 180.3 で跳ねた）。`document.hidden` を真にして `visibilitychange` を送ると、0.6 秒間の `requestAnimationFrame` は 0 回だった。`srcset` の切り替えでのテクスチャの作り直しは、確認していない（未検証）。資源の解放は、本例は実装しておらず、確認していない
@@ -352,4 +357,4 @@ loader.load(img.currentSrc, (texture) => {
 
 ## この例の出典
 
-S27、S40、S41、S43、S49、S53、S54、S55、S59、S60、S61、S64、S69、S119、S122、S147、S148、S150、S151、S158、S159、S160。台帳は `../references/sources.md`。
+S27、S40、S41、S43、S49、S53、S54、S55、S59、S60、S61、S64、S69、S119、S122、S147、S148、S150、S151、S158、S159、S160、S201。台帳は `../references/sources.md`。

@@ -1,6 +1,6 @@
 # designer-creative-coding 出典台帳
 
-`SKILL.md` と `examples/` と `references/design-history.md`（デザイン史）が根拠とした出典の台帳。引用原文（原語のまま・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S167 は、クリエイティブコーディングの系譜・WebGL と性能・代替表示と動きの安全・制作会社の工程・批判の出典である。S168 以降は、デザイン一般の進め方（`SKILL.md` の「進め方」と、各例の初見検証・点検の根拠）の出典である。番号は振り直さない。全 200 件のうち、区分 A は 180 件、B は 3 件、C は 11 件、R は 6 件（U は台帳に入れず、末尾の一覧に回した）。
+`SKILL.md` と `examples/` と `references/design-history.md`（デザイン史）が根拠とした出典の台帳。引用原文（原語のまま・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S167 は、クリエイティブコーディングの系譜・WebGL と性能・代替表示と動きの安全・制作会社の工程・批判の出典である。S168 以降は、デザイン一般の進め方（`SKILL.md` の「進め方」と、各例の初見検証・点検の根拠）の出典である。S201 は、WebGL 1.0 のシェーダー言語（GLSL ES 1.00）の仕様で、各例のシェーダーの精度の根拠である。番号は振り直さない。全 201 件のうち、区分 A は 181 件、B は 3 件、C は 11 件、R は 6 件（U は台帳に入れず、末尾の一覧に回した）。
 
 ## 凡例
 
@@ -17,7 +17,7 @@
 - 台帳の引用文は、取得したテキストから切り出した（手で打ち直していない）。タグ除去で生じた句読点の前の空白（例: `2009 ,`）だけは詰めた。アポストロフィ・引用符・ダッシュは原文のまま。コード片を含む引用では、HTML の整形に由来する空白が残る箇所がある。同じ出典の 2 つ目の逐語行（S06・S22・S114・S118・S119・S121・S139・S143）は、備考の事実を引用ブロックで裏づけるために足した行で、空の引用行で区切ってある。S44・S113・S176 は、主語や前後の文を含めるため、引用の範囲を伸ばした。S44・S113・S139・S143・S176 は、2026-11-16 に本文を取得し直して照合した
 - 日本語の訳・要旨は本 skill の言葉であり、発言者本人の発言ではない
 - 数値（比率・個数・秒・年）は、区分 A で原文を確認できたものだけを「出典あり」として使う。それ以外は「目安（出典なし）」と分けて書く
-- 取得日は、出典ごとに最後に本文を確認した日（S44・S113・S139・S143・S176 は 2026-11-16、ほかは 2026-11-15）。記述は 2026-11-15 時点。WebGPU・three.js・MDN の互換表・Awwwards の採点などは随時変わる時点情報
+- 取得日は、出典ごとに最後に本文を確認した日（S44・S113・S139・S143・S176・S201 は 2026-11-16、ほかは 2026-11-15）。記述は 2026-11-15 時点。WebGPU・three.js・MDN の互換表・Awwwards の採点などは随時変わる時点情報
 
 ## 帰属上の注意
 
@@ -2250,6 +2250,24 @@
 - 検証区分: C
 - 使用箇所: SKILL.md
 - 備考: 批判の矛先が概念そのものではなく、万能薬として売る実践者に向く点。批判を「型は不要」と誤読しないための根拠
+
+
+## シェーダー言語の仕様
+
+### S201 Khronos（The OpenGL ES Shading Language 1.00）
+
+> The type of varying variables with the same name declared in both the vertex and fragment shaders must match, otherwise the link command will fail. The precision of varying variables does not need to match.
+>
+> Hence, types and precisions of uniforms with the same name must match across all shaders that are linked into a single executable.
+>
+> Language Version: 1.00 Document Revision: 17 12 May, 2009
+
+- 媒体・日付: The OpenGL ES Shading Language, Version 1.00（改訂 17。表紙に 12 May, 2009）。WebGL 1.0 のシェーダー言語（GLSL ES 1.00）の仕様。PDF から pdftotext で本文を取り出し、空白を 1 つに正規化して照合した（4.3.5 Varying と 4.3.4 Uniform の節）
+- URL: https://registry.khronos.org/OpenGL/specs/es/2.0/GLSL_ES_Specification_1.00.pdf
+- 取得日: 2026-11-16
+- 検証区分: A
+- 使用箇所: SKILL.md / examples/distortion-gallery.md / examples/generative-poster.md / examples/particle-product-hero.md / examples/scroll-procedural-3d.md / examples/shader-gradient-background.md
+- 備考: varying は、型が一致しないとリンクに失敗するが、精度は一致しなくてよい。uniform は、同じ名前を両方のステージで宣言するとき、型と精度が一致しなければならない。WebGL 2（GLSL ES 3.00）の規定は取得していない
 
 
 ## 引用ではない参照（事実の根拠）
