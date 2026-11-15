@@ -5,6 +5,7 @@ description: >
   「Apple のデザイナーに相談したい」「デザインをレビューして」「サイトを作って」「LP をデザインして」
   「スライドを作って」「アニメーションを付けて」「説明なしで分かる UI にしたい」「Apple っぽくしたい」で使用。
   HIG、Jony Ive、Liquid Glass、discoverability、affordance、オンボーディング・設定画面・エラー文言・ハードウェア体験。
+  導入されていれば、図表は designer-dataviz、文字組は designer-typography、ロゴ・CI は designer-brand、調査は designer-ux-research、製品の形は designer-industrial、デザインシステムは designer-material。
 user-invocable: true
 specialist: true
 ---
@@ -51,6 +52,7 @@ Apple のプロダクトデザインのように「使い方を説明しなく�
   3. 初見検証: 初見のユーザーが、説明なしで「何に注意するか・何を操作できるか・どう操作するか」を言えるかを検証する
   4. 改善案: before / after で具体的に示す
   5. 対抗視点の自己点検: discoverability・アクセシビリティ・可読性・やり直しの観点で自分の案を点検し、残るリスクを明示する
+- 実際の利用者で確かめる調査の設計は、導入されていれば designer-ux-research。本 skill は、確かめる観点（初見検証の 3 問）の提示までにとどめる。
 - 断定と推測を分ける。出典のある事実は断定し、skill の知識体系に無いこと・個別のデータが要ることは「推測」と明示する。
 - 人物の視点を借りるときは、次の書式で「誰の考え方か」と「出典の確度」を添える。
   - 例（地の文で書く）: Ive のレンズ（Telegraph 2012・逐語確認済み）。要旨として、価値を説明して説得しなければならない状態は、まだ足りない兆候だと見る。本件への当てはめは本 skill の推測である。
@@ -305,6 +307,19 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 | ハードウェア UI | `examples/hardware-ui.md` | 物理操作と小さな画面の分担。HIG は未調査で、画面付き製品の指針の転用（本 skill の整理） |
 | アニメーション | `examples/motion-and-animation.md` | 遷移・フィードバック・スプリング・動きを減らす設定 |
 | 「Apple っぽく」 | `examples/anti-pattern-apple-look.md` | 様式の模倣を原則へ翻訳し直す |
+
+### 他の designer-* との分担
+
+導入されていれば、次の分担で案内する。導入されていない場合は、本 skill の範囲で答え、別の専門領域の観点があることだけを伝える。
+
+| 相談の中心 | 担当 | designer-apple の役割 |
+|-----------|------|----------------------|
+| 図の種類・軸・色・不確実性（ダッシュボードの図表部分） | designer-dataviz | ダッシュボードの画面体験（カードの数・見出し・更新の動き）まで |
+| 本文の組版・和文の約物・書体選び | designer-typography | 画面内の文字の大きさと階層の方針まで |
+| ロゴ・CI・ブランドガイドライン | designer-brand | ブランドの見せ方が画面の手がかりを損なわないかの点検まで |
+| 利用者調査・ユーザビリティテスト・ヒューリスティック評価の設計と実施 | designer-ux-research | 「説明なしで分かる」かを確かめる観点の提示まで |
+| 製品の形・素材と仕上げ（CMF）・量産・修理・人体寸法 | designer-industrial | 物理操作と小さな画面・文言まで |
+| Material Design・デザインシステム・トークン・Android | designer-material | Apple のプラットフォームと HIG の考え方まで |
 
 ### デザイン史の使い方
 
