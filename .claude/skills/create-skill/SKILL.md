@@ -8,6 +8,8 @@ description: >
 model: sonnet
 user-invocable: true
 argument-hint: "<skill-name> [specialist|procedure] (例: create-skill game-producer specialist)"
+metadata:
+  internal: "true"
 ---
 
 # create-skill

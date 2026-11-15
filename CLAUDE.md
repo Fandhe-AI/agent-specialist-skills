@@ -196,6 +196,8 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | create-agent | `.claude/agents/<category>/<name>.md` を scaffold。カテゴリ選定・tools 最小権限・dotclaude-via-temp 経由の配置・frontmatter 検証まで行う |
 | update-skill | 既存スキル（主にスペシャリスト skill）を改訂する。check で差分レポート、apply で承認済みの改訂を適用 |
 
+管理スキルの frontmatter には `metadata.internal: "true"` を付ける（付けないと skills CLI の `--list` と `--all` に出て downstream に誤って配布されるため。新しく管理スキルを足すときも同じにする）。
+
 ## Conventions
 
 ### Conventional Commits
