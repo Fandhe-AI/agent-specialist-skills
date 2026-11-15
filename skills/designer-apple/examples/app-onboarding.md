@@ -152,7 +152,8 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 12px; }  
   margin-top: 16px; padding: 4px 4px 4px 12px; background: var(--surface); border-radius: 12px;
   font-size: 13px; line-height: 18px; animation: hint-in 0.2s ease-out; }
 .hint-close { min-height: 44px; min-width: 44px; border: 0; background: none;
-  color: var(--accent); font-size: 13px; text-decoration: underline; }
+  color: var(--accent); font-size: 13px; text-decoration: underline;
+  flex: none; white-space: nowrap; }          /* 狭い幅でも「閉じる」を縮めず 1 行に保つ。縮むのは左の文 */
 @keyframes hint-in { from { opacity: 0; } to { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {

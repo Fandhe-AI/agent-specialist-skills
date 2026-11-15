@@ -70,6 +70,8 @@
 | 点滅・自動の繰り返し | 付けない。1 秒に 3 回を超える点滅を作らない | 速い動きと点滅に注意（S55）。点滅の回数は S72（2.3.1）。実機に動きを減らす設定が無いなら最初から付けない |
 | 起動・復元 | 即時。前回の温度を復元 | S63、S24 の考え方の転用 |
 | 色 | 共通パレット。警告だけエラー色。色以外に語を添える | S53、S72 の 1.4.1。具体色は本 skill の目安 |
+| 文の折り返し | 異常の文は文節の切れ目で折り返す（`word-break: auto-phrase`。文書の言語が `ja` のときに効く）。対応しないブラウザーや言語の指定が無い文書では、従来どおり字数で折り返し、助詞の前で切れることがある | 本 skill の目安（出典なし）。実機の液晶での折り返しは、試作で確かめる |
+| プレビューの最小幅 | 344 px（本文の既定の余白 8 px ＋ `.display` の margin 16 px ＋ 液晶の幅 320 px）。これより狭い画面では横にはみ出す | 本 skill の目安（出典なし）。液晶は 320 x 240 px 固定の試作プレビューで、画面幅へ追従させない |
 
 コントラスト比（試作の液晶プレビュー。WCAG の相対輝度式で計算。基準 4.5:1、非文字 3:1。S72）:
 
@@ -136,7 +138,8 @@
   font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif; }
 .temp { font-size: 80px; line-height: 1; font-weight: 700; margin: 0; }    /* 画面高 240 の約 3 分の 1 */
 .unit { font-size: 40px; }
-.state { font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--text-2); margin: 12px 0; }
+.state { font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--text-2); margin: 12px 0;
+         word-break: auto-phrase; }   /* 文節の切れ目で折り返す。文書が lang="ja" のときに効く目安の指定。対応しないブラウザーでは字数で折り返す */
 .state.error { color: var(--danger); font-size: 28px; }
 .progress { height: 16px; border: 2px solid var(--line); border-radius: 8px; overflow: hidden; }
 .fill { display: block; width: 82%; height: 100%; background: var(--accent); transition: width 0.4s linear; }   /* 0.4s は本 skill の目安（出典なし） */

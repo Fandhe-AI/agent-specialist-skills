@@ -66,11 +66,13 @@
 | 目盛り | 0・20・40（なじみのある刻み） | S59 |
 | 線 | 軸 1 本・目盛り線なし・目標線 1 本 | 線が多すぎるとデータの邪魔になる（S59） |
 | 系列の区別 | 棒（実線）と破線＋ラベル | 色に形・パターンを添える（S59、S53、S72 の 1.4.1） |
+| 数値と単位の折り返し | 見出しの数値と単位は同じ行に置く（`white-space: nowrap` の `.nb`） | 本 skill の目安（出典なし）。auto-phrase だけでは数値と助数詞が分かれる |
 | 数値の表記 | 実数値。「6 月 2 日」「42 分」と書く | 「6/6」「60m」のような略記や主観語を避ける（S59） |
 | 値の表示 | 棒の中にラベルで常に表示 | ホバーを必須にしない（S59） |
 | 文字（指標の数値） | 34 / 41 pt・太字 | 画面アプリの Large Title の値を転用（S51）。px への読み替えは本 skill の目安 |
 | 文字（結論の見出し・ラベル） | 結論の見出し 22 / 28 pt・太字、ラベル 17 / 22 pt、補足 13 / 18 pt | Title 2（22 / 28 pt、強調は Bold）・Body・Footnote の表の値（S51）。最小は 11 pt。px への読み替えは本 skill の目安 |
 | 更新の表示 | 「最終更新 10:42」を常に表示。自動の更新に動きを付けない | 状態は控えめに常時見えるように（S61）。動きは付けない（S56） |
+| 表の開閉 | 開閉の印を行の先頭に置く。閉じると右向き、開くと下向きで、文字と同じ色。動きは付けない | 本 skill の目安（出典なし）。行を flex にすると標準の印が消えるため、疑似要素で足す |
 | 色 | 共通パレット。系列は 2 色まで | S53、S71。具体色は本 skill の目安 |
 | 面 | 指標とチャートはカード面。ガラス表現を使わない | コンテンツ層にガラスを使わない（S65） |
 | アクセシビリティ | チャート全体に説明の代替テキスト、同じデータの表を併置 | S59、S60 |
@@ -106,7 +108,7 @@
 
 ```html
 <section class="board" aria-labelledby="board-title">
-  <h1 id="board-title">未対応は 18 件。先週より 6 件減り、目標の 25 件以内</h1>
+  <h1 id="board-title">未対応は <span class="nb">18 件</span>。先週より <span class="nb">6 件減り</span>、目標の <span class="nb">25 件以内</span></h1>
   <p class="meta">最終更新 10:42 <a class="btn" href="/board/refresh">更新</a></p>
   <dl class="kpis">
     <div><dt>未対応</dt><dd>18 件</dd></div>
@@ -166,7 +168,8 @@
 body { margin: 0; padding: 24px 16px; background: var(--bg); color: var(--text);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif; }
 .board { max-width: 720px; margin: 0 auto; }
-h1 { font-size: 22px; line-height: 28px; font-weight: 700; margin: 0 0 8px; }   /* 結論の文 */
+h1 { font-size: 22px; line-height: 28px; font-weight: 700; margin: 0 0 8px;     /* 結論の文 */
+     word-break: auto-phrase; }                                                   /* lang="ja" の文書で効く目安の指定。対応しないブラウザーでは字数で折り返す */
 .meta { color: var(--text-2); font-size: 13px; line-height: 18px; margin: 0 0 16px; }
 .btn { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0 12px;
   color: var(--accent); text-decoration: underline; }
@@ -181,7 +184,13 @@ svg { width: 100%; height: auto; }
 .val { fill: var(--on-accent); font-size: 14px; font-weight: 700; text-anchor: middle; }
 .tick { fill: var(--text-2); font-size: 13px; text-anchor: middle; }
 .tick.end, .tick-y { text-anchor: end; }              /* y 軸の目盛りと目標ラベルは右揃え（.tick の middle より後に置く） */
-summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+.nb { white-space: nowrap; }                       /* 数値と単位を分けない（見出しの「18 件」「6 件減り」「25 件以内」） */
+summary { min-height: 44px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+summary { list-style: none; }                                              /* 標準の印を明示的に消す。Safari は flex でも標準の印が残り、足した印と二重になるため */
+summary::-webkit-details-marker { display: none; }
+summary::before { content: ""; flex: none; width: 0; height: 0;          /* 開閉の印。flex にすると標準の印が消えるので足す */
+  border-left: 9px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+details[open] > summary::before { transform: rotate(90deg); }              /* 開いたら下向き。動き（transition）は付けない */
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 /* 動きは付けない。動きの宣言を書かないので、動きを減らす設定への分岐は不要 */
 ```
@@ -194,7 +203,7 @@ summary { min-height: 44px; display: flex; align-items: center; cursor: pointer;
 |---|---|---|
 | 何に注意するか | 未対応が 18 件で、目標内に収まっている | 見出しの 1 文 |
 | 何を操作できるか | 更新、表の展開 | 画面に更新と「データを表で見る」だけがある |
-| どう操作するか | 押す。表は開閉する | 44 px 以上の行・下線付きのリンク |
+| どう操作するか | 押す。表は開閉する | 44 px 以上の行・下線付きのリンク・開閉の印（閉じると右向き、開くと下向き）。キーボードの Enter・Space でも開閉する |
 
 「今、間に合っているか」に 5 秒で答えられるかを観察する。見出しを隠して棒だけを見せ、同じ答えが出るかも確かめる。出ない場合は、軸・目標線・ラベルの手がかりを見直す。
 
