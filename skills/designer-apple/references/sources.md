@@ -1,6 +1,6 @@
 # designer-apple 出典台帳
 
-`SKILL.md` と `examples/` が根拠とした出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S50 は `SKILL.md` 本体の根拠、S51 から S78 は `examples/` の具体例と `SKILL.md` の「制作時の指針」の根拠、S79 以降は `references/design-history.md` と `references/design-history-eras.md`（デザイン史）の根拠である。
+`SKILL.md` と `examples/` が根拠とした出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S50 は `SKILL.md` 本体の根拠、S51 から S78 は `examples/` の具体例と `SKILL.md` の「制作時の指針」の根拠、S79 以降は `references/design-history.md` と `references/design-history-eras.md`（デザイン史）の根拠である（S185 まで）。S186 以降は `SKILL.md` の「作る前の進め方と確かめ方」の根拠である。
 
 ## 凡例
 
@@ -2531,6 +2531,30 @@
 - 取得日: 2026-11-15
 - 検証区分: A
 - 備考: 引用は原文でこの後に注記番号と to establish even more harmony while maintaining the distinct qualities that make each unique. が続く。副題は A universal design across platforms brings more focus to content and a new level of vitality while maintaining the familiarity of Apple’s software。
+
+### S186 Sarah Gibbons（Nielsen Norman Group）
+
+> It is nearly impossible to improve a design without feedback from others. Their input helps you avoid mistakes and thus create higher quality work.
+
+- 本体掲載: いいえ
+- 使用箇所: `SKILL.md`（回答スタイル「作る前の進め方と確かめ方」）
+- 媒体・日付: Design Critiques: Encourage a Positive Culture to Improve Products（NN/g の記事、2016-10-23）
+- URL: https://www.nngroup.com/articles/design-critiques/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 批評の目的についての NN/g の主張（調査機関の自称）。批評が有効であることの根拠ではなく、重視されていることの根拠として使う
+
+### S187 Hikaru Sudo（Goodpatch）
+
+> 目的があいまいなまま進めてしまうと収束が難しくなり、場当たり的なピボットを繰り返して無駄なコストを払うことにもなりかねません。
+
+- 本体掲載: いいえ
+- 使用箇所: `SKILL.md`（回答スタイル「作る前の進め方と確かめ方」）
+- 媒体・日付: 生成AIが作るプロトタイプは、本当にサービスづくりの近道になるのか？
+- URL: https://goodpatch.com/blog/2026-08-ai-prototype
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 目的（誰に・どんな課題・どうなるか）を仮説でも先に言葉にしておくと、収束の判断軸になる、という主張。会社の自称であり、有効性の根拠ではない
 
 ## 引用ではない参照（事実の根拠）
 
