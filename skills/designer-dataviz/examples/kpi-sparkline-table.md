@@ -76,10 +76,10 @@
 |---|---|---|
 | sparkline の性格 | 小さく単純で、文字と同じ解像度の図 | S01 |
 | 描画域 | 96 × 24 px、余白 3 px | 本 skill の目安（出典なし） |
-| 行の高さ | 36 px 以上（図 24 px + 上下 6 px）。文字は 16 px | 本 skill の目安（出典なし） |
+| 行の高さ | 36 px 以上（図 24 px + 上下 6 px。図を `display: block` にして隙間を作らない。区切り線 1 px を含めた実測は 37 px）。文字は 16 px | 本 skill の目安（出典なし） |
 | 点の数 | 12（週） | この例の設定 |
 | 尺度 | 行ごとの最小〜最大。幅が平均の絶対値の 10 % 未満なら、その幅に広げる | 本 skill の目安（出典なし） |
-| 狭い画面 | sparkline は 96 × 24 px のまま縮めない。表を横スクロールの包み（`overflow-x: auto`）に入れる | 本 skill の目安（出典なし） |
+| 狭い画面 | sparkline は 96 × 24 px のまま縮めない。セルは折り返さず（`white-space: nowrap`）、表を横スクロールの包み（`overflow-x: auto`）に入れる。見出しと注記は包みの外に置く | 本 skill の目安（出典なし） |
 | 線 | 実線 1.5 px・1 色。終点だけに r = 2.5 の印 | 本 skill の目安。印は S70 を踏まえた整理 |
 | 数値 | 最新週・前週比・範囲を、図の隣に文字で置く | S08 |
 | 増減の表示 | 符号つきの数値と率。色で分けない | S60 |
@@ -175,6 +175,7 @@ function sparkline(values, label, w = 96, h = 24, pad = 3, minSpanRatio = 0.1) {
 JavaScript が使えない環境でも読めるよう、静的な HTML でも同じ形を書ける（港店の 1 行。座標は上の関数の出力）。
 
 ```html
+<h2>最初の週と最新週を比べて下がったのは港店だけ（300 → 260 万円）。ほかの 4 店は横ばいか上向き</h2>
 <div class="scroll">
 <table>
   <tr><th scope="col">店舗</th><th scope="col">最新週</th><th scope="col">前週比</th><th scope="col">12 週の範囲</th>
@@ -201,7 +202,8 @@ body { color: #1d1d22; background: #ffffff; }
 .note { color: #4a4a55; }
 .spark polyline { fill: none; stroke: #1f5f8b; stroke-width: 1.5; stroke-linejoin: round; }
 .spark circle { fill: #1f5f8b; }
-th, td { padding: 6px 12px; border-bottom: 1px solid #d0d0d8; text-align: left; }
+.spark { display: block; } /* 行の高さを図 24 px + 上下 6 px = 36 px にそろえる（inline のままだと文字の下の隙間で 43 px になる） */
+th, td { padding: 6px 12px; border-bottom: 1px solid #d0d0d8; text-align: left; white-space: nowrap; } /* 狭い画面で 1 字ずつ折り返さず、表を横スクロールにする */
 .num { text-align: right; }
 .scroll { overflow-x: auto; }
 ```

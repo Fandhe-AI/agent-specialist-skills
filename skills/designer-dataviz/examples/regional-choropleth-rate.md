@@ -56,9 +56,9 @@
 +------------------------------------------------------------+
 | 1 万人あたりの事故は、B 市 13.0 に対し E 村は 20.0。         |  見出し = メッセージ（S68）
 | ただし E 村は 5 件で、1 件の増減で 4.0 動く                  |
-| +-------+-------------------+-----+                          |
-| | A市8.0|      E村 20.0     |C町  |   面積に比例した簡略図     |
-| |192 件 |    5 件（※）      |6.0  |   各市町村に名前・率・件数    |
+| +-------------------+-------+-----+                          |
+| |      E村 20.0     | A市8.0|C町  |   面積に比例した簡略図     |
+| |    5 件（※）      |192 件 |6.0  |   各市町村に名前・率・件数    |
 | +-----+-----+-------------------+                            |
 | |B市  |D町  |       F町 10.0    |                            |
 | |13.0 |7.0  |        80 件      |                            |
@@ -98,7 +98,7 @@ E 村は面積の 26.3 %（200 ÷ 760）を占めるが、人口の 0.44 %、件
 | 注記 | データの出どころと分析の過程の文書化を添える（期間・単位は本 skill の整理） | S14 |
 | 文字 | 水平 | S71 |
 
-本 skill の目安（出典なし）: 階級の境界 8.0 と 12.0、階級数 3、面積 1 km² = 1.5 px の簡略図、市町村の高さ 140 px、市町村の間の隙間 4 px、率の文字 22 px・名前 13 px・件数 12 px。狭い画面では、図は幅 520 px を下限に縮め（13 px の名前が 11.6 px、12 px の件数が 10.7 px）、それより狭ければ横スクロールにする（`overflow-x: auto` の包み）。件数が 10 件未満を「少ない」とみなす基準。いずれも規格ではない。
+本 skill の目安（出典なし）: 階級の境界 8.0 と 12.0、階級数 3、面積 1 km² = 1.5 px の簡略図、市町村の高さ 140 px、市町村の間の隙間 4 px、率の文字 22 px・名前 13 px・件数 12 px。図の幅は 520〜582 px（582 px は描画の幅で、それより広い画面でも文字を拡大しない。名前 13 px・率 22 px・件数 12 px のまま）。520 px の下限では名前が 11.6 px、件数が 10.7 px になり、それより狭ければ横スクロールにする（`overflow-x: auto` の包み）。横スクロールの初期表示は左端なので、見出しの主役の E 村と B 市を各行の左端に置く（並びは本 skill の整理）。390 px の画面（図の表示幅 294 px）の初期表示に、E 村・B 市・D 町の名前・率・件数が入ることを、Chrome headless で確かめた（A 市・C 町・F 町は横スクロールの先で、率と件数は表にもある）。件数が 10 件未満を「少ない」とみなす基準。いずれも規格ではない。
 
 色の計算（WCAG の相対輝度式。色値は本 skill の目安で、ColorBrewer などの配色の値ではない）:
 
@@ -139,7 +139,7 @@ from html import escape
 
 # (名前, 人口, 件数, 面積 km², 行, 左端 px)。幅 = 面積 × 1.5 px、高さは 140 px で共通
 towns = [
-    ("A市", 240000, 192, 120, 0, 0), ("E村", 2500, 5, 200, 0, 184), ("C町", 60000, 36, 60, 0, 488),
+    ("E村", 2500, 5, 200, 0, 0), ("A市", 240000, 192, 120, 0, 304), ("C町", 60000, 36, 60, 0, 488),
     ("B市", 150000, 195, 90, 1, 0), ("D町", 40000, 28, 100, 1, 139), ("F町", 80000, 80, 190, 1, 293),
 ]
 FILL = {0: "#e9f0f8", 1: "#6491ca", 2: "#0f3a78"}   # 低・中・高（明度が下がる順）
@@ -184,22 +184,23 @@ for name, pop, cnt, area, row, x in towns:
   <figcaption>1 万人あたりの事故は、B 市 13.0 に対し E 村は 20.0。ただし E 村は 5 件で、1 件の増減で 4.0 動く</figcaption>
   <div class="scroll">
   <svg viewBox="-1 -1 582 288" role="img" font-size="13" font-family="system-ui, sans-serif"
-       style="width:100%;min-width:520px;height:auto"
+       style="width:100%;min-width:520px;max-width:582px;height:auto"
        aria-label="あおば県の市町村別の 1 万人あたり自転車事故件数。A 市 8.0、B 市 13.0、C 町 6.0、D 町 7.0、E 村 20.0（5 件。件数が少ない）、F 町 10.0">
-    <rect x="184" y="0" width="300" height="140" fill="#0f3a78" stroke="#4a4a55" stroke-dasharray="5 3"/>
-    <g fill="#ffffff" text-anchor="middle"><text x="334" y="56">E村</text><text x="334" y="78" font-size="22" font-weight="700">20.0</text><text x="334" y="98" font-size="12">5 件（※）</text></g>
+    <rect x="0" y="0" width="300" height="140" fill="#0f3a78" stroke="#4a4a55" stroke-dasharray="5 3"/>
+    <g fill="#ffffff" text-anchor="middle"><text x="150" y="56">E村</text><text x="150" y="78" font-size="22" font-weight="700">20.0</text><text x="150" y="98" font-size="12">5 件（※）</text></g>
     <rect x="0" y="144" width="135" height="140" fill="#0f3a78" stroke="#4a4a55"/>
     <g fill="#ffffff" text-anchor="middle"><text x="67.5" y="200">B市</text><text x="67.5" y="222" font-size="22" font-weight="700">13.0</text><text x="67.5" y="242" font-size="12">195 件</text></g>
     <!-- A 市・C 町・D 町・F 町も、上のコードの出力を同じ形で並べる -->
   </svg>
   </div>
   <p>簡略図。面積は実際の面積に比例するが、形は実際と異なる。色は面積の広がりを強調する</p>
+  <p class="legend-title">1 万人あたりの件数。色は 3 階級</p>
   <ul class="legend">
     <li><span class="sw" style="background:#e9f0f8"></span>8.0 未満</li>
     <li><span class="sw" style="background:#6491ca"></span>8.0 以上 12.0 未満</li>
     <li><span class="sw" style="background:#0f3a78"></span>12.0 以上</li>
   </ul>
-  <p class="source">※ E 村は件数が少ない（5 件）。1 件の増減で率が 4.0 動く。単位: 1 万人あたりの件数。期間: 2025 年度（架空）。出典: あおば県交通安全課の集計（架空）</p>
+  <p class="source">※ E 村は件数が少ない（5 件）。1 件の増減で率が 4.0 動く。単位: 1 万人あたりの件数。期間: 2025 年度（架空）。出典: あおば県交通安全課の集計（架空）。全体の率は総件数 ÷ 総人口</p>
 </figure>
 ```
 
@@ -207,7 +208,8 @@ for name, pop, cnt, area, row, x in towns:
 
 ```css
 .scroll { overflow-x: auto; }
-.legend { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.legend-title { margin: 8px 0 0; }
+.legend { list-style: none; margin: 4px 0 8px; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
 .sw { display: inline-block; width: 16px; height: 16px; border: 1px solid #4a4a55; vertical-align: middle; margin-right: 6px; }
 ```
 
@@ -221,7 +223,7 @@ for name, pop, cnt, area, row, x in towns:
 | 何を読み取れるか | 1 万人あたりでは E 村 20.0、B 市 13.0 が高い。C 町 6.0 が最も低い | 各市町村の率の数字と色 |
 | どう読むか | 数字は 1 万人あたりの件数。色は 3 階級で、濃いほど率が高い。件数は小さい文字と表 | 凡例の見出しと地図の注記 |
 
-5 人程度（本 skill の目安）に、地図だけを見せて「注意喚起をまず届けたい市町村を 2 つ選ぶ」と頼む。濃い色の広い E 村だけを選ぶ人が多い場合は、小地域の注記と表の位置を見直す。件数の多い A 市が見落とされる場合は、階級の境界（8.0）の置き方を見直す。
+幅 390 px 前後の画面で、地図の初期表示に E 村と B 市の率が入っているかも見る。5 人程度（本 skill の目安）に、地図だけを見せて「注意喚起をまず届けたい市町村を 2 つ選ぶ」と頼む。濃い色の広い E 村だけを選ぶ人が多い場合は、小地域の注記と表の位置を見直す。件数の多い A 市が見落とされる場合は、階級の境界（8.0）の置き方を見直す。
 
 ## 点検
 
