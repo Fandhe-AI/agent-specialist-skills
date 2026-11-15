@@ -56,7 +56,7 @@
  |          |
  |  ( 測定 )|  <- 親指が届く位置（小さい手で確認）
  |          |
- |  ( 握り ) |  <- 径は 3 種の試作で確認。滑りにくい面
+ |  ( 握り )|  <- 径は 3 種の試作で確認。滑りにくい面
  +----------+
 ```
 
@@ -99,11 +99,18 @@
 分布から設計の範囲を求める計算（標準ライブラリのみ。`python3 grip_range.py 平均 標準偏差 カバー率`）。標準偏差は使用者集団の実測で与える。AIST の標準偏差は本 skill で取得しておらず、下の実行例の 4.0 は例示で、出典のない仮の値である。
 
 ```python
+import math
 import sys
 
+USAGE = "使い方: grip_range.py 平均mm 標準偏差mm カバー率（例 0.90）。標準偏差は実測で与える"
 if len(sys.argv) != 4:
-    sys.exit("使い方: grip_range.py 平均mm 標準偏差mm カバー率（例 0.90）。標準偏差は実測で与える")
-mean, sd, cover = float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3])
+    sys.exit(USAGE)
+try:
+    mean, sd, cover = float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3])
+except ValueError:
+    sys.exit(USAGE)
+if not (math.isfinite(mean) and math.isfinite(sd) and sd > 0):
+    sys.exit(USAGE)
 Z = {0.80: 1.282, 0.90: 1.645, 0.95: 1.960}   # 正規分布の仮定（本 skill の仮定）。両側の z 値
 if cover not in Z:
     sys.exit("カバー率は 0.80・0.90・0.95 のみ対応")

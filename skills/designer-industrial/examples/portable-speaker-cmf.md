@@ -121,9 +121,18 @@ molding:
 肉厚とキャビティ深さから、受託企業ごとの値を並べて食い違いを見せる計算（標準ライブラリのみ。`python3 molding_check.py 2.5 60`）:
 
 ```python
+import math
 import sys
 
-wall, depth = float(sys.argv[1]), float(sys.argv[2])  # mm。肉厚は仮置き、深さは図面から
+USAGE = "使い方: molding_check.py 肉厚mm 深さmm（例 2.5 60。どちらも有限の正の値）"
+if len(sys.argv) != 3:
+    sys.exit(USAGE)
+try:
+    wall, depth = float(sys.argv[1]), float(sys.argv[2])  # mm。肉厚は仮置き、深さは図面から
+except ValueError:
+    sys.exit(USAGE)
+if not (math.isfinite(wall) and math.isfinite(depth) and wall > 0 and depth > 0):
+    sys.exit(USAGE)
 # 出典: (リブ厚の下限係数, 上限係数, リブ高さの上限（リブ厚の倍数。無ければ None）)
 guides = {"S40": (None, 0.60, 3), "S41": (0.50, 0.50, None), "S42": (0.50, 0.60, None)}
 for sid, (lo, hi, h) in guides.items():
