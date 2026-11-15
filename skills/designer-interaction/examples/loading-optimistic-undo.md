@@ -44,14 +44,18 @@
 | 空 | 文と、読み込み直すボタン |
 | エラー | 文と、もう一度試すボタン。行単位の失敗は、その行に出す |
 
+画面の下に、2 つの通知欄を分けて置く。取り消しの欄（`#undo`）は、猶予中の削除の「元に戻す」だけを持つ。通常のメッセージ欄（`#msg`）は、完了・失敗・確定などの結果を伝える。別の操作の通知が、取り消しの欄を置き換えない。どちらも `role="status"` である。
+
 操作ごとの流れ:
 
 ```text
 完了: チェック → 即座に反映（行・メッセージ）→ 応答を待つ
       成功: そのまま / 失敗: チェックを戻し、行にエラーと「もう一度試す」
-削除: 削除 → 即座に行を消す → メッセージ「元に戻す」（6 秒）
-      6 秒の間に元に戻す: 同じ位置に行が戻り、強調される / 6 秒経過: サーバーへ確定
-      確定に失敗: 行を戻し、メッセージで伝える
+削除: 削除 → 即座に行を消す → 取り消しの欄に「元に戻す」（6 秒。削除ごとに猶予を持つ）
+      6 秒の間に元に戻す: 元の順番の位置に行が戻り、強調される
+      6 秒経過: 「元に戻す」を外し、「確定しています」→ サーバーへ確定 → 「確定しました」
+      確定に失敗: 行を元の順番の位置へ戻し、通常のメッセージ欄で伝える（取り消しの欄は壊さない）
+読み込み直し: 世代を進める。前の削除のタイマーと通信の結果は捨てる
 ```
 
 ## 仕様
@@ -67,10 +71,14 @@
 | 完了の反映 | 操作から次の描画までに反映する（応答を待たない） | S50。反応の限界は 0.1 秒（S01） |
 | 失敗時（完了） | チェックを戻し、その行に「完了にできませんでした。」と再試行のボタンを出す。メッセージ欄にも同じ内容を出す | S50 |
 | 連続した操作 | 同じ行を続けて操作したら、最新の操作の結果だけを反映する（古い応答の失敗で巻き戻さない） | 本 skill の実装（出典なし） |
-| 削除 | 確認ダイアログを出さない。行を即座に消し、6 秒の間「元に戻す」を出す。確定は 6 秒後 | S115・S116・S51。6 秒は本 skill の目安 |
-| 元に戻す | 同じ位置に行を戻し、1.2 秒強調する。言葉でも伝える。Ctrl+Z（Mac は ⌘+Z）でも戻せる。猶予が過ぎて確定したら、メッセージから「元に戻す」を外し、確定を伝える | 結果を見せる（S72）。1.2 秒は目安。外す理由は、効かないボタンを残さないため（S72 の「効かなかったと思って繰り返す」の逆）|
-| 削除の確定の失敗 | 行を元の位置へ戻し、メッセージで伝える | S50 の考え方（失敗時は巻き戻す） |
-| Undo の範囲 | 直近 1 件。続けて削除したら、前の 1 件はそこで確定する | 本 skill の実装の制限 |
+| 削除 | 確認ダイアログを出さない。行を即座に消し、6 秒の間、取り消しの欄に「元に戻す」を出す。確定は 6 秒後。猶予は削除ごとに持つ | S115・S116・S51。6 秒は本 skill の目安 |
+| 元に戻す | 元の順番の位置に行を戻し、1.2 秒強調する。言葉でも伝える。Ctrl+Z（Mac は ⌘+Z）でも戻せる。対象は、猶予中の最新の削除 | 結果を見せる（S72）。1.2 秒は目安 |
+| 猶予が終わった後 | 猶予が終わった時点（確定を始めた時点）で、「元に戻す」を外し、「確定しています」と出す。確定できたら「確定しました」を通常のメッセージ欄に出す | 効かないボタンを残さない（S72 の「効かなかったと思って繰り返す」の逆）。本 skill の整理 |
+| 削除の確定の失敗 | 行を元の順番の位置へ戻し、通常のメッセージ欄で伝える。取り消しの欄の、別の削除の「元に戻す」は消さない | S50 の考え方（失敗時は巻き戻す） |
+| 復元の位置 | 配列の添字でなく、元の順番の値で決める（他の削除の失敗で復元が入っても、順序が崩れない） | 本 skill の実装（出典なし） |
+| 複数の削除 | 削除ごとに猶予とタイマーを持つ。取り消しの欄は、猶予中の最新の削除を出す。古い削除は、猶予が終われば確定する | 本 skill の実装の制限（Undo は猶予中の最新の 1 件） |
+| 読み込み直し | 世代を進め、前の削除のタイマーと通信の結果（成功・失敗）を捨てる。猶予中の削除は破棄し、取り消しの欄を空にする | 本 skill の実装（出典なし） |
+| 復元の強調 | 強調を外すタイマーは、強調を始めた行だけを対象にする（別の行の強調を早く消さない） | 本 skill の実装 |
 | 結果の通知 | メッセージ欄を `role="status"` にし、フォーカスを移さず伝える。読み込みの失敗も、状態の枠とメッセージ欄の両方に出す | S100 |
 | フォーカス | 行が無くなる操作（全削除）と再試行の後も、フォーカスを失わない（空の状態のボタン・最初のチェックへ移す） | 本 skill の整理 |
 | 空と全完了 | 0 件は「タスクはありません。」、全部完了は完了のメッセージで言い分ける | 本 skill の整理 |
@@ -98,13 +106,14 @@
 |---|---|---|---|
 | 完了 | （無言） | 「会議の資料を送る」を完了にしました | 結果を伝える（S100） |
 | 完了の失敗 | エラーが発生しました | 「会議の資料を送る」を完了にできませんでした。もう一度試す | 何が・どうすればを言う |
-| 削除 | 本当に削除しますか（確認） | 「週報を書く」を削除しました。元に戻す（Ctrl+Z でも戻せる） | 確認ではなく取り消しで守る（S115） |
+| 削除 | 本当に削除しますか（確認） | 「週報を書く」を削除しました。元に戻す（Ctrl+Z でも戻せる）（取り消しの欄） | 確認ではなく取り消しで守る（S115） |
 | 元に戻した | （無言） | 「週報を書く」を元に戻しました | 結果を見せる（S72） |
 | 削除の失敗 | 通信エラー | 「週報を書く」を削除できませんでした。元の位置に戻しました | 何が起きたかと現状を言う |
 | 読み込みの失敗 | 失敗しました | タスクを読み込めませんでした。もう一度試す | 次の行動を示す |
 | 空（0 件） | データがありません | タスクはありません。 | 責めず、状態を言う。削除で空になった場合も同じで、「完了」とは言わない |
 | 全部完了 | （無言） | 「週報を書く」を完了にしました。すべてのタスクが完了しました | 完了と空を文言で区別する |
-| 削除の確定 | （猶予後も「元に戻す」が残る） | 「週報を書く」の削除を確定しました。 | 戻せなくなったことを伝える |
+| 削除の確定中 | （猶予後も「元に戻す」が残る） | 「週報を書く」の削除を確定しています。（取り消しの欄。ボタンなし） | 戻せなくなったことを伝える |
+| 削除の確定 | （無言） | 「週報を書く」の削除を確定しました。 | 結果を伝える |
 | 10 秒を超える待ち（文言のみ） | 読み込み中… | タスクを読み込んでいます。あと 10 秒ほどかかります | 見積もりを出す（S112） |
 
 ## コード断片
@@ -116,6 +125,7 @@
   <h1>今日のタスク</h1>
   <ul id="list" class="list" aria-busy="false"></ul>
   <div id="state" class="state" hidden></div>
+  <div id="undo" class="undo" role="status"></div>
   <div id="msg" class="msg" role="status"></div>
 </main>
 ```
@@ -155,7 +165,8 @@ h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 
 .state { padding: 24px 16px; text-align: center; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .state p { margin: 0 0 12px; }
-.msg { min-height: 56px; margin-top: 16px; padding: 4px 0; color: var(--text); }
+.undo { min-height: 44px; margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 0 4px; }   /* 取り消しの領域。通常の通知とは別 */
+.msg { min-height: 56px; margin-top: 4px; padding: 4px 0; color: var(--text); }
 
 /* 復元した行の強調: 背景を 1.2 秒かけて戻す。動きを減らす設定では、同じ長さだけ静的に付ける */
 @keyframes flash { from { background: var(--flash); } to { background: transparent; } }
@@ -177,23 +188,25 @@ const SHOW_DELAY = 200, MIN_VISIBLE = 400;                       // 骨組みの
 const fails = new Set((params.get('fail') || '').split(',').filter(Boolean));   // 例: load,complete:3,delete:1（各 1 回だけ失敗）
 const SEED = [[1, '請求書を確認する'], [2, '会議の資料を送る'], [3, '備品を発注する'], [4, '週報を書く']];
 
-const list = document.getElementById('list'), stateBox = document.getElementById('state'), msg = document.getElementById('msg');
+const list = document.getElementById('list'), stateBox = document.getElementById('state'), msg = document.getElementById('msg'), undoBox = document.getElementById('undo');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-let tasks = [], pending = null;
+let tasks = [], pendings = [], gen = 0;                          // pendings: 猶予中・確定中の削除（1 件ごと）。gen: 読み込みの世代
 
 function api(op, id) {                                            // 擬似のサーバー
   const key = op === 'load' ? 'load' : `${op}:${id}`;
   return sleep(LATENCY).then(() => {
     if (fails.delete(key)) throw new Error('fail');
-    return op === 'load' ? SEED.map(([i, t]) => ({ id: i, title: t, done: false, v: 0 })) : null;
+    return op === 'load' ? SEED.map(([i, t]) => ({ id: i, title: t, done: false, v: 0, order: i })) : null;
   });
 }
-function say(text, undoable) {                                    // 結果を、フォーカスを移さず伝える（S100）
-  msg.textContent = text; msg.dataset.undo = undoable && pending ? String(pending.t.id) : '';
-  if (undoable) {
-    const b = Object.assign(document.createElement('button'), { type: 'button', className: 'link', textContent: '元に戻す' });
-    b.addEventListener('click', undo); msg.append(' ', b, '（Ctrl+Z でも戻せる）');
-  }
+function say(text) { msg.textContent = text; }                  // 通常の通知（S100）。取り消しの領域には触れない
+function renderUndo() {                                           // 取り消しの領域。猶予中の最新の削除だけに「元に戻す」を出す
+  const wait = pendings.filter((p) => p.state === 'wait').pop(), send = pendings.filter((p) => p.state === 'sending').pop();
+  undoBox.replaceChildren();
+  if (wait) {
+    const b = el('button', { type: 'button', className: 'link', textContent: '元に戻す' }); b.addEventListener('click', undo);
+    undoBox.append(`「${wait.t.title}」を削除しました。`, b, '（Ctrl+Z でも戻せる）');
+  } else if (send) undoBox.append(`「${send.t.title}」の削除を確定しています。`);   // 戻せなくなったら、ボタンを外す
 }
 function el(tag, props, ...kids) { const e = Object.assign(document.createElement(tag), props); e.append(...kids); return e; }
 
@@ -223,7 +236,8 @@ function render(restoredId) {
     }
     return row;
   }));
-  if (restoredId) setTimeout(() => { const r = list.querySelector('.restored'); if (r) r.classList.remove('restored'); }, 1200);
+  const flashRow = restoredId ? list.querySelector('.restored') : null;          // 強調を外すのは、この行だけ
+  if (flashRow) setTimeout(() => flashRow.classList.remove('restored'), 1200);
   if (keep) { const n = list.querySelector(`[data-id="${CSS.escape(keep.id)}"] ${keep.sel}`); if (n) n.focus(); }
   if (!tasks.length) {
     showState('タスクはありません。', 'サンプルを読み込み直す', load);
@@ -237,14 +251,17 @@ function showState(text, label, action) {
 }
 
 async function load() {                                           // 待ちの秒数に合う見せ方（S106・S49）
+  const mine = ++gen;                                             // 世代を進め、前の削除のタイマーと通信の結果を無効にする
+  pendings.forEach((p) => clearTimeout(p.timer)); pendings = []; renderUndo();
   const hadFocus = stateBox.contains(document.activeElement);     // 再試行のボタンを押した後も、フォーカスを失わない
   msg.textContent = ''; stateBox.hidden = true; list.hidden = false;
   let shownAt = 0;
-  const timer = setTimeout(() => { showSkeleton(); shownAt = performance.now(); }, SHOW_DELAY);
+  const timer = setTimeout(() => { if (mine === gen) { showSkeleton(); shownAt = performance.now(); } }, SHOW_DELAY);
   let loaded = null;
   try { loaded = await api('load'); } catch { /* 下で扱う */ }
   clearTimeout(timer);
   if (shownAt) await sleep(Math.max(0, MIN_VISIBLE - (performance.now() - shownAt)));   // 出したなら、最短の時間は見せる
+  if (mine !== gen) return;                                       // 読み込みが重なったら、古い結果は捨てる
   if (loaded) { tasks = loaded; render(); if (hadFocus) list.querySelector('input').focus(); return; }
   list.replaceChildren(); list.setAttribute('aria-busy', 'false'); list.hidden = true;
   showState('タスクを読み込めませんでした。', 'もう一度試す', load);
@@ -253,41 +270,45 @@ async function load() {                                           // 待ちの�
 }
 
 async function setDone(t, done) {                                 // 楽観的更新: 先に反映し、失敗したら戻す（S50）
-  const v = ++t.v; t.done = done; t.error = null; render();
+  const v = ++t.v, g = gen; t.done = done; t.error = null; render();
   say(done ? `「${t.title}」を完了にしました` + (tasks.every((x) => x.done) ? '。すべてのタスクが完了しました' : '') : `「${t.title}」を未完了に戻しました`);
   try { await api('complete', t.id); } catch {
-    if (t.v !== v) return;                                        // 新しい操作がある。古い失敗では戻さない
+    if (g !== gen || t.v !== v) return;                           // 読み込み直した・新しい操作がある。古い失敗では戻さない
     t.done = !done; t.error = `「${t.title}」を${done ? '完了にできませんでした。' : '未完了に戻せませんでした。'}`; render();
     say(t.error);
   }
 }
 
 function remove(t) {                                              // 確認でなく取り消しで守る（S115・S51）
-  if (pending) commit();                                          // 直近 1 件だけ Undo できる
   const index = tasks.indexOf(t); tasks.splice(index, 1);
-  pending = { t, index, timer: setTimeout(commit, UNDO_MS) };
-  render(); say(`「${t.title}」を削除しました。`, true);
+  const p = { t, gen, state: 'wait', timer: setTimeout(() => commit(p), UNDO_MS) };   // 削除ごとに猶予を持つ
+  pendings.push(p); render(); renderUndo();
   const next = list.querySelectorAll('input[type="checkbox"]')[index] || list.querySelector('input[type="checkbox"]');
   if (next) next.focus();
 }
-async function commit() {
-  const p = pending; if (!p) return; pending = null; clearTimeout(p.timer);
-  try {
-    await api('delete', p.t.id);
-    if (msg.dataset.undo === String(p.t.id)) say(`「${p.t.title}」の削除を確定しました。`);   // 戻せなくなったら、元に戻すを外す
-  } catch {
-    tasks.splice(p.index, 0, p.t); render(p.t.id); say(`「${p.t.title}」を削除できませんでした。元の位置に戻しました。`);
-  }
+const drop = (p) => { pendings = pendings.filter((x) => x !== p); };
+function restore(t) {                                             // 元の順番の値で位置を決める（配列の添字は、他の削除で変わる）
+  const i = tasks.findIndex((x) => x.order > t.order); tasks.splice(i < 0 ? tasks.length : i, 0, t);
 }
-function undo() {
-  const p = pending; if (!p) return; pending = null; clearTimeout(p.timer);
-  tasks.splice(p.index, 0, p.t); render(p.t.id);                  // 同じ位置に戻し、強調する（S72）
+async function commit(p) {
+  if (p.gen !== gen || p.state !== 'wait') return;
+  p.state = 'sending'; renderUndo();                              // 猶予が終わった時点で、元に戻すを外す
+  try { await api('delete', p.t.id); } catch {
+    if (p.gen !== gen) return;
+    drop(p); restore(p.t); render(p.t.id); renderUndo(); say(`「${p.t.title}」を削除できませんでした。元の位置に戻しました。`); return;
+  }
+  if (p.gen !== gen) return;
+  drop(p); renderUndo(); say(`「${p.t.title}」の削除を確定しました。`);
+}
+function undo() {                                                 // 猶予中の最新の削除を戻す
+  const p = pendings.filter((x) => x.state === 'wait').pop(); if (!p) return;
+  clearTimeout(p.timer); drop(p); restore(p.t); render(p.t.id); renderUndo();   // 同じ位置に戻し、強調する（S72）
   say(`「${p.t.title}」を元に戻しました`);
   list.querySelector(`[data-id="${CSS.escape(String(p.t.id))}"] input`).focus();
 }
 addEventListener('keydown', (e) => {                              // テキスト入力の Ctrl+Z（入力の取り消し）は奪わない
   const typing = document.activeElement.matches('textarea, input:not([type="checkbox"])');
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && pending && !typing) { e.preventDefault(); undo(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && pendings.some((p) => p.state === 'wait') && !typing) { e.preventDefault(); undo(); }
 });
 load();
 ```
@@ -298,8 +319,8 @@ load();
 
 | 問い | 期待する答え | 確認する場所 |
 |---|---|---|
-| 何に注意するか | 完了にすると、すぐ取り消し線が付く。削除すると、行が消えて「元に戻す」が出る | 行の変化とメッセージ欄 |
-| 何を操作できるか | 完了・削除・元に戻す・もう一度試す | チェック・削除ボタン・メッセージ欄のボタン |
+| 何に注意するか | 完了にすると、すぐ取り消し線が付く。削除すると、行が消えて「元に戻す」が出る | 行の変化と、取り消しの欄・メッセージ欄 |
+| 何を操作できるか | 完了・削除・元に戻す・もう一度試す | チェック・削除ボタン・取り消しの欄のボタン・メッセージ欄の再試行 |
 | どう操作するか | チェックを押す。削除を押し、間違えたら「元に戻す」（または Ctrl+Z） | 24 px 以上のチェック（行全体が押せる）、44 px 以上のボタン |
 
 動きの検証は、動きを減らす設定をオンにしても同じ 3 問に答えられることを確かめる。復元した行は、背景の静的な強調と言葉で分かる（S64・S72）。
@@ -309,14 +330,14 @@ load();
 - 目的: 待ち・完了・削除のそれぞれで、結果が先に見え、失敗したら戻せるか
 - 待ち: 待ちが 200 ms 未満なら骨組みを出さない（点滅しない）。出したら 400 ms は見せる（S49・S06）。骨組みと最終の一覧の高さが等しく、レイアウトがずれない（S56）。待ちが 10 秒を超える場合は、進捗か見積もりを足す（S107・S112。この例は文言のみ）
 - 楽観的更新: 完了が、応答を待たずに反映される。失敗したら、チェックが戻り、行にエラーと再試行がある。同じ行の連続した操作で、古い応答が新しい結果を戻さない
-- 取り消し: 削除に確認ダイアログが無い。「元に戻す」で同じ位置に戻り、強調される。猶予（6 秒）を過ぎるとサーバーへ確定し、失敗なら行が戻る。送信・購入のような取り消しにくい操作に、この方式を使っていない（S71・S51）
+- 取り消し: 削除に確認ダイアログが無い。「元に戻す」で元の順番の位置に戻り、強調される。猶予（6 秒）が終わると「元に戻す」が外れ、サーバーへ確定し、失敗なら行が戻る。別の操作の通知（完了・失敗）が、猶予中の「元に戻す」を消さない。読み込み直しの後、古い削除のタイマー・通信・Ctrl+Z が一覧を壊さない。送信・購入のような取り消しにくい操作に、この方式を使っていない（S71・S51）
 - 状態: 読み込み中・通常・空・エラーのすべてがある（S55）。メッセージが `role="status"` で、フォーカスを奪わない（S100）
 - キーボード: Tab でチェックと削除に着き、Space・Enter で操作できる。削除の後、フォーカスが消えない（次の行へ移る）。Ctrl+Z で戻せる。フォーカスの輪が見える（S98）
 - 縮小版: 動きを減らす設定で、復元した行の強調が背景色の静的な表示になる。骨組みは元から動かない
 - 横はみ出し: 1440・390・320 px で横スクロールが出ない。長い題は省略記号で切る
 - 失敗パターン: 骨組みが万能だと思っていないか（S110・S111）。確認ダイアログを足していないか（S116）。Undo の結果が見えない状態になっていないか（S72）
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: ハッシュ無しで開くと、擬似の通信は 300 ms・Undo の猶予は 6000 ms で、削除の 900 ms 後に「元に戻す」で戻った（修正前は 0 ms・500 ms で、戻らなかった）。待ちが 100 ms のとき、骨組みは一度も出なかった。待ちが 1200 ms のとき、骨組みは約 200 ms 後に出て、約 1200 ms で一覧に替わった。待ちが 450 ms のとき、骨組みは約 200 ms に出て、データが届いた 450 ms ではなく約 600 ms（出してから約 400 ms 後）に一覧へ替わった。骨組みと最終の一覧の高さは、どちらも 226 px（行は 56 px の 4 行）で、ずれは無かった。完了は、チェックを押した処理の中（約 0.4 ms）で行が完了になった。失敗する行（待ち 800 ms）は、約 900 ms 後にチェックが戻り、行にエラーと再試行が出て、再試行で完了になった。全部を完了にすると「すべてのタスクが完了しました」が出た。Space キーで操作した後も、フォーカスは同じチェックに残った。削除は、確認なしで行が消え、フォーカスが次の行のチェックへ移り、「元に戻す」で同じ位置（2 番目）に戻って強調され、約 1.4 秒後に強調が消えた。Ctrl+Z でも戻った。猶予（1 秒の指定）を過ぎると、メッセージが「削除を確定しました」に替わり、「元に戻す」が消えた（修正前は残った）。猶予後の確定が失敗する行は、元の位置に戻ってメッセージが出た。4 件すべてを削除すると「タスクはありません。」とボタンが出て、フォーカスがそのボタンに移り、押すと一覧が戻って最初のチェックにフォーカスがあった（修正前はフォーカスが失われた）。読み込みの失敗は、状態の枠とメッセージ欄の両方に出て、再試行で最初のチェックにフォーカスが移った。動きを減らす設定では、強調の `animation-name` が `none` で、背景が静的に付いた。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。実機・スクリーンリーダー・他のブラウザーは未検証
-- 推測の明示: 200 ms・400 ms・6 秒・1.2 秒・56 px は本 skill の目安である。楽観的更新と骨組みの効果を測った研究は取得していない（S110 は反証の一例）。Ctrl+Z の処理は試作で、本番ではテキスト入力だけを除く。スクリーンリーダーでの読み上げは実機で確かめていない。Undo は直近 1 件のみ
+- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: ハッシュ無しで開くと、擬似の通信は 300 ms・Undo の猶予は 6000 ms で、削除の 900 ms 後に「元に戻す」で戻った（修正前は 0 ms・500 ms で、戻らなかった）。待ちが 100 ms のとき、骨組みは一度も出なかった。待ちが 1200 ms のとき、骨組みは約 200 ms 後に出て、約 1200 ms で一覧に替わった。待ちが 450 ms のとき、骨組みは約 200 ms に出て、データが届いた 450 ms ではなく約 600 ms（出してから約 400 ms 後）に一覧へ替わった。骨組みと最終の一覧の高さは、どちらも 226 px（行は 56 px の 4 行）で、ずれは無かった。完了は、チェックを押した処理の中（約 0.4 ms）で行が完了になった。失敗する行（待ち 800 ms）は、約 900 ms 後にチェックが戻り、行にエラーと再試行が出て、再試行で完了になった。全部を完了にすると「すべてのタスクが完了しました」が出た。Space キーで操作した後も、フォーカスは同じチェックに残った。削除は、確認なしで行が消え、フォーカスが次の行のチェックへ移り、取り消しの欄に「元に戻す」が出て、押すと元の順番の位置（2 番目）に戻って強調され、約 1.4 秒後に強調が消えた。Ctrl+Z でも戻った。猶予（1 秒の指定）を過ぎると、「元に戻す」が消えて「確定しました」が出た。猶予後の確定が失敗する行は、元の順番の位置に戻ってメッセージが出た。取り消しまわりの 6 つの場面を、修正前（コミット f7f5900 の版）と修正後で同じ手順の自動操作で比べた。(1) 猶予 5 秒・通信 800 ms で、2 を削除した後に 1 を完了し、3 の完了が失敗しても、修正前は「元に戻す」が完了の通知で消えたが（hasUndo が false）、修正後は取り消しの欄に残った。(2) 4 件を全削除して「読み込み直す」を押し、Ctrl+Z を押すと、修正前は 4,1,2,3,4（重複）になったが、修正後は 1,2,3,4 のまま。猶予（3 秒）後も重複しなかった。(3) 1 と 2 を削除し、1 の確定が失敗して復元された後に Ctrl+Z で 2 を戻すと、修正前は 2,1,3,4 だったが、修正後は 1,2,3,4。(4) 猶予（500 ms）が切れて確定の通信中（1500 ms）に、修正前は「元に戻す」が残って押しても行は戻らなかったが、修正後は「確定しています」に替わってボタンが無い。(5) 1 の確定が失敗した時点で 2 が猶予中のとき、修正前は失敗の通知が「元に戻す」を消したが、修正後は取り消しの欄に 2 の「元に戻す」が残り、失敗の通知は通常のメッセージ欄に出た。(6) 行 1 を戻した直後に行 2 を戻すと、修正前は 1 の強調のタイマーが 2 の強調を約 1.25 秒で消したが（1.4 秒の時点で強調が 0 件）、修正後は 2 の強調が 1.4 秒の時点で残り、1.9 秒で消えた。読み込み直しで前の世代の通信の失敗が遅れて届く場面は、通信時間が読み込みと同じ値で、擬似では作れず、未再現である。動きを減らす設定では、強調の `animation-name` が `none` で、背景が静的に付いた。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。実機・スクリーンリーダー・他のブラウザーは未検証
+- 推測の明示: 200 ms・400 ms・6 秒・1.2 秒・56 px は本 skill の目安である。楽観的更新と骨組みの効果を測った研究は取得していない（S110 は反証の一例）。Ctrl+Z の処理は試作で、本番ではテキスト入力だけを除く。スクリーンリーダーでの読み上げは実機で確かめていない。Undo は猶予中の最新の 1 件のみ
 
 ## この例の出典
 
