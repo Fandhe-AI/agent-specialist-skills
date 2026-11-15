@@ -175,9 +175,9 @@ body { margin: 0; background: var(--bg); color: var(--text);
 h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .rows { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: 8px; }
-.rows li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.rows li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 12px 16px; border-top: 1px solid var(--line); overflow-wrap: anywhere; }   /* 長い品名は折り返し、在庫数が行からはみ出さない */
 .rows li:first-child { border-top: 0; }
-.rows span { color: var(--text-2); }
+.rows span { color: var(--text-2); white-space: nowrap; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* ボタン: 押下は 100 ms で 0.97 まで縮む（S20・S35）。離すと戻る */
@@ -251,7 +251,7 @@ h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 
 ```js
 /* 連打対策（スクリプトを持つ 4 例で共通）: 時間で押下を捨てず、キーの押しっぱなしと、同じ位置の 2 回目以降のクリックだけを無視する */
-const actionable = (t) => t.closest && t.closest('button, a[href], input[type="checkbox"]');
+const actionable = (t) => t.closest && t.closest('button, a[href], label, input[type="checkbox"]');   // label（とその子）も対象。label の既定動作が作る checkbox の click（detail が 0）を、label の段階で止める
 document.addEventListener('keydown', (e) => { if (e.repeat && (e.key === 'Enter' || e.key === ' ') && actionable(e.target)) e.preventDefault(); }, true);
 document.addEventListener('click', (e) => { if (e.detail > 1 && actionable(e.target)) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
 document.addEventListener('mousedown', (e) => { if (e.detail > 1 && actionable(e.target)) e.preventDefault(); }, true);   // 2 回目の押下で、フォーカスを動かさない（行が上がってきて、別の削除へ移るのを防ぐ）
@@ -387,10 +387,11 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 - 連打: ダブルクリックで「在庫を追加」が 1 行しか増えず、「変更を保存」が 1 回しか効かない。Enter の押しっぱなしでも 1 行だけ増える。「並べ替える」のダブルクリックで、開いたメニューが閉じ直されない。トーストの「閉じる」で Enter を押しっぱなしにしても、保存が再実行されない（別に押し直した 2 回目の Enter は、意図した操作として保存を実行する。変更が無ければ「保存する変更はありません」と出るだけ）
 - トーストの通知: 見えない通知欄（常設の `role="status"`）に、トーストを出した後で文が書かれる。同じ文が続いても、保存のたびに通知される。トースト自体には `role` を付けない
 - 未対応: (1) トーストの「閉じる」で、Enter を別々に 2 回押す（押しっぱなしでない）と、フォーカスが戻った「変更を保存」を 2 回目の Enter が押す。意図した 2 回の操作と区別できず、時間で捨てない方針のため直していない。結果は、変更が無ければ「保存する変更はありません」と出るだけ。(2) 並べ替え・同期・書き出しの処理は、範囲外（上の「根拠の範囲」）。(3) スクリーンリーダーの読み上げは、実機で確かめていない
+- 在庫の行: 長い品名（改行できない英数字の長い列を含む）が折り返し、在庫数が行からはみ出さない（320・390 px、文字 100%・200%）。行は `.page` の端で切れない
 - ツールチップの右端: 320〜1440 px のどの幅でも、`.page` の右端を超えない（欠けない）
 - フォーカス: メニューを閉じたら起点の「並べ替える」へ（Escape・項目の選択・外側の何も無い所のクリックのどれでも。別のボタンをクリックして閉じたときは、そのボタンにフォーカスが残り、奪わない）、トーストの「閉じる」を押したら、トーストを出す前にフォーカスがあった要素（「変更を保存」）へ戻る。トーストが自動で消えたときは、別の要素にあるフォーカスを動かさない。Popover API の有無で同じ
 - 失敗パターン: 全部に同じ長さを当てていないか。出と入りを同じにしていないか。トーストを自動で消すとき、時間制限に関する基準（本 skill の台帳に無く、未照合）に当たらないか、実装前に確認する
-- 実測（Chrome 156、2026-11-16、1440・390・320 px）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 500 ms までは 0、583 ms で 0.92、666 ms で 1 になり、入りの 150 ms が省かれない。暖機は 650 ms 後に付いた。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。Escape で不透明度 0・`visibility: hidden`。メニューの入りは 0.15 s・出は 0.1 s、トーストの入りは 0.25 s。閉じたトーストの `display` は `none`。動きを減らす設定では、メニューとトーストの `translate` が `none`。ツールチップの右端は、1440・1024・800・720・700・680・660・641・390・320 px のすべてで `.page` の右端以内（欠けた量 0）。キーボードで開いたメニューは、20 ms 後に不透明度 1（`transition-duration: 0s`）で、フォーカスは「名前順」。項目からの Tab・Shift+Tab で外へ出ると、メニューが閉じて `aria-expanded` が `false` になった（対応版・非対応版とも。対応版は「在庫を同期」へ、非対応版は「並べ替える」と「CSV に書き出す」へフォーカスが移った）。メニューは、開くと `aria-expanded` が `true`・フォーカスが「名前順」、選ぶと `false`・フォーカスが「並べ替える」・`aria-checked` が選んだ項目だけ `true`、外側の何も無い所をクリックして閉じてもフォーカスが「並べ替える」へ戻り、別のボタン（在庫を追加）をクリックして閉じるとフォーカスはそのボタンに残った（Popover API 対応と非対応の両方）。保存の通知は、通知欄に「変更を保存しました」「保存する変更はありません」の順に書かれた。メニューを選んだ直後（30 ms）と、トーストを閉じた直後（40 ms）に、背後のボタンが押せた。横はみ出し（`scrollWidth` が `innerWidth` を超えること）は、1440・390・320 px のどれにも無かった。他のブラウザー・実機は未検証
+- 実測（Chrome 156、2026-11-16、1440・390・320 px）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 500 ms までは 0、583 ms で 0.92、666 ms で 1 になり、入りの 150 ms が省かれない。暖機は 650 ms 後に付いた。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。Escape で不透明度 0・`visibility: hidden`。メニューの入りは 0.15 s・出は 0.1 s、トーストの入りは 0.25 s。閉じたトーストの `display` は `none`。動きを減らす設定では、メニューとトーストの `translate` が `none`。ツールチップの右端は、1440・1024・800・720・700・680・660・641・390・320 px のすべてで `.page` の右端以内（欠けた量 0）。キーボードで開いたメニューは、20 ms 後に不透明度 1（`transition-duration: 0s`）で、フォーカスは「名前順」。項目からの Tab・Shift+Tab で外へ出ると、メニューが閉じて `aria-expanded` が `false` になった（対応版・非対応版とも。対応版は「在庫を同期」へ、非対応版は「並べ替える」と「CSV に書き出す」へフォーカスが移った）。メニューは、開くと `aria-expanded` が `true`・フォーカスが「名前順」、選ぶと `false`・フォーカスが「並べ替える」・`aria-checked` が選んだ項目だけ `true`、外側の何も無い所をクリックして閉じてもフォーカスが「並べ替える」へ戻り、別のボタン（在庫を追加）をクリックして閉じるとフォーカスはそのボタンに残った（Popover API 対応と非対応の両方）。保存の通知は、通知欄に「変更を保存しました」「保存する変更はありません」の順に書かれた。メニューを選んだ直後（30 ms）と、トーストを閉じた直後（40 ms）に、背後のボタンが押せた。横はみ出し（`scrollWidth` が `innerWidth` を超えること）は、1440・390・320 px のどれにも無かった。長い品名（改行できない 40 字の英数字）を足した行は、320・390 px の文字 100%・200% で、行の幅を超えなかった（`.page` の端で切れる量 0）。他のブラウザー・実機は未検証
 - 推測の明示: ツールチップが 1.4.13 の 3 条件を満たすかの判断（適合の宣言）はしない（S167 の条件を実装した例である）。ブラウザーが描く `title` のツールチップは例外とされる（S167 の備考）が、この例は自前の要素である。500 ms（ツールチップの遅延）・300 ms（暖機の解除）・6 秒（トーストの表示）・4 px・8 px・長さの段階の選択は、本 skill の目安である。スクリーンリーダーの読み上げ（`role="tooltip"`・`role="status"`）は、実機で確かめていない。`@starting-style` と `popover` は、取得した記述の範囲（S91・S92）で時点情報である
 
 ## この例の出典

@@ -145,7 +145,7 @@ a { color: var(--link); }
 
 ```js
 /* 連打対策（スクリプトを持つ 4 例で共通）: 時間で押下を捨てず、キーの押しっぱなしと、同じ位置の 2 回目以降のクリックだけを無視する */
-const actionable = (t) => t.closest && t.closest('button, a[href], input[type="checkbox"]');
+const actionable = (t) => t.closest && t.closest('button, a[href], label, input[type="checkbox"]');   // label（とその子）も対象。label の既定動作が作る checkbox の click（detail が 0）を、label の段階で止める
 document.addEventListener('keydown', (e) => { if (e.repeat && (e.key === 'Enter' || e.key === ' ') && actionable(e.target)) e.preventDefault(); }, true);
 document.addEventListener('click', (e) => { if (e.detail > 1 && actionable(e.target)) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
 document.addEventListener('mousedown', (e) => { if (e.detail > 1 && actionable(e.target)) e.preventDefault(); }, true);   // 2 回目の押下で、フォーカスを動かさない（行が上がってきて、別の削除へ移るのを防ぐ）
