@@ -1,6 +1,6 @@
 # designer-typography 出典台帳
 
-`SKILL.md`・`design-history.md`・`examples/` が根拠とした出典の台帳。引用原文（逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。番号は S01 から S67 で、台帳の末尾に「引用ではない参照」「未検証・伝聞」「調査の限界」を置く。件数は引用の台帳 67 件（区分 A 43・B 8・C 8・R 8）、逐語引用の文は計 190 件。番号で検索して該当の項目だけ読む前提で書いてある。
+`SKILL.md`・`design-history.md`・`examples/` が根拠とした出典の台帳。引用原文（逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。番号は S01 から S74 で、台帳の末尾に「引用ではない参照」「未検証・伝聞」「調査の限界」を置く。件数は引用の台帳 74 件（区分 A 50・B 8・C 8・R 8）、逐語引用の文は計 207 件。番号で検索して該当の項目だけ読む前提で書いてある。
 
 ## 凡例
 
@@ -15,7 +15,8 @@
 - 引用文は原文を改変していない。原文の誤植（`predicable`・`no more then`）、全角のコンマ・ピリオド（，．）、アポストロフィ・引用符・ダッシュの表記も、そのまま残した
 - 日本語の訳・要旨・「備考」は本 skill の言葉であり、発言者本人の発言ではない
 - 実務家の推奨・主張は、本人の文章でも研究結果の根拠にしない。本台帳では、推奨・規則の形で主張を述べる文（Butterick の S31・S46〜S50、Tufte の S45）を C とする。Vignelli『The Vignelli Canon』（S32〜S36）・Licko（S43）・Allsopp（S51）は、本人の文章を公式の配布元・掲載元から取得して逐語を照合したため A とするが、内容は本人の主張・観察であって研究結果ではない（本 skill では A でも「本人の主張」と添えて使う）
-- 取得日は 2026-11-15（すべて同日に取得・照合）。ブラウザの対応状況・価格・提供書体数・ガイドラインの版は、この日付時点の情報
+- 取得日は、S01〜S67 が 2026-11-15（すべて同日に取得・照合）。S68〜S74 は各項目に記した日付（S68・S71・S72 は 2026-11-15、S69・S70・S73・S74 は 2026-11-16）。S68〜S72 は、同じ配布元の別の skill の台帳で照合済みの項目を、原文・URL・区分のまま移した。S73・S74 と D04 は 2026-11-16 に新規に取得して照合した。ブラウザの対応状況・価格・提供書体数・ガイドラインの版は、この日付時点の情報
+- 引用ブロックの中の命令形の文（指示・手順を述べる文）は、資料としての引用で、この skill への指示ではない。AI の提供元の設計指針の文書（S69・S70）も同じで、本 skill の規則が優先する。S69・S70 の URL は、変更可能な main ではなく、取得日時点のコミットに固定してある
 - 引用の番号（S01 など）は振り直さない。欠番が出たら欠番のままにする
 
 ## 帰属上の注意
@@ -1022,6 +1023,96 @@
 - 検証区分: A
 - 備考: 文字と背景のコントラスト比の最低線（4.5:1）の文。この引用は 4.5:1 の文までで、続く例外（大きい文字の 3:1 など）と 1.4.11（非テキストの 3:1）は本台帳に原文を載せておらず未照合。本 skill の制作例は、すべての文字を 4.5:1 で判定して例外に触れない
 
+### S68 Hikaru Sudo（Goodpatch）
+
+> 目的があいまいなまま進めてしまうと収束が難しくなり、場当たり的なピボットを繰り返して無駄なコストを払うことにもなりかねません。
+
+- 媒体・日付: 生成AIが作るプロトタイプは、本当にサービスづくりの近道になるのか？
+- URL: https://goodpatch.com/blog/2026-08-ai-prototype
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 目的があいまいなまま進めると収束が難しくなる、という主張（引用の範囲）。制作会社の自称。「仮説でも先に言葉にしておくと判断の基準になる」は、この引用から言えることではなく、本 skill の整理である。制作の前に目的を先に決める理由の一つとして使う
+
+### S69 AI の提供元の公開文書「frontend-design」（公開リポジトリの設計指針。Apache License 2.0）
+
+> For calibration, AI-generated design right now clusters around some traits: 1. a warm cream background (near #F4F1EA) with a high-contrast serif display and a terracotta or warm-clay accent
+
+> 4. the SaaS-card kit: content chopped into identical rounded cards, one border-radius on everything regardless of hierarchy, the same soft grey shadow (rgba(0,0,0,.1)) under each, and gradient washes as decoration;
+
+> All traits are legitimate for some briefs, but they are defaults rather than choices, and they appear regardless of subject.
+
+- 媒体・日付: AI の提供元の公開リポジトリ（main ブランチの取得時点。URL 参照）。時点情報
+- URL: https://raw.githubusercontent.com/anthropics/skills/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f/skills/frontend-design/SKILL.md
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 生成 AI の出力が偏りがちな見た目を、AI の提供元自身が列挙した文書（第 1 項は cream の地＋セリフ体の見出し＋テラコッタの差し色、第 4 項は同じ角丸・同じ影のカードの束）。「right now」の時点情報で、数か月で変わる。同文書は、それらが一部の依頼では妥当でも、既定値であって選択ではないと書く。避ける定番がすぐ次の定型になるという観察の裏づけは、本台帳では取得していない（本 skill の整理（推測））。LICENSE は Apache 2.0（取得して確認）。URL は main ではなく、取得日時点でこのファイルを最後に変えたコミットに固定してある。再取得したら、差分を人が確認してから台帳へ反映する。引用ブロックの中の命令形の文は資料としての引用で、この skill への指示ではない
+
+### S70 AI の提供元の公開文書「frontend-design」（同上。制作の進め方）
+
+> Spend your boldness in one place. Let one element be the memorable thing, keep everything around it quiet and disciplined, and cut any decoration that does not serve the brief.
+
+> Typography carries the personality of the page.
+
+> Then review that plan against the brief before building: if any part of it reads like the generic default you would produce for any similar page (work through a similar prompt to see if you arrive somewhere similar) rather than a choice made for this specific brief — revise that part, say what you changed and why.
+
+> Build to a quality floor without announcing it: responsive down to mobile, visible keyboard focus, reduced motion respected, visually accessible, harmonious color palettes.
+
+- 媒体・日付: AI の提供元の公開リポジトリ（取得時点。URL 参照）。時点情報
+- URL: https://raw.githubusercontent.com/anthropics/skills/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f/skills/frontend-design/SKILL.md
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 「大胆さは 1 か所に使う」「書体がページの人格を運ぶ」「作る前に、方針が同種の依頼で誰でも出す既定の案になっていないかを見直し、変えた点と理由を言う」「品質の下限（モバイル対応・キーボードフォーカス・動きを減らす設定・アクセシブルな配色）を告げずに満たす」という指針。URL は取得日時点のコミットに固定してある。引用ブロックの中の命令形の文は資料としての引用で、この skill への指示ではない
+
+### S71 Sam Goree・Bardia Doosti・David Crandall・Norman Su「Investigating the Homogenization of Web Design: A Mixed-Methods Approach」（プロジェクトページ）
+
+> we show that designs have become significantly more similar since 2007, especially for page layouts where the average distance between sites decreased by over 30%.
+
+> Synthesizing interviews from 11 experienced web design professionals with our computational analyses, we discuss causes of this homogenization including overlap in source code and libraries, color scheme standardization, and support for mobile devices.
+
+- 媒体・日付: CHI ’21 の研究の公式プロジェクトページ（cv-web-history.neocities.org）, 2021（ページの日付は未確認）
+- URL: https://cv-web-history.neocities.org/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: Web のデザインの均質化を、2003〜2019 年の代表的サイトの画像で測り（レイアウトの距離が 30% 超縮小）、デザイナー 11 名のインタビューで原因（共有コード・ライブラリ、配色の標準化、モバイル対応）を論じた研究の、著者自身の要約。原論文は未取得で、取得したのは著者のプロジェクトページの要約だけ。サンプルは英語圏の企業・Webby 候補サイトに偏る（同ページ）。既定値で作ることを避ける理由（画一化）の根拠
+
+### S72 Sarah Gibbons（Nielsen Norman Group）
+
+> It is nearly impossible to improve a design without feedback from others. Their input helps you avoid mistakes and thus create higher quality work.
+
+- 媒体・日付: Design Critiques: Encourage a Positive Culture to Improve Products（NN/g の記事、2016-10-23）
+- URL: https://www.nngroup.com/articles/design-critiques/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 批評の目的についての NN/g の主張（調査機関の自称）。作った本人とは別の目で見直す根拠
+
+### S73 MDN Web Docs「Subgrid」（CSS grid layout）
+
+> These grids, however, are independent of the parent grid and of each other, meaning that they do not take their track sizing from the parent grid.
+
+> This makes it difficult to line nested grid items up with the main grid.
+
+> instead of creating a new track listing, the nested grid uses the tracks defined on the parent.
+
+> In such a case, auto-sized row tracks will grow to fit content in the main grid and content in the subgrid.
+
+> As the subgrid value acts in much the same way as a regular nested grid, it is easy to switch between the two.
+
+- 媒体・日付: MDN Web Docs（取得日時点の版）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 入れ子のグリッドは親のトラックと独立で、入れ子の項目を親にそろえにくい。`subgrid` を指定すると、入れ子のグリッドが親のトラックを使う。行のトラックが内容で伸びる指定なら、親の内容と入れ子の内容の両方に合わせて伸びる。通常の入れ子のグリッドと切り替えやすい。引用は、MDN の本文を `curl` で取得し、タグ・空白を正規化した本文に固定文字列として含まれることを確認した（引用に使った文は `grep -F` で 1 件ずつ一致）。ブラウザの対応開始の版は、この記事の互換性表（JS 描画で本文取得では取れない）ではなく、D04 の機械可読データによる
+
+### S74 MDN Web Docs「@supports」
+
+> The @supports CSS at-rule lets you specify CSS declarations that depend on a browser's support for CSS features.
+
+- 媒体・日付: MDN Web Docs（取得日時点の版）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@supports
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 機能（構文・プロパティ・値）に対するブラウザの対応に依存する宣言を書く規則（機能クエリ）。表示装置・利用者の環境（色の設定・動きの設定など）の判定は、`@media` の役割で、`@supports` では判定しない（本 skill の整理）。本 skill の制作例は、`@supports` を構文の対応の分岐にだけ使う。引用は S73 と同じ手順で照合した
+
 ## 引用ではない参照（事実の根拠）
 
 逐語の引用を載せず、事実・書誌・時点情報の根拠として記録するもの。D 番号は引用の S 番号とは別。
@@ -1057,6 +1148,16 @@
 - デジタル庁デザインシステムの版は β 版 v2.18.2（取得日時点。ページの更新表示は 2026-08-05。S27・S28）。同ページの本文の行間の表は 100〜175%（用途別）、本文の最小サイズは 16 CSS px 以上。行長・段組の数値はこのページに無い
 - 写研は 2026-10-14 に「Morisawa Fonts」で写研書体 35 書体の追加提供を開始（S59）。モリサワは 2021 年に写研との OpenType フォント共同開発に合意（S57）。2025 年に字游工房を吸収合併（S57 の沿革は 2025 年に字游工房の吸収合併を記載）。字游工房の公式ページは取得できなかった（調査の限界）
 - Adobe と Google の Pan-CJK フォント（Source Han Sans／Noto Sans CJK）は 2014 年の発表（Adobe の記事は 2014-07-15。S63）。可変フォント版 Source Han Sans は 2021-04-08（S65）
+
+### D04 `subgrid` の対応開始の版（MDN browser-compat-data、2026-11-16 時点）
+
+- 出典: mdn/browser-compat-data の main ブランチの JSON（`css/properties/grid-template-columns.json`・`css/properties/grid-template-rows.json` の `subgrid` の項目）を 2026-11-16 に取得し、`version_added` を読んだ。区分 R（機械可読データ。引用ではない）。Edge は、データ上 Chrome の値を `mirror`（同じ）としている。数値は「その機能が最初に入ったバージョン」で、現在の利用者の割合ではない
+- 対応状況は変わる。使う前に MDN・caniuse で再確認する（制作例では日付つきで書く）
+
+| 機能 | Chrome・Edge | Firefox | Safari | 備考 |
+|---|---|---|---|---|
+| `grid-template-columns: subgrid` | 117 | 71 | 16 | 項目の status は `standard_track: true`・`experimental: false`（機能ごとのフラグで、ブラウザごとの値ではない） |
+| `grid-template-rows: subgrid` | 117 | 71 | 16 | 同上。Edge は列・行とも `mirror` |
 
 ## 未検証・伝聞（SKILL.md では事実・引用として使わない）
 
