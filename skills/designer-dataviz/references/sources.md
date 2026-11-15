@@ -1,6 +1,6 @@
 # designer-dataviz 出典台帳
 
-`SKILL.md`・`design-history.md`・`examples/` が根拠とする出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S129 までの 129 件で、番号は振り直さない（使わない項目も台帳に残してある）。S01 から S14 は Tufte 本人の Web 上の文章、S15 から S18 は Tufte の書籍ページと読者の投稿、S19 から S22 は Minard、S23 から S32 は Shneiderman・Heer・Munzner、S33 から S45 は Few・Kosara、S46 から S63 は色と WCAG、S64 から S91 は政府・組織・報道の実務指針、S92 から S99 は Tufte への反論と軸の研究、S100 から S109 は折れ線・不確実性・統計、S110 から S121 は歴史、S122 から S129 は追補である。
+`SKILL.md`・`design-history.md`・`examples/` が根拠とする出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S138 までの 138 件で、番号は振り直さない（使わない項目も台帳に残してある）。S01 から S14 は Tufte 本人の Web 上の文章、S15 から S18 は Tufte の書籍ページと読者の投稿、S19 から S22 は Minard、S23 から S32 は Shneiderman・Heer・Munzner、S33 から S45 は Few・Kosara、S46 から S63 は色と WCAG、S64 から S91 は政府・組織・報道の実務指針、S92 から S99 は Tufte への反論と軸の研究、S100 から S109 は折れ線・不確実性・統計、S110 から S121 は歴史、S122 から S129 は追補、S130 から S138 は 2026-11-16 の追補（進め方の出典と、ダーク配色・配色の切り替え・色の計算の出典）である。
 
 ## 凡例
 
@@ -19,7 +19,7 @@
 - 追記行: 台帳を作った後、本文で使う事実の裏づけが引用ブロックに無い項目に、同じ URL の別の行を足した（引用ブロックの 2 つ目以降の段落。S14・S15・S22・S38・S39・S56・S63・S67・S69・S75・S76・S77・S78・S79・S114・S128・S129 の 17 項目、計 22 行。備考の末尾に「追記行」として理由を書いた）。追記した行も、2026-11-15 に同じ URL を新規に取得し、取得テキストから切り出して `grep -F` で照合した。新しい出典は足していない
 - 年・日付の扱い: 本文で S 番号を付けて論旨を支える年・日付（Datawrapper の 2026-07、Few の 2004 と 2008、Minard の 1869、Nightingale の 1858、Tufte の 1983、Isenberg らの 2011 など）は、その番号の引用ブロックに逐語で含まれるものに限った。単なる書誌の年（論文の発表年・投稿日・版の年など）は、「媒体・日付」の項に書いた書誌情報による。引用ブロックの原文にあるものではない
 - 数値（比率・個数・コントラスト比・年）は、区分 A で原文を確認できたものだけを「出典あり」として使う。それ以外は「目安（出典なし）」と分けて書く
-- 取得日は、出典ごとに最後に本文を確認した日（すべて 2026-11-15）。記述は 2026-11-15 時点
+- 取得日は、出典ごとに最後に本文を確認した日（S130〜S138 は 2026-11-16、ほかはすべて 2026-11-15）。記述は 2026-11-15 時点（S130〜S138 は 2026-11-16 時点）
 
 ## 帰属上の注意
 
@@ -1372,6 +1372,130 @@
 - 備考: 二軸（superimposed chart）の実験的な根拠。論文本体は未取得で、Datawrapper 経由の引用。対象は 15 人と小規模。追記行: 実験の年（2011 年）と人数（15 人）。Datawrapper の記事の記述
 
 
+### S130 GOV.UK（Service Manual）
+
+> Before you start your research, you’ll need to interrogate that solution and reframe it as a problem to be solved.
+
+- 媒体・日付: How the discovery phase works（Service Manual、2016-08-04 公開・2021-06-21 更新）
+- URL: https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 「解決策を渡されたら問題に戻す」。依頼（「棒グラフにして」など）の受け方・問いの立て方の根拠
+
+### S131 Sarah Gibbons（Nielsen Norman Group）
+
+> It is nearly impossible to improve a design without feedback from others. Their input helps you avoid mistakes and thus create higher quality work.
+
+- 媒体・日付: Design Critiques: Encourage a Positive Culture to Improve Products（NN/g の記事、2016-10-23）
+- URL: https://www.nngroup.com/articles/design-critiques/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 批評の目的についての NN/g の主張（調査機関の自称）。作った本人と別の目で見直す、という進め方の根拠
+
+### S132 Sarah Gibbons（Nielsen Norman Group）
+
+> Be a master chef, not a line cook: take the recipe as a framework, then tweak as needed. Each phase is meant to be iterative and cyclical rather than strictly linear.
+
+- 媒体・日付: Design Thinking 101（NN/g の記事、2016-07-31 公開・2026-07-15 最終確認）
+- URL: https://www.nngroup.com/articles/design-thinking/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 枠組みを「レシピ」ではなく出発点として使う。各段階が往復する点。調査機関の自称。取得ページの HTML は "i<strong>terative and cyclical</strong>" と語の途中に強調のタグを持つ。タグを除いた本文で照合した
+
+### S133 Sam Goree・Bardia Doosti・David Crandall・Norman Su「Investigating the Homogenization of Web Design: A Mixed-Methods Approach」（プロジェクトページ）
+
+> we show that designs have become significantly more similar since 2007, especially for page layouts where the average distance between sites decreased by over 30%.
+
+> Synthesizing interviews from 11 experienced web design professionals with our computational analyses, we discuss causes of this homogenization including overlap in source code and libraries, color scheme standardization, and support for mobile devices.
+
+- 媒体・日付: CHI ’21 の研究の公式プロジェクトページ（cv-web-history.neocities.org）, 2021（ページの日付は未確認）
+- URL: https://cv-web-history.neocities.org/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: Web のデザインの均質化を、2003〜2019 年の代表的サイトの画像で測り（レイアウトの距離が 30% 超縮小）、デザイナー 11 名のインタビューで原因（共有コード・ライブラリ、配色の標準化、モバイル対応）を論じた研究の、著者自身の要約。PDF 本体は取得できず（旧 URL は移転）、取得したのは著者のプロジェクトページの要約（原論文未取得）。サンプルは英語圏の企業・Webby 候補サイトに偏る（同ページ）。対象は Web のページの見た目で、図表の既定の見た目には直接当てはまらない（図表で同じことが起きるかは本 skill では未確認）
+
+### S134 MDN「prefers-color-scheme」
+
+> The prefers-color-scheme CSS media feature is used to detect if a user has requested light or dark color themes. A user indicates their preference through an operating system setting (e.g., light or dark mode) or a user agent setting.
+>
+> It’s been available across browsers since January 2020.
+
+- 媒体・日付: MDN Web Docs, 取得時点
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-color-scheme
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 利用者が求めた配色（ライト／ダーク）を、メディア特性で検出できる、という定義の根拠。2 つ目の段落は、ブラウザーの対応状況（Baseline）の表示で、取得時点の情報。本 skill は版ごとの対応表を照合していない（未照合）
+
+### S135 MDN「color-scheme」
+
+> The color-scheme CSS property allows an element to indicate which color schemes it can comfortably be rendered in.
+>
+> User agents change the following aspects of the UI chrome to match the used color scheme: The color of the canvas surface. The default colors of scrollbars and other interaction UI.
+>
+> It’s been available across browsers since January 2022.
+
+- 媒体・日付: MDN Web Docs, 取得時点
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/color-scheme
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 要素が描ける配色を宣言し、ブラウザーが、キャンバスの色・スクロールバーなどの既定の色を合わせる、という定義の根拠。2 つ目は UI の既定色の対象、3 つ目の段落は対応状況（Baseline）の表示で、取得時点の情報。本 skill は版ごとの対応表を照合していない（未照合）
+
+### S136 Raluca Budiu（Nielsen Norman Group）
+
+> I must say upfront that NN/g has not done its own research on dark mode.
+
+> the smaller the font, the better it is for users to see the text in light mode.
+
+> In other words, in users with normal vision, light mode leads to better performance most of the time.
+
+> at this point we don’t recommend switching to dark mode by default if your target audience includes the general population. That being said, we strongly recommend that designers allow users to switch to dark mode if they want to
+
+- 媒体・日付: Dark Mode vs. Light Mode: Which Is Better?（NN/g の記事、2020-02-02）
+- URL: https://www.nngroup.com/articles/dark-mode/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 学術論文の文献整理で、NN/g 自身の調査ではない（1 つ目の段落）。文章を読む課題（視力・校正・短い語の判断）の研究が中心で、図やグラフの中の文字を測ったものではない。2 つ目は、校正の課題でフォントが小さいほどライトの利点が増えた、という研究（Piepenbrock ほか）の紹介。引用した研究の原論文は未取得。2020 年の記述で、その後の研究は反映していない
+
+### S137 Gustavo M. Machado・Manuel M. Oliveira・Leandro A. F. Fernandes（色覚の違いのシミュレーションの公開ページ）
+
+> According to this model the simulation of the perception of indivuduals with CVD is given by a single matrix multiplication
+
+> Table 1 contains a set of pre-computed matrices for severities in the range [0.0,1.0] where 1.0 represents the highest severity or a case of dichromacy, and 0.0 represents absence of CVD.
+
+> 1.0 0.152286 1.052583 -0.204868 0.114503 0.786281 0.099216 -0.003882 -0.048116 1.051998 0.367322 0.860646 -0.227968 0.280085 0.672501 0.047413 -0.011820 0.042940 0.968881
+
+- 媒体・日付: 著者（UFRGS）の公開ページ「A Physiologically-based Model for Simulation of Color Vision Deficiency」。論文は IEEE Transactions on Visualization and Computer Graphics, Volume 15 (2009), Number 6, pp. 1291-1298（ページの記載。ページ自体の日付は未確認）
+- URL: https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 3 つ目の引用は、ページの Table 1（シミュレーション用の行列）の重度 1.0（二色型）の行を、1 行に並べ直したもの。左から Protanomaly の 9 数（`0.152286` から `1.051998`）、Deuteranomaly の 9 数（`0.367322` から `0.968881`）の順で、Tritanomaly の 9 数は省いた。"indivuduals" は原文の綴り。取得したページは、この行列を掛ける RGB の種類（ガンマ付きか線形か）を述べていない（未確認）。論文本体（IEEE）は未取得。ページが述べるのは行列による色覚の違いの再現であり、特定の図の判読しやすさを検証したものではない
+
+### S138 Björn Ottosson（Oklab の開発者の解説）
+
+> Oklab is able to predict perceived lightness, chroma and hue well, while being simple and well-behaved numerically and easy to adopt.
+
+> Oklab uses a D65 whitepoint, since this is what sRGB and other common color spaces use.
+
+> `float l = 0.4122214708f * c . r + 0.5363325363f * c . g + 0.0514459929f * c . b ;`
+
+> `float m = 0.2119034982f * c . r + 0.6806995451f * c . g + 0.1073969566f * c . b ;`
+
+> `float s = 0.0883024619f * c . r + 0.2817188376f * c . g + 0.6299787005f * c . b ;`
+
+> `0.2104542553f * l_ + 0.7936177850f * m_ - 0.0040720468f * s_`
+
+> `1.9779984951f * l_ - 2.4285922050f * m_ + 0.4505937099f * s_`
+
+> `0.0259040371f * l_ + 0.7827717662f * m_ - 0.8086757660f * s_`
+
+> To test a color space it is not possible to simply check the distance in predictions in the tested color space however, since that will depend on the scaling of the color space.
+
+- 媒体・日付: bottosson.github.io「A perceptual color space for image processing」、2020-12-23（ページの "Published" の記載）
+- URL: https://bottosson.github.io/posts/oklab/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 3〜8 番目の引用は、同ページの `linear_srgb_to_oklab` の係数（線形 sRGB から LMS、立方根の後に L・a・b）。コード中の `c . r` の空白は、取得ページからタグを除いた結果の表記で、元の表示とは異なる。最後の引用は、色空間の中の距離は、その色空間の尺度に依存するため、そのままでは検証に使えないという記述で、Oklab 内のユークリッド距離を色差とみなしてよい根拠にはならない（ページは CIEDE2000 で評価した）。したがって Oklab 内の距離は、本 skill では「目安」で、しきい値を持たない
+
 ## 引用ではない参照（事実の根拠）
 
 書籍・有料論文など、Web に原文が無い、または取得できなかったもの。逐語の引用はしない。要旨は本 skill の言葉で、書誌情報は取得できた範囲だけ書く（取得できなかった項目は空欄でなく「未確認」と書く）。区分は「書籍・未照合」。
@@ -1447,3 +1571,10 @@
 - 虹色型のカラーマップについては、S52 が述べるのは jet の欠点（偽の細部・縞・色覚の曖昧さ）を改善した設計であるという点まで。Turbo が知覚的に均等であるとは、取得した本文では述べていない。viridis は S50 のページが jet の置き換えとして設計したカラーマップの 1 つとして述べるが、色覚の違いで読めるかの検証結果は台帳に載せていない
 - 図の中の文字の最小サイズ、グラフの縦横比の具体値（S100 は 45 度の手法だけ）、KPI の個数、sparkline の寸法、予測区間の確率（80 %・95 % など）は出典を取得していない。本文では「本 skill の目安（出典なし）」と書く
 - 時代別の因果（「当時の制約」「示唆」）は、出典が述べたものを除いて本 skill の整理（推測）である
+
+### 2026-11-16 の追補（進め方・ダーク配色）で確認した限界
+
+- S130〜S138 は、2026-11-16 に同じ URL を新規に取得し、引用の各段落を、タグを除いた本文に対する `grep -F`（空白を 1 つに正規化）で照合した。MDN の 2 件（S134・S135）は、取得時点の URL（`/Reference/` の付く現行の階層）を台帳に書いた
+- ダークの背景での図の色（系列色の明るさ・彩度の選び方、順序色・発散色の明暗が逆になる問題、ダークの格子線・注記の色）は、一次情報を取得していない。`examples/dark-theme-series-colors.md` の色の値は本 skill の目安で、系列間の距離（Oklab 内のユークリッド距離。S138 の係数）と、色覚の違いの近似（S137 の重度 1.0 の行列を線形 RGB に掛けた値）は本 skill の計算である。距離のしきい値に出典は無い。S137 のページは行列を掛ける RGB の種類を述べないため、線形 RGB に掛けたのは本 skill の選択（未確認）。S138 は、色空間の中の距離はその尺度に依存すると述べ、Oklab 内の距離を色差とみなす根拠にはならない
+- ライトとダークの読みやすさの比較（S136）は、文章を読む課題の研究の整理（2020 年）で、図中の文字や折れ線の判読を測ったものではない。NN/g 自身の調査でもない
+- 画一化の研究（S133）は、Web のページの見た目が対象で、作図ツールの既定の図表については取得していない
