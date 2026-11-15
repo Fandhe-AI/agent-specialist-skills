@@ -306,7 +306,7 @@ specialist: true
 | designer-typography | 書体・文字組・読みやすさ | 製品の刻印・表示の文字は、字形・組みを designer-typography に回す |
 | designer-dataviz | データの見せ方・チャート | 計測値や状態表示のグラフ化は designer-dataviz |
 | designer-brand | ブランドの語り・ロゴ・体験の一貫性 | ロゴの大きさの判断（S04）は本 skill で触れるが、ブランド戦略は designer-brand |
-| designer-material | 素材の科学・表面・触感の選定 | 本 skill は CMF の設計判断と成形の目安まで。材料の物性・データシートの読み方は designer-material |
+| designer-material | Material Design とデザインシステム（トークン・コンポーネント仕様・Android） | 機器の画面 UI をデザインシステムや Material の部品で組む場合は designer-material。素材の物性・データシートはどの designer-* も扱わないため、材料メーカー・成形メーカー・専門家に確認する（本 skill の範囲外） |
 | designer-ux-research | 利用者調査・評価設計 | 使用誤り・初見検証の調査設計は designer-ux-research |
 
 ### デザイン例の索引
