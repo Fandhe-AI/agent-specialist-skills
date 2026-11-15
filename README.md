@@ -37,7 +37,7 @@ Claude Code の Claude Skills として使用するスキルは、原則とし�
 
 | スキル | 説明 |
 |--------|------|
-| **designer-apple** | Apple 流プロダクトデザイン相談役。説明不要の UI・HIG・Liquid Glass・Jony Ive 等の考え方でデザインをレビュー |
+| **designer-apple** | Apple 流プロダクトデザイン相談役。説明不要の UI・HIG・Liquid Glass・Jony Ive 等の考え方でデザインをレビュー・サイト/スライド等を制作 |
 
 今後も追加予定です。新規スペシャリスト skill の著作は `.claude/rules/specialist-authoring.md` の規約と `skills/init-claude-specialist/sample/specialist-skill-example.md`（見本）を参照してください。
 

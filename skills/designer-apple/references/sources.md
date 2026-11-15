@@ -1,6 +1,6 @@
 # designer-apple 出典台帳
 
-`SKILL.md` が根拠とした出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。
+`SKILL.md` と `examples/` が根拠とした出典の台帳。引用原文（英語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S50 は `SKILL.md` 本体の根拠、S51 以降は `examples/` の具体例と `SKILL.md` の「制作時の指針」の根拠である。
 
 ## 凡例
 
@@ -11,6 +11,9 @@
   - R: 記者・第三者の地の文。発言者本人の発言ではない（本人発言として引用しない）
   - U: 未検証（末尾の一覧）。事実・引用として使わない
 - 「本体掲載」は、`SKILL.md` 本体に英語原文のまま引用した項目。それ以外の項目は、本体では要旨（日本語）としてのみ使った根拠である
+- 「使用箇所」（S51 以降）は、その出典の値・引用を使った `examples/` のファイルと `SKILL.md` の箇所。ファイル内の S 番号の記載から機械的に集計した
+- S51 以降の HIG の本文は、Apple が提供する各ページの本文データ（JSON 版）を取得して照合した。WWDC の引用は公式トランスクリプトの本文との照合で、トランスクリプトの時刻は約 1 分単位の近似のため台帳には記載しない
+- 数値（pt・px・比率・秒・スプリング値）は、区分 A で原文を確認できたものだけを「出典あり」として examples に使う。原文に無い値は、examples の中で「本 skill の目安（出典なし）」と明記している
 - 引用文は英語原文を改変していない。原文のアポストロフィ・引用符・ダッシュの表記もそのまま残した
 - 日本語の訳・要旨は本 skill の言葉であり、発言者本人の発言ではない
 - 取得日は、出典ごとに最後に本文を確認した日。Wayback Machine の保存コピーを使った出典は、保存コピーの本文を照合した
@@ -636,6 +639,463 @@
 - 検証区分: A
 - 備考: care を人類への奉仕に結びつける語り口の根拠。2012 年の確認済み発言（Telegraph）には無いため、SKILL.md は「確認できた範囲では 2015 年と 2025 年」と書く。2 行目は退社後の発言
 
+### S51 Apple（HIG Typography）
+
+> Follow the recommended default and minimum text sizes for each platform — for both custom and system fonts — to ensure your text is legible on all devices.
+> In general, avoid light font weights.
+> Minimize the number of typefaces you use, even in a highly customized interface.
+> If you need to display three or more lines of text, avoid tight leading even in areas where height is limited.
+> You can use the constants defined in Font.Design to access all system fonts — don’t embed system fonts in your app or game.
+> consider using a stacked layout where text appears above secondary items.
+> Adjust font weight, size, and color as needed to emphasize important information and help people visualize hierarchy.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/business-dashboard.md`、`examples/hardware-ui.md`、`examples/motion-and-animation.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Typography」（変更履歴の最新: 2025-12-16）
+- URL: https://developer.apple.com/design/human-interface-guidelines/typography
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 数値（原文の表）: iOS・iPadOS は本文の既定 17 pt・最小 11 pt。Dynamic Type の Large（既定）は Large Title 34 / 41 pt（強調 Bold）、Headline 17 / 22 pt（Semibold）、Body 17 / 22 pt、Title 1 は 28 / 34 pt、Title 2 は 22 / 28 pt、Title 3 は 20 / 25 pt、Subhead 15 / 20 pt、Footnote 13 / 18 pt、Caption 1 は 12 / 16 pt（いずれも既定の太さは Regular）。強調（emphasized）の太さは、Large Title・Title 1・Title 2 が Bold、Title 3・Headline から Caption 2 まで（Footnote を含む）が Semibold。watchOS・visionOS の最小は 12 pt。pt を CSS px へ等値換算できるとは原文に書かれていない。SF Pro の tracking の値（サイズごとの表）は本 skill の例では使わない（Web の他のフォントへ一般化する根拠を確認していない）。HIG のページ本文データ（JSON 版）を取得して照合
+
+### S52 Apple（HIG Layout）
+
+> Order content by relative importance.
+> place the most important items near the top and leading side of the window or display
+> Group related items to clearly express related information or functions.
+> Use progressive disclosure to make layouts cleaner and easier to interact with.
+> Differentiate controls from content.
+> Don’t change your app’s functionality based on the space it occupies.
+> display no more than three buttons that contain glyphs — or two buttons that contain text — in a row
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-settings.md`、`examples/business-dashboard.md`、`examples/hardware-ui.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Layout」（変更履歴の最新: 2026-09-09）
+- URL: https://developer.apple.com/design/human-interface-guidelines/layout
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 最後の行は watchOS の節。iOS・iPadOS のマージンの pt 値は、取得した本文データに記載が無かった（tvOS のセーフエリア 60 / 80 pt などは tvOS 向けで、本 skill では使わない）。ページの本文データ（JSON 版）を取得して照合
+
+### S53 Apple（HIG Color）
+
+> Avoid relying solely on color to differentiate between objects, indicate interactivity, or communicate essential information.
+> Avoid using the same color to mean different things.
+> Apply color sparingly to the Liquid Glass material, and to symbols or text on the material.
+> Avoid hard-coding system color values in your app.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/business-dashboard.md`、`examples/hardware-ui.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Color」（変更履歴の最新: 2025-12-16）
+- URL: https://developer.apple.com/design/human-interface-guidelines/color
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: システムカラーの RGB 値は表が本文データから取れなかったため、本 skill の例の色は全て本 skill の目安（出典なし）。HIG 自身も値のハードコードを避けるよう述べる
+
+### S54 Apple（HIG Dark Mode）
+
+> At a minimum, make sure the contrast ratio between colors is no lower than 4.5:1. For custom foreground and background colors, strive for a contrast ratio of 7:1, especially in small text.
+> Avoid offering an app-specific appearance setting.
+> Soften the color of white backgrounds.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-settings.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Dark Mode」（変更履歴の最新: 2024-08-06）
+- URL: https://developer.apple.com/design/human-interface-guidelines/dark-mode
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 最低 4.5:1、小さい文字では 7:1 を目指す、という 2 つの水準を区別して使う
+
+### S55 Apple（HIG Accessibility）
+
+> Ideally, give people the option to enlarge text by at least 200 percent (or 140 percent in watchOS apps).
+> Strive to meet the recommended minimum control size for each platform to ensure controls and menus are comfortable for all when tapping and clicking.
+> it works well to add about 12 points of padding around elements that include a bezel. For elements without a bezel, about 24 points of padding works well around the element’s visible edges.
+> Tightening animation springs to reduce bounce effects
+> Replacing transitions in x-, y-, and z-axes with fades to avoid motion
+> Avoiding animating into and out of blurs
+> Convey information with more than color alone.
+> Minimize use of time-boxed interface elements.
+> Offer alternatives to gestures.
+> Be cautious with fast-moving and blinking animations.
+> Always ask for confirmation twice whenever people perform an action that’s difficult to recover from, such a deleting a file.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/business-dashboard.md`、`examples/hardware-ui.md`、`examples/motion-and-animation.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Accessibility」（変更履歴の最新: 2025-06-09）
+- URL: https://developer.apple.com/design/human-interface-guidelines/accessibility
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 数値（原文の表）: 操作対象の既定 / 最小は iOS・iPadOS 44 x 44 / 28 x 28 pt、watchOS 44 x 44 / 28 x 28 pt、macOS 28 x 28 / 20 x 20 pt、tvOS 66 x 66 / 56 x 56 pt、visionOS 60 x 60 / 28 x 28 pt。コントラストの目安は WCAG AA に基づき、17 pt 以下は 4.5:1。Reduce Motion の節の箇条書き 3 件（「Tightening」「Replacing」「Avoiding」で始まる行。箇条書きの記号は除いた）。Reduce Transparency の独立した節は無い
+
+### S56 Apple（HIG Motion）
+
+> Add motion purposefully, supporting the experience without overshadowing it.
+> Don’t add motion for the sake of adding motion.
+> Make motion optional.
+> Aim for brevity and precision in feedback animations.
+> In apps, generally avoid adding motion to UI interactions that occur frequently.
+> Let people cancel motion.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/business-dashboard.md`、`examples/motion-and-animation.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Motion」（変更履歴の最新: 2025-09-09）
+- URL: https://developer.apple.com/design/human-interface-guidelines/motion
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 確認事項: Motion のページ全文に、UI アニメーションの所要時間（秒・ms）の推奨値は無い。数値があるのはゲームのフレームレート（30〜60 fps）と visionOS の揺れの周波数（約 0.2 Hz を避ける）のみで、本 skill では使わない。したがって examples の秒数はすべて本 skill の目安（出典なし）
+
+### S57 Apple（HIG Buttons）
+
+> As a general rule, a button needs a hit region of at least 44x44 pt
+> Always include a press state for a custom button.
+> Keep the number of prominent buttons to one or two per view.
+> Use style — not size — to visually distinguish the preferred choice among multiple options.
+> consider starting the label with a verb to help convey the button’s action
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Buttons」
+- URL: https://developer.apple.com/design/human-interface-guidelines/buttons
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 原文は 44x44 pt（visionOS は 60x60 pt）。Accessibility ページの表（S55）は既定 44 x 44・最小 28 x 28 pt と別の水準なので、本 skill の例では出典を区別して書く。CSS px への換算は原文に無い
+
+### S58 Apple（HIG Writing）
+
+> Prioritize clarity and avoid the temptation to be too cute or clever with your labels.
+> Begin with language like “Get Started” to indicate you’re starting a flow.
+> display it as close to the problem as possible, avoid blame, and be clear about what someone can do to fix it.
+> Interjections like “oops!” or “uh-oh” are typically unnecessary and can sound insincere.
+> Avoid using we altogether because it may be unclear who the “we” in question refers to.
+> Avoid robotic error messages with no helpful information, like “Invalid name.”
+> Provide clear next steps on any blank screens.
+> Remember that empty states are usually temporary, so don’t show crucial information that could then disappear.
+> Describe what it does when turned on, and people can infer the opposite.
+> If you’re trying to convey more than one idea, consider breaking up the text onto multiple screens, and think about the flow of information across those screens.
+> For links, avoid using “Click here” in favor of more descriptive words or phrases, such as “Learn more about UX Writing.”
+> Use possessive pronouns sparingly.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/hardware-ui.md`、`examples/motion-and-animation.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Writing」（変更履歴の最新: 2025-12-16）
+- URL: https://developer.apple.com/design/human-interface-guidelines/writing
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 最後の行はスライドの例への転用（アプリ画面向けの記述を、本 skill がスライドへ当てた）。HIG に「Empty states」専用のページは見つからなかった。空状態の指針は Writing の記述に含まれる
+
+### S59 Apple（HIG Charts）
+
+> An effective chart highlights a few key pieces of information in a dataset, helping people gain insights and make decisions.
+> Summarize the main message of your chart to help make it approachable and useful for everyone.
+> Avoid relying solely on color to differentiate between different pieces of data or communicate essential information in a chart.
+> Let people interact with the data when it makes sense, but don’t require interaction to reveal critical information.
+> Make every chart in your app accessible.
+> bar charts can work well when you use zero for the lower bound of the Y axis
+> Prefer familiar sequences of values in the tick and grid-line labels for an axis.
+> Too many grid lines can be visually overwhelming, distracting people from the data; too few grid lines can make it difficult to estimate a mark’s value.
+> Avoid using subjective terms.
+> using “June 6” is clearer than using “6/6”
+> In contrast, defining a lower bound of zero can sometimes make meaningful differences between values more difficult to discern.
+> Typically, you want the data itself to be most prominent, while letting the descriptions and axes provide additional context without competing with the data.
+> similarly, spelling out “60 minutes” or “60 meters” is clearer than using the abbreviation “60m.”
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/business-dashboard.md`、`examples/slides-presentation.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Charts」
+- URL: https://developer.apple.com/design/human-interface-guidelines/charts
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: HIG にダッシュボード専用のページは見つからなかった。業務ダッシュボードの例は、Charts・Charting data に Layout・Typography を転用した、本 skill の整理
+
+### S60 Apple（HIG Charting data）
+
+> Not every collection of data needs to be displayed in a chart.
+> Keep a chart simple, letting people choose when they want additional details.
+> Maintain continuity among multiple charts that use the same data.
+> Although a descriptive headline or summary can make a chart more accessible, it doesn’t take the place of accessibility labels.
+> consider offering the data in other ways, such as in a list or table that people can scroll, search, and sort.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/business-dashboard.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Human Interface Guidelines「Charting data」（変更履歴は 2022-09-23 の新規ページのみ）
+- URL: https://developer.apple.com/design/human-interface-guidelines/charting-data
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: Patterns のページ
+
+### S61 Apple（HIG Feedback）
+
+> The most effective feedback tends to match the significance of the information to the way it’s delivered.
+> Make sure all feedback is accessible.
+> Alerts can lose their impact if you use them too often or to deliver unimportant information.
+> because people typically expect their action or task to succeed, they only need to know when it doesn’t.
+> it often works well to display status information in a passive way so that people can view it when they need it.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/business-dashboard.md`、`examples/hardware-ui.md`、`examples/motion-and-animation.md`
+- 媒体・日付: Apple Human Interface Guidelines「Feedback」
+- URL: https://developer.apple.com/design/human-interface-guidelines/feedback
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 重要度に合わせた通知の強さ、成功の確認の要否
+
+### S62 Apple（HIG Branding）
+
+> Apply your app’s accent color judiciously.
+> Ensure branding always defers to content.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/web-landing-page.md`
+- 媒体・日付: Apple Human Interface Guidelines「Branding」
+- URL: https://developer.apple.com/design/human-interface-guidelines/branding
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: ブランド色は主要操作・状態表示に絞る
+
+### S63 Apple（HIG Launching）
+
+> Launch instantly.
+> Restore the previous state when your app restarts so people can continue where they left off.
+> A launch screen’s sole function is to enhance the perception of your experience as quick to launch and immediately ready to use.
+> Don’t advertise.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/app-onboarding.md`、`examples/hardware-ui.md`
+- 媒体・日付: Apple Human Interface Guidelines「Launching」
+- URL: https://developer.apple.com/design/human-interface-guidelines/launching
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 起動画面は宣伝の場ではない、という節の記述
+
+### S64 Apple（HIG Loading）
+
+> The best content-loading experience finishes before people become aware of it.
+> Show something as soon as possible.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/app-empty-and-error-states.md`、`examples/motion-and-animation.md`
+- 媒体・日付: Apple Human Interface Guidelines「Loading」
+- URL: https://developer.apple.com/design/human-interface-guidelines/loading
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 読み込み中は、まず何かを表示する
+
+### S65 Apple（HIG Materials）
+
+> Don’t use Liquid Glass in the content layer.
+> Use Liquid Glass effects sparingly.
+> If the underlying content is bright, consider adding a dark dimming layer of 35% opacity.
+> Thicker materials, which are more opaque, can provide better contrast for text and other elements with fine features.
+> Instead, use standard materials for elements in the content layer, such as app backgrounds.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/business-dashboard.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`
+- 媒体・日付: Apple Human Interface Guidelines「Materials」
+- URL: https://developer.apple.com/design/human-interface-guidelines/materials
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: S30 と同じページの追加引用。35% の dimming layer は clear バリアントの Liquid Glass 向けの記述で、Web の一般の文字下地へそのまま当てはめる値ではない（本 skill の例は「下地を暗くして読めるようにする」考え方の参照のみ）
+
+### S66 Apple（WWDC20 Session 10175 “The details of UI typography”）
+
+> Text styles are a set of predefined combinations of a system font weight, a point size value and a leading value.
+> you can use the tight and loose leading variants of text styles. In iOS and macOS, tight leading decreases the line height by two points, while loose leading increases the line spacing by two points.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: WWDC20 Session 10175
+- URL: https://developer.apple.com/videos/play/wwdc2020/10175/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 数値: tight は -2 pt、loose は +2 pt（iOS・macOS）。公式セッションのトランスクリプトを取得して照合。トランスクリプトの時刻は約 1 分単位の近似のため台帳には記載しない
+
+### S67 Apple（WWDC23 Session 10158 “Animate with springs”）
+
+> So springs are the only type of animation that maintains continuity both for static cases and cases with an initial velocity.
+> But a spring animation doesn’t only mean a bouncy animation.
+> a spring animation uses the velocity it had when it was retargeted as the initial velocity towards its new destination and this same velocity preservation makes these kind of interruptions feel smooth and natural.
+> With an ease in and out animation, it does animate to the end, but its motion jerks to a halt as the gesture ends.
+> A bounce of 0 feels like a smooth, gradual change.
+> But you should be cautious about using values higher than around 0.4, since they may feel too exaggerated for a UI element.
+> When you’re not sure, use a spring with bounce 0, which is also what you get if you don’t specify the bounce.
+> Because of its unpredictable nature, you shouldn’t wait for the settling duration for user-facing changes.
+> it’s generally best to start by finding a duration value that gives a pacing that you like.
+> Linear animations can be useful as a specialized tool in some places, like a repeating spinning indicator, but otherwise you should be cautious about using them, especially for movement
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/motion-and-animation.md`、SKILL.md（制作時の指針）
+- 媒体・日付: WWDC23 Session 10158
+- URL: https://developer.apple.com/videos/play/wwdc2023/10158/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 数値: bounce は -1.0 から 1.0、約 0.15 で控えめ、約 0.3 で明確な弾み、約 0.4 超は UI には誇張。duration の具体値は同セッションに無い。公式トランスクリプトを取得して照合。CSS の transition が速度を引き継がない、という主張は、この出典ではなく本 skill の整理
+
+### S68 Apple（WWDC18 Session 803 “Designing Fluid Interfaces”、追加の引用）
+
+> Everything needs to respond instantly.
+> Next, we want to allow for constant redirection and interruption.
+> The second property is response.
+> So, we recommend starting with 100% damping, or no overshoot when you’re tuning elastic behaviors.
+> Because the tap doesn’t have any momentum in the direction of the presentation of Now Playing, we use 100% damping to make sure it doesn’t overshoot.
+> and so we use 80% damping to have a little bit of bounce and squish, making the gesture a lot more satisfying.
+> You should remember that bounciness needs to be purposeful.
+> we end up with this projected position where it could go if we scrolled it there.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/motion-and-animation.md`、SKILL.md（制作時の指針）
+- 媒体・日付: WWDC18 Session 803（S29 と同じセッションの追加引用）
+- URL: https://developer.apple.com/videos/play/wwdc2018/803/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 数値: 弾み調整の開始値は damping 100%（オーバーシュート無し）。Music の Now Playing は、タップで開く場合 100%、スワイプで閉じる場合 80%。damping・response を物理量（周期・減衰比）へ写す計算式は Apple の定義ではなく、本 skill の実装例
+
+### S69 Apple（WWDC25 Session 356 “Get to know the new design system”）
+
+> Instead of relying on decoration, hierarchy should be expressed through layout and grouping.
+> concentric shapes calculate their radius by subtracting padding from the parent’s.
+> Capsules use a radius that’s half the height of the container.
+> Typography has been refined to strengthen clarity and structure, now bolder and left-aligned to improve readability in key moments like alerts and onboarding.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-onboarding.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: WWDC25 Session 356
+- URL: https://developer.apple.com/videos/play/wwdc2025/356/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 最後の行の適用範囲はアラートやオンボーディングなどの場面で、あらゆる見出しへ一般化しない。公式トランスクリプトを取得して照合
+
+### S70 Apple（WWDC26 Session 251 “Communicate your brand identity on iOS”）
+
+> Conceptually, the content layer is the best opportunity to express your brand identity.
+> people don’t need to be reminded which app they’re using.
+> but they also improve interaction by connecting the tap target to the transition state.
+> But delayed load times or dropped frames translate poorly to peoples perception of your app, even if they couldn’t pinpoint exactly why.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/motion-and-animation.md`、`examples/web-landing-page.md`
+- 媒体・日付: WWDC26 Session 251
+- URL: https://developer.apple.com/videos/play/wwdc2026/251/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 原文は iOS アプリ向け。Web や LP への適用は、本 skill の転用。原文の綴り（peoples）はそのまま。公式トランスクリプトを取得して照合
+
+### S71 Apple（WWDC25 Session 219 “Meet Liquid Glass”、追加の引用）
+
+> Tinting should only be used to bring emphasis to primary elements and actions in the UI.
+> Avoid tinting all your elements.
+> When every element is tinted, nothing stands out, and it can be confusing.
+> If you want to imbue color into your app, do it in the content layer instead.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-onboarding.md`、`examples/business-dashboard.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: WWDC25 Session 219（S30 と同じセッションの追加引用）
+- URL: https://developer.apple.com/videos/play/wwdc2025/219/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 色を付けるのは主要な要素に限る、という節。公式トランスクリプトを取得して照合
+
+### S72 W3C（WCAG 2.2）
+
+> The visual presentation of text and images of text has a contrast ratio of at least 4.5:1
+> The visual presentation of the following have a contrast ratio of at least 3:1 against adjacent color(s)
+> The size of the target for pointer inputs is at least 24 by 24 CSS pixels
+> Color is not used as the only visual means of conveying information, indicating an action, prompting a response, or distinguishing a visual element.
+> text can be resized without assistive technology up to 200 percent without loss of content or functionality.
+> at a width equivalent to 320 CSS pixels
+> Motion animation triggered by interaction can be disabled, unless the animation is essential to the functionality or the information being conveyed.
+> starts automatically, lasts more than five seconds, and is presented in parallel with other content
+> anything that flashes more than three times in any one second period
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/business-dashboard.md`、`examples/hardware-ui.md`、`examples/motion-and-animation.md`、`examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: W3C Recommendation, 2024-12-12（Web Content Accessibility Guidelines 2.2）
+- URL: https://www.w3.org/TR/WCAG22/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 順に 1.4.3 Contrast (Minimum)（AA。大きい文字は 3:1。large-scale は 18 pt または太字 14 pt 以上）、1.4.11 Non-text Contrast（AA）、2.5.8 Target Size (Minimum)（AA）、1.4.1 Use of Color（A）、1.4.4 Resize Text（AA）、1.4.10 Reflow（AA。横幅 320 CSS px）、2.3.3 Animation from Interactions（AAA）、2.2.2 Pause, Stop, Hide（A。5 秒）、2.3.1 Three Flashes or Below Threshold（A）。2.5.5 Target Size (Enhanced)（AAA）は 44 by 44 CSS pixels。1.4.12 Text Spacing の 1.5 倍などは、ユーザーが上書きしても壊れない要件で、推奨の行間ではない。コントラスト比の計算は WCAG の相対輝度の式を用いて本 skill が行った
+
+### S73 MDN Web Docs（CSS のメディア機能）
+
+> The prefers-reduced-motion CSS media feature is used to detect if a user has enabled a setting on their device to minimize the amount of non-essential motion.
+> The prefers-color-scheme CSS media feature is used to detect if a user has requested light or dark color themes.
+> The prefers-contrast CSS media feature is used to detect whether the user has requested the web content to be presented with a lower or higher contrast.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/motion-and-animation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: MDN「prefers-reduced-motion」「prefers-color-scheme」「prefers-contrast」
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion（ほか prefers-color-scheme / prefers-contrast）
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 各ページに Baseline「Widely available」の表示を確認した（prefers-reduced-motion と prefers-color-scheme は 2020 年 1 月以降、prefers-contrast は 2022 年 5 月以降）。prefers-reduced-transparency は「Limited availability」で Baseline ではなく、本 skill では使わない
+
+### S74 MDN Web Docs（font-family）
+
+> As the name implies, system-ui is intended to make UI elements look like native apps, and not for typesetting large paragraphs of text.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: MDN「font-family」（ページ最終更新 2026-10-21）
+- URL: https://developer.mozilla.org/en-US/docs/Web/CSS/font-family
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: system-ui の位置づけ
+
+### S75 WebKit Blog “Using the System Font in Web Content”（2015-07-27）
+
+> using the platform’s system font, which is possible on iOS and OS X by using the -apple-system CSS value for the “font-family” CSS property.
+> On platforms which do not support -apple-system, the browser will simply fall back to the next item in the font-family fallback list.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/web-landing-page.md`
+- 媒体・日付: WebKit Blog, 2015-07-27
+- URL: https://webkit.org/blog/3709/using-the-system-font-in-web-content/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 2015 年の古い記事で、system-ui ではなく -apple-system を述べる。現行の推奨フォントスタック（system-ui, -apple-system, ... の並び）を示す Apple 公式の文書は確認できていない
+
+### S76 Apple Developer「Fonts」（San Francisco フォントのライセンス文面）
+
+> THE APPLE SAN FRANCISCO FONT IS TO BE USED SOLELY FOR CREATING MOCK-UPS OF USER INTERFACES TO BE USED IN SOFTWARE PRODUCTS RUNNING ON APPLE’S iOS, OS X OR tvOS OPERATING SYSTEMS, AS APPLICABLE.
+> You may not embed the Apple Font in any software programs or other products.
+> you may not make the Apple Font available over a network where it could be run or used by multiple computers at the same time.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/slides-presentation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 媒体・日付: Apple Developer「Fonts」ページに埋め込まれたライセンス本文（2026-11-15 時点）
+- URL: https://developer.apple.com/fonts/
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 字面どおりに読む限り、SF を Web フォントとしてサイトへ配信する使い方は許諾されていないと読める。ただし、このページの本文は iOS・OS X・tvOS 向けと明記された旧版で、現行の SF Pro のダウンロードに同梱されるライセンスは未確認。法的な解釈は本 skill の範囲外で、法務の確認事項。結論は「SF Pro のフォントファイルを Web へ配信せず、system-ui 等で端末のシステムフォントを参照する」に留める。Apple Developer Forums の「使える」とする返信の要約は、スレッド本文を未取得のため根拠にしない（区分 B）
+
+### S77 Apple（HIG Settings、追加の引用）
+
+> Aim to provide default settings that give the best experience to the largest number of people.
+> Although people appreciate having control over an app or game, too many settings can make the experience feel less approachable, while also making it hard to find a particular setting.
+> Respect people’s systemwide settings and avoid including redundant versions of them in your custom settings area.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/app-onboarding.md`、`examples/app-settings.md`、`examples/motion-and-animation.md`
+- 媒体・日付: Apple Human Interface Guidelines「Settings」（S24 と同じページの追加引用）
+- URL: https://developer.apple.com/design/human-interface-guidelines/settings
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 設定の数・既定値・端末全体の設定との重複
+
+### S78 Apple（HIG Onboarding、追加の引用）
+
+> Teach through interactivity.
+> Consider providing a collection of context-specific tips instead of a single onboarding flow.
+> Otherwise, present a permission request when people first access the specific function that relies on private data or resources.
+> Prefer letting people experience your app or game before prompting them for ratings or purchases.
+> Keep onboarding content focused on the experience you provide.
+
+- 本体掲載: いいえ（要旨・数値として使用）
+- 使用箇所: `examples/app-onboarding.md`
+- 媒体・日付: Apple Human Interface Guidelines「Onboarding」（S16 と同じページの追加引用）
+- URL: https://developer.apple.com/design/human-interface-guidelines/onboarding
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 許可の依頼の時機、体験の前に評価や購入を求めない
+
 ## 引用ではない参照（事実の根拠）
 
 - 体制（CEO John Ternus、Executive Chair Tim Cook、VP Human Interface Design Steve Lemay、VP Industrial Design Molly Anderson）。出典: Apple Leadership ページ https://www.apple.com/leadership/ 、https://www.apple.com/leadership/molly-anderson/。取得日: 2026-11-15。区分: A
@@ -678,8 +1138,23 @@
 ## 調査の限界
 
 - Liquid Glass で discoverability をどう担保するかについて、Apple 側の明示的な説明は取得範囲に存在しない。語られていないのか、取得できていないのかは区別できない
-- 取得した WWDC のデザイン系セッションは 2017/802、2018/803、2025/219 と 356、2026/250 のみ。Apple Design Awards は部門説明のみで、審査要項は未取得
+- 取得した WWDC のデザイン系セッションは 2017/802、2018/803、2020/10175、2023/10158、2025/219 と 356、2026/250 と 251 のみ。Apple Design Awards は部門説明のみで、審査要項は未取得
 - 現行 HIG の Materials・Gestures など一部ページのみ取得。HIG 全体に Clarity / Deference / Depth が無いとは断言できない（取得した 32 ページには無かった）
 - Industrial Design Studio の運営・ロック画面の設計意図・店頭での Apple Pay の物理操作に関する一次資料は未取得
 - Ive 期の主要製品（MacBook Air・初代 iPhone・iPod）について、Ive 本人が製品ごとの設計判断を語った一次文書は限られる
 - NYT・Stanford News・Fast Company・BusinessWeek・CNN Money・Telegraph・New Yorker は直接取得できず、Wayback または再掲載で代替した。保存時点の改変の可能性は排除していない
+
+### examples/ の作成時に確認した限界（2026-11-15）
+
+- スライド: Apple 公式のスライドデザイン原則は、確認できる範囲では見つからなかった。Keynote User Guide for Mac の目次ページ（https://support.apple.com/guide/keynote/toc/）の本文に、tips・best practice・guideline・principle・legibility・contrast・design の語は一致せず、目次は操作手順の見出し（スライドの追加・並べ替え・レイアウトの適用・テーマの変更など）だった。個別ページ全件は読んでいないので、「存在しない」とは言えない。`examples/slides-presentation.md` は、アプリ画面向けの HIG の原則を転用した本 skill の整理であり、Apple がスライドについて述べたことではない
+- Apple イベントの基調講演のスライドの特徴について、Apple 関係者・Jobs 本人が一次の場で語った発言は確認できなかった。書籍・ブログ・名言サイト経由の孫引きは採用していない
+- HIG の Motion のページ全文に、UI アニメーションの所要時間（秒・ms）の推奨値は無い。WWDC23 Session 10158 にも duration の具体値は無い。`examples/` の秒数はすべて本 skill の目安（出典なし）である
+- HIG の Layout のページ本文に、iOS・iPadOS のマージンの pt 値は無かった。変更履歴には iPhone 17 などの specifications の追加が記録されているが、その仕様表は取得した本文データに含まれていなかった
+- システムカラーの RGB 値は表が本文データから取れず、HIG 自身も値のハードコードを避けるよう述べる。examples の色は本 skill の目安（出典なし）で、コントラスト比は WCAG の式で本 skill が計算した
+- HIG の Patterns・Foundations の目次に、ダッシュボードと Empty states を扱うページは見つからなかった。「指標は何個まで」といった具体数も無い。`examples/business-dashboard.md` と `examples/app-empty-and-error-states.md` は、Charts・Charting data・Writing・Layout・Typography を転用した本 skill の整理である
+- ハードウェア UI（物理ボタン・本体ディスプレイ）の HIG は未調査。`examples/hardware-ui.md` は、画面付き製品（watchOS など）の HIG の数値を目安として転用し、公開された発言の考え方を添えた本 skill の整理である
+- SF Pro の現行ライセンス（ダウンロードに同梱される版）は未確認。取得できたのは Fonts のページに埋め込まれた旧版の文面（S76）のみで、Web への配信可否は法務の確認事項。現行の推奨フォントスタック（system-ui, -apple-system, ... の並び）を示す Apple 公式の文書は確認できていない（S74、S75）
+- 日本語環境（CJK）向けの Apple の文字サイズ・字間の公式指針は確認できていない。HIG の表は欧文を前提とする。SF Pro の tracking の値は、examples では使っていない
+- WWDC のモーション系・デザイン系セッションは、取得済みのものを除き未取得（WWDC24 以前と WWDC26 の他のデザイン系セッションなど）
+- HIG の数値（44 pt など）は iOS 向けで、Web（CSS px）・印刷物・スライドへそのまま適用できるとは原文は述べていない。examples では、換算した値を「本 skill の目安」と区別している
+- HIG は Apple が随時改訂する。S51 以降の引用は 2026-11-15 時点である
