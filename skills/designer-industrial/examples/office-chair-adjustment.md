@@ -129,7 +129,12 @@ def mix_cdf(x):
     return sum(w * cdf(x, m, s) for w, m, s in GROUPS)
 
 
-def mix_quantile(p, lo=0.0, hi=200.0):
+def mix_quantile(p):
+    # 探索区間は GROUPS から決める（各群の平均 ± 10 標準偏差の最小・最大）。単位に依存しない
+    lo = min(m - 10 * s for _, m, s in GROUPS)
+    hi = max(m + 10 * s for _, m, s in GROUPS)
+    if not mix_cdf(lo) < p <= mix_cdf(hi):   # 区間の端に張り付く入力は、誤った値を返さず止める
+        raise ValueError(f"分位 {p} が探索区間 [{lo}, {hi}] の外にある。GROUPS を確かめる")
     for _ in range(100):
         mid = (lo + hi) / 2
         lo, hi = (mid, hi) if mix_cdf(mid) < p else (lo, mid)
