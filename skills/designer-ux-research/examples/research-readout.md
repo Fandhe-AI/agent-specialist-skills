@@ -117,6 +117,7 @@ for f in d["findings"]:
     miss = [k for k in need[f["type"]] if not f.get(k)]
     bad = [x for x in f.get("from", []) if by[x]["type"] != parent[f["type"]]]
     assert not miss and not bad, (f["id"], miss, bad)
+assert d["findings"], "findings が空"
 assert d["not_seen"], "見ていないことが空"
 print("OK", {t: sum(f["type"] == t for f in d["findings"]) for t in need})
 ```
@@ -137,6 +138,8 @@ responses = {  # 1 人 = 項目 1〜10 への回答（1〜5）
                   [3, 3, 4, 3, 3, 3, 3, 3, 3, 3]],
 }
 def sus(r):
+    if len(r) != 10 or any(x not in (1, 2, 3, 4, 5) for x in r):
+        raise ValueError("回答は 1〜5 を 10 件")
     return 2.5 * sum((x - 1) if i % 2 == 0 else (5 - x) for i, x in enumerate(r))
 
 for group, rs in responses.items():
