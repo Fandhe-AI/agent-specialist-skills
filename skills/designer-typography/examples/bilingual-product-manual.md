@@ -62,6 +62,9 @@ A5 は 148 x 210 mm。1 pt = 25.4 / 72 mm。
 |---|---|---|
 | 文字サイズ | 日本語 9 pt・英語 10 pt | 和文書籍は一般に 9 pt・最小 8 pt、欧文書籍は 10 pt か 12 pt（S02）。英語は S46 の印刷 10〜12 pt（C）の下限 |
 | 行長 | 36 字 x 9 pt = 324 pt = 114.3 mm。余白は左右 16.85 mm（(148 − 114.3) / 2） | 書籍の上限 40 字（S02）の内側で、字数の整数倍（S03）。36 字は本 skill の目安 |
+| 警告・注意の枠内 | 和文 34 字 x 9 pt = 306 pt = 107.95 mm。枠の内側の幅（324 pt − 両側の枠線）から 306 pt を引いた残りを、左右の余白に等分する（警告の帯・本文とも同じ値） | 行長は字数の整数倍にする（上の行長の行と同じ考え方）。左右の余白を 8 pt に固定すると、Chrome 156 の PDF の実測で警告の枠内は 305.0 pt（33.9 字）になり、両端そろえの 1 行目が 32 字で字間が開いた。枠線は整数 px に丸められる（305.0 pt との差から推定）ので、pt の引き算で余白を決めずに「内側の幅 − 306 pt」で決める。34 字は本 skill の目安（出典なし）。本例の指定の実測は、警告・注意とも 306.0 pt = 34.0 字で、警告の 1 行目が 34 字（PDF） |
+| 手順の字下げ | 番号の字下げ 2em = 18 pt（body が 9 pt）。和文は 324 − 18 = 306 pt = 34 字 | 枠内と同じ 34 字になる。2 行にした手順を PDF に出した実測で、和文の 1 行目が 306.0 pt（番号を除いて 34 字）。本 skill の目安 |
+| 言語の指定の範囲 | `lang` ごとの文字サイズ・そろえは `body` 以下の要素に当て、`html` に当てない。言語の指定が無い要素（表の数値・字下げの `em`）は body の 9 pt | `html` に `lang="ja"` があるため、`[lang="ja"]` だけだと文書全体が 9 pt・両端そろえになった（Chrome 156 の実測で `html` が 12 px・`justify`）。`body` 以下に限る本例の指定では、`html` は 16 px・`start`。本 skill の整理 |
 | 英語の 1 行の字数 | 同じ 114.3 mm。10 pt で約 65〜70 字と推測する。組んだ見本で実測する | 推測。S46 の 45〜90 字（C）に収まる見込みで、S38 の「60 字を超えると読みにくい」（B）の主張は超える。1 つの最適値にしない |
 | 行送り | 14 pt 一定（和文 155%・英文 140%） | 行間を一定にする（S02）。英文の 140% は S48 の 120〜145%（C）の内側。和文は本 skill の目安 |
 | サイズの段階 | 章見出し 18 pt・本文（和 9 pt／英 10 pt を 1 段とみなす） | Vignelli の内規は 1 ページ 2 サイズ・見出しは約 2 倍（S34。印刷の欧文）。和欧を 1 段とみなすのは本 skill の整理 |
@@ -122,28 +125,32 @@ A5 の印刷・PDF 用の HTML/CSS。外部のスクリプト・フォント・�
 
 ```css
 @page { size: 148mm 210mm; margin: 18mm 16.85mm 20mm; }
-:root { --ja: 9pt; --en: 10pt; --pitch: 14pt; --measure: calc(var(--ja) * 36); }  /* 324pt = 114.3mm */
-body { margin: 0; color: #111; line-height: var(--pitch);
+:root { --ja: 9pt; --en: 10pt; --pitch: 14pt;
+  --measure: calc(var(--ja) * 36);                 /* 324pt = 114.3mm */
+  --inner: calc(var(--ja) * 34); }                 /* 枠内・手順の和文 306pt = 107.95mm */
+body { margin: 0; color: #111; line-height: var(--pitch); font-size: var(--ja);   /* 言語の指定が無い要素（表の数値・手順の字下げ）は 9pt */
   font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif; }
 .page, .sign, .spec { inline-size: var(--measure); }
-[lang="ja"] { font-size: var(--ja); text-align: justify; line-break: strict; text-autospace: normal; }
-[lang="en"] { font-size: var(--en); text-align: start; hyphens: manual;
+body [lang="ja"] { font-size: var(--ja); text-align: justify; line-break: strict; text-autospace: normal; }   /* body 以下に限る。html の lang には当てない */
+body [lang="en"] { font-size: var(--en); text-align: start; hyphens: manual;
   font-family: "Noto Sans", "Helvetica Neue", Arial, sans-serif; }
 p { margin: 0; }
 .pair { margin: 0 0 var(--pitch); break-inside: avoid; }      /* 日英の組の間は 1 行 */
 .model { white-space: nowrap; }
 
-.sign { box-sizing: border-box; break-inside: avoid; }
-.sign > h3 { margin: 0; padding: 0 8pt; font-weight: 700; }
+.sign { --inset: calc((100% - var(--inner)) / 2);   /* 枠の内側の幅から 34 字分を引いた残りを左右に分ける。枠線の太さに左右されない */
+  box-sizing: border-box; break-inside: avoid; }
+.sign > h3 { margin: 0; padding: 0 var(--inset); font-weight: 700; }
 .sign > h3 [lang="en"] { margin-inline-start: 1em; }
-.sign > .pair { padding: 7pt 8pt 0; }
+.sign > .pair { padding: 7pt var(--inset) 0; }
 .warning { border: 2pt solid #111; }
-.warning > h3 { background: #111; color: #fff; }               /* 反転の帯 */
+.warning > h3 { background: #111; color: #fff;                 /* 反転の帯 */
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; } /* 背景の印刷が切られると白地に白文字で消えるため、背景を必ず出す */
 .caution { border: 1pt solid #111; }
 .caution > h3 { border-block-end: 1pt solid #111; }            /* 白地の帯 */
 .note { border-inline-start: 1pt solid #111; padding-inline-start: 8pt; }
 
-.steps { margin: 0; padding-inline-start: 2em; }
+.steps { margin: 0; padding-inline-start: 2em; }              /* body が 9pt なので 2em = 18pt。和文は 306pt = 34 字 */
 .spec { border-collapse: collapse; }
 .spec th, .spec td { padding: 3.5pt 0; border-block-end: 0.5pt solid #111; text-align: start; vertical-align: top; }
 .spec th span { display: block; }
@@ -166,12 +173,12 @@ p { margin: 0; }
 
 ## 点検
 
-- 行長・行送り: 日本語は 36 字（114.3 mm）。英語の 1 行の字数を実測し、S46・S38 の範囲と並べて判断する。行送りは 14 pt 一定
+- 行長・行送り: 日本語は 36 字（114.3 mm）、警告・注意の枠内と手順は 34 字（107.95 mm）。枠の中で字間が開いていないか、書き出した PDF で 1 行目の字数を数える。英語の 1 行の字数を実測し、S46・S38 の範囲と並べて判断する。行送りは 14 pt 一定
 - そろえ: 日本語は両端そろえで行末のばらつきが無い。英語は左そろえで、ハイフネーションに頼っていない（S08・S49）。約物の前後が不自然に広がっていないか、書き出した PDF で確認する
 - 和欧間: 自動の空きと手動スペースの二重が無い（S13・S20）。漢字・かな・数字・欧字のそれぞれの境で空きが同じに見えるか、実機で確認する（かなとの境の挙動は未照合）
 - 表記: 全角英数が無い（S07）。日本語にイタリックが無い（S28）。ハイフン・波ダッシュの文字コードが 1 種。句読点・括弧が日本語と英語で別々に統一されている（S29）
 - 用語: 日英の用語表と本文が一致している
-- 色: 黒 1 色で階層が成り立つ。色を足すなら追加の手がかりにとどめる
+- 色: 黒 1 色で階層が成り立つ。色を足すなら追加の手がかりにとどめる。ブラウザーの印刷で「背景のグラフィック」を切った設定でも、警告の帯が読めるか（反転の帯は背景に頼るので `print-color-adjust` で背景を出す。印刷ダイアログの設定は実機で確かめる）
 - 範囲外: 警告表示の法令・規格への適合、安全上の表現、翻訳の正確さは、製品安全の担当・法務・翻訳者に確認する。入稿規定・用紙・書体の使用許諾と PDF への埋め込みは、印刷会社・権利者に確認する
 - 失敗パターン: 欧文の助言（左そろえ・字間）を和文へ持ち込んでいないか。WCAG の試験値（0.12em など）で本文を組んでいないか（S25）
 
