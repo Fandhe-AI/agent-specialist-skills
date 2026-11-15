@@ -62,7 +62,7 @@ AI の下書きを、待っている間も状態が分かり、いつでも止�
 | 状態の枠 | 停止・使う・続きは、下書き欄の上の同じ枠に出す。状態が変わっても下書き欄は動かない（枠の高さを固定する） | 本 skill の整理 |
 | 待ちの表示 | 「返信の要点を整理しています」→「下書きを書いています」。具体的な処理名 | S70 |
 | 整理中の長さ | 700 ms | 本 skill の目安（出典なし） |
-| 停止 | 生成を始めた同じ描画で、「停止」ボタンを出す。Esc でも止まる。止めたら、ここまでの下書きを残し、フォーカスを次の操作（下書きが空なら提案）へ移す | 出す時間の出典は無い（本 skill の整理）。残すのは S125 の考え方 |
+| 停止 | 生成を始めた同じ描画で、「停止」ボタンを出す。Esc でも止まる（入力できる欄にフォーカスがあるときを除く）。止めたら、ここまでの下書きを残し、フォーカスが消える所か body にあれば、次の操作（下書きが空なら提案）へ移す。入力中の欄からは奪わない | 出す時間の出典は無い（本 skill の整理）。残すのは S125 の考え方 |
 | ストリーミング | 2 文字ずつ 50 ms 間隔（目安）。動きを減らす設定では、ストリーミングせず、書き終えてから全文を出す | 本 skill の目安・整理（出典なし） |
 | 画面の位置 | 生成中も完了時も、スクロールを動かさない。下書き欄は固定の高さ（8 行）で、あふれたら欄の中でスクロールする | S120 |
 | 通知 | 状態は下書きの枠の近くの欄、採用・取り消し・送信は返信の近くの欄（どちらも `role="status"`）に、状態だけ出す。下書きの全文を通知しない。生成中の欄は `aria-busy` | S100・本 skill の整理 |
@@ -229,11 +229,15 @@ function setState(next) {
   $('adopt').classList.toggle('btn-main', next === 'done');                               // 次の一手を 1 つだけ強調する
   $('resume').classList.toggle('btn-main', next === 'stopped' || next === 'error');
 }
+function focusIfFree(el) {                                                   // 非同期の後は、フォーカスが消える所か body にあるときだけ移す。入力中の欄は奪わない
+  const a = document.activeElement;
+  if (!a || a === document.body || $('suggest').contains(a) || $('run').contains(a) || $('after').contains(a)) el.focus({ preventScroll: true });
+}
 function start(k, resume) {
   clearInterval(timer); clearTimeout(timer);
   if (!resume) { if ($('draft').value.trim()) savedDraft = $('draft').value; pos = 0; base = ''; $('draft').value = ''; }
   else base = $('draft').value;                                                           // 直した分を残し、その後ろへ続きを足す
-  startPos = pos; kind = k; setState('thinking'); $('stop').focus({ preventScroll: true });   // 停止を同じ描画で出し、キーボードの利用者も止められる
+  startPos = pos; kind = k; setState('thinking'); focusIfFree($('stop'));   // 停止を同じ描画で出し、キーボードの利用者も止められる
   $('phase').textContent = '返信の要点を整理しています'; sayAi('下書きを作っています');
   timer = setTimeout(write, resume ? 0 : THINK);
 }
@@ -243,23 +247,27 @@ function write() {
   if (reduce.matches) { pos = text.length; $('draft').value = base + text.slice(startPos); return finish(); }   // 動きを減らす設定では、書き終えてから全文を出す
   timer = setInterval(() => {
     pos = Math.min(text.length, pos + STEP); $('draft').value = base + text.slice(startPos, pos);
-    if (FAIL && !failedOnce && pos >= text.length / 2) { failedOnce = true; clearInterval(timer); setState('error'); sayAi('下書きを最後まで作れませんでした。ここまでの下書きは残してあります。', true); $('resume').focus({ preventScroll: true }); }
+    if (FAIL && !failedOnce && pos >= text.length / 2) { failedOnce = true; clearInterval(timer); setState('error'); sayAi('下書きを最後まで作れませんでした。ここまでの下書きは残してあります。', true); focusIfFree($('resume')); }
     else if (pos >= text.length) { clearInterval(timer); finish(); }
   }, TICK);
 }
-function finish() { setState('done'); sayAi('下書きができました。直して使えます。'); $('adopt').focus({ preventScroll: true }); }
+function finish() { setState('done'); sayAi('下書きができました。直して使えます。'); focusIfFree($('adopt')); }
 function stop() {
   if (state !== 'thinking' && state !== 'writing') return;
   clearInterval(timer); clearTimeout(timer); setState('stopped');
   sayAi('停止しました。ここまでの下書きは残してあります。');
-  (!$('adopt').disabled ? $('resume') : $('suggest').querySelector('button')).focus({ preventScroll: true });   // 下書きが空なら、提案へ戻す
+  focusIfFree(!$('adopt').disabled ? $('resume') : $('suggest').querySelector('button'));   // 下書きが空なら、提案へ戻す
 }
 document.querySelectorAll('#suggest [data-kind]').forEach((b) => b.addEventListener('click', () => start(b.dataset.kind, false)));
 $('stop').addEventListener('click', stop);
-addEventListener('keydown', (e) => { if (e.key === 'Escape') stop(); });
+addEventListener('keydown', (e) => {                                          // 返信などを入力しているときの Esc は、生成を止めない
+  if (e.key === 'Escape' && !document.activeElement.matches('textarea:not([readonly])')) stop();
+});
 $('resume').addEventListener('click', () => start(kind, true));
 $('again').addEventListener('click', () => start(kind, false));
-$('restore').addEventListener('click', () => { $('draft').value = savedDraft; savedDraft = null; setState('done'); sayAi('前の下書きに戻しました'); });
+$('restore').addEventListener('click', () => {
+  $('draft').value = savedDraft; savedDraft = null; setState('done'); sayAi('前の下書きに戻しました'); focusIfFree($('adopt'));   // 押したボタンが消えるので、フォーカスを移す
+});
 $('draft').addEventListener('input', () => { $('adopt').disabled = $('draft').value.trim() === ''; });
 
 function flash() { $('reply').classList.add('flash'); setTimeout(() => $('reply').classList.remove('flash'), 1200); }
@@ -297,13 +305,13 @@ $('send').addEventListener('click', () => sayReply('送信しました（この�
 - 目的: 待ち・停止・編集・採用・取り消しのそれぞれで、人が主導権を持つか。送信を自動化していないか（S71）
 - 待ち: 具体的な処理名が出る（S70）。停止が生成の開始と同じ描画で出る。Esc でも止まる
 - 位置: 生成中も完了時も、ページのスクロール位置が動かない（S120）。下書き欄は固定の高さで、あふれても欄の中だけ動く
-- 通知: メッセージ欄が状態だけを出し、下書きの全文を出さない。フォーカスを奪うのは、停止と、完了後の次の操作（使う）だけで、全文を読み上げさせない（S100）
+- 通知: メッセージ欄が状態だけを出し、下書きの全文を出さない。非同期の完了（生成の開始・完了・失敗・停止）でフォーカスを移すのは、フォーカスが消える所（提案・停止・続きなどの行）か body にあるときだけ。返信欄などで入力している最中は、フォーカスを奪わず、状態の通知だけにする。Esc は、入力できる欄にフォーカスがあるときは生成を止めない（S100）
 - 編集と復旧: 停止後・完了後に下書きを直せる。書き直しで消える下書きを戻せる。失敗してもここまでの下書きが残る（S125）
 - 採用と取り消し: 返信欄の文を置き換えるとき、取り消せる。取り消した結果が言葉と強調で分かる（S72）。送信は人が押す（S71）
 - 縮小版: 動きを減らす設定で、点の脈動が止まり、全文は書き終えてから出る。設定は CSS とスクリプトの判定で、途中で変えても CSS の部分は追従する
 - 横はみ出し: 1440・390・320 px で横スクロールが出ない。下書きと返信の欄が幅に収まる
 - 能力と精度: できることと、正確とは限らないことが、使う前に読める（S123・S124）。提案はボタンで、導入文は具体的（S121・S122）
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: ハッシュ無しで開くと、ストリーミング間隔 50 ms・整理中 700 ms で、提案を押した直後（約 1 ms）に「返信の要点を整理しています」が出て、停止ボタンにフォーカスがあった（修正前は 5 ms・0 ms で、待ちの文言が出ずに全文が出た）。約 703 ms で「下書きを書いています」に替わり、下書きは 1 秒で 10 文字、2 秒で 50 文字、3 秒で 90 文字、約 3.1 秒で全 95 文字になり、フォーカスが「この下書きを使う」へ移った（スクロール位置は 0 のまま）。状態を変えても、下書き欄の上端は、1440・390・320 px とも動かなかった（修正前は 390 px で 52 px 動いた）。「この下書きを使う」は、320 px（画面の高さ 640 px）でも画面の内側（上端 562 px）にある。整理中に Esc で停止すると、フォーカスが最初の提案へ移った（修正前は失われた）。停止（ボタンと Esc）でここまでの下書き（24 文字・14 文字）が残った。停止して下書きに一文を足し、「続きを書く」を押すと、足した文が残ったまま最後まで書き終えた（修正前は消えた）。失敗（擬似）では途中の 50 文字が残り、「続きを書く」にフォーカスが移って、「続きを書く」で完了した。採用は、元の返信を置き換え、続けて 2 回採用しても、「採用を取り消す」で元の返信（「元の返信」）に戻り、フォーカスは返信欄へ移った（修正前は下書きに戻った）。採用後に返信を直すと、取り消しが外れた。書き直しで消えた編集済みの下書きは、「前の下書きに戻す」で戻った。送信は自動で起きなかった。390 px と 320 px で、スクロールを 90 px にして生成しても、生成中・完了時とも 90 px のままだった。動きを減らす設定では、点の `animation-name` が `none` で、全文が書き終えた後に一度に出た。通常は `pulse`・1.2 s。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。狭い画面では、下書き欄が画面の下側（390 px で上端 665 px、320 px で 768 px）にあり、生成中の文字は自分でスクロールして読む（画面は動かさない）。実機・スクリーンリーダー・実際の生成 AI は未検証
+- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: ハッシュ無しで開くと、ストリーミング間隔 50 ms・整理中 700 ms で、提案を押した直後（約 1 ms）に「返信の要点を整理しています」が出て、停止ボタンにフォーカスがあった（修正前は 5 ms・0 ms で、待ちの文言が出ずに全文が出た）。約 703 ms で「下書きを書いています」に替わり、下書きは 1 秒で 10 文字、2 秒で 50 文字、3 秒で 90 文字、約 3.1 秒で全 95 文字になり、フォーカスが「この下書きを使う」へ移った（スクロール位置は 0 のまま）。状態を変えても、下書き欄の上端は、1440・390・320 px とも動かなかった（修正前は 390 px で 52 px 動いた）。「この下書きを使う」は、320 px（画面の高さ 640 px）でも画面の内側（上端 562 px）にある。整理中に Esc で停止すると、フォーカスが最初の提案へ移った（修正前は失われた）。停止（ボタンと Esc）でここまでの下書き（24 文字・14 文字）が残った。停止して下書きに一文を足し、「続きを書く」を押すと、足した文が残ったまま最後まで書き終えた（修正前は消えた）。失敗（擬似）では途中の 50 文字が残り、「続きを書く」にフォーカスが移って、「続きを書く」で完了した。採用は、元の返信を置き換え、続けて 2 回採用しても、「採用を取り消す」で元の返信（「元の返信」）に戻り、フォーカスは返信欄へ移った（修正前は下書きに戻った）。採用後に返信を直すと、取り消しが外れた。書き直しで消えた編集済みの下書きは、「前の下書きに戻す」で戻った。送信は自動で起きなかった。390 px と 320 px で、スクロールを 90 px にして生成しても、生成中・完了時とも 90 px のままだった。動きを減らす設定では、点の `animation-name` が `none` で、全文が書き終えた後に一度に出た。通常は `pulse`・1.2 s。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。狭い画面では、下書き欄が画面の下側（390 px で上端 665 px、320 px で 768 px）にあり、生成中の文字は自分でスクロールして読む（画面は動かさない）。返信欄にフォーカスを置いたまま生成を始めると、開始時も完了時（約 1.5 秒後）も、フォーカスは返信欄に残った（修正前は停止ボタン、続いて「使う」に奪われた）。失敗（擬似）の時点でも返信欄に残った。返信欄で Esc を押しても、生成は止まらなかった（修正前は止まった）。「前の下書きに戻す」を押すと、フォーカスは「この下書きを使う」へ移った（修正前は body に落ちた）。実機・スクリーンリーダー・実際の生成 AI は未検証
 - 推測の明示: 2 文字・50 ms・700 ms・1.2 秒・8 行は本 skill の目安である。ストリーミングの速さ・停止を出す時間・再生成の上限の出典は取得していない。画面の位置を動かさない設計と、全文を読み上げさせない選択は、NN/g の観察（S120）と本 skill の整理であり、スクリーンリーダーでの実際の読み上げは実機で確かめていない。生成 AI の実際の応答の遅さ・誤りは、擬似では再現していない
 
 ## この例の出典

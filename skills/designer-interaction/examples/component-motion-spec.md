@@ -73,7 +73,7 @@
 | 状況 | 姿 |
 |---|---|
 | `allow-discrete` に非対応 | `transition` の宣言ごと無効になり、メニューとトーストは動きなしで出入りする。機能は変わらない |
-| Popover API に非対応 | スクリプトが検出し、`hidden` の切り替えで同じ開閉をする。Escape・メニューの外のクリック・項目の選択でも閉じる。動きなし |
+| Popover API に非対応 | スクリプトが検出し、`hidden` の切り替えで同じ開閉をする。Escape・メニューの外のクリック・項目の選択でも閉じる（閉じる処理は 1 か所）。メニューの中にフォーカスがあれば、起点の「並べ替える」へ戻す。動きなし |
 | 動きを減らす設定 | 上の縮小版の列のとおり |
 
 コントラスト比（WCAG の相対輝度式で計算。基準の 4.5:1・3:1 の原文は本 skill の台帳に無く、未照合）:
@@ -234,7 +234,7 @@ const hasPopover = 'popover' in HTMLElement.prototype;       // 非対応なら 
 const menu = document.getElementById('sort-menu');
 const sort = document.getElementById('sort');
 const toast = document.getElementById('toast');
-let toastTimer;
+let toastTimer, toastFrom = null;                              // toastFrom: トーストを出したときにフォーカスがあった要素
 if (!hasPopover) { document.documentElement.classList.add('no-popover'); menu.hidden = true; toast.hidden = true; }
 
 /* メニュー: 位置をボタンの下に置く。キーボードで開いたときは動きを付けない（detail が 0 のクリック）*/
@@ -245,15 +245,17 @@ function placeMenu() {
   menu.style.left = Math.max(8, Math.min(r.left, innerWidth - 216)) + 'px';             // 画面の端からはみ出さない（幅 200 px + 余白）
 }
 menu.addEventListener('beforetoggle', (e) => { if (e.newState === 'open') placeMenu(); });
-if (!hasPopover) {                                            // 非対応: 開閉・Escape・外側のクリックを自前で持つ
-  sort.addEventListener('click', () => { placeMenu(); menu.hidden = !menu.hidden; });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') menu.hidden = true; });
-  document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && !sort.contains(e.target)) menu.hidden = true; });
+function closeMenu() {                                        // 閉じる処理は 1 か所。メニューの中にフォーカスがあれば、起点のボタンへ戻す
+  const inside = menu.contains(document.activeElement);
+  if (hasPopover) { if (menu.matches(':popover-open')) menu.hidePopover(); } else menu.hidden = true;
+  if (inside) sort.focus({ preventScroll: true });
 }
-menu.addEventListener('click', (e) => {                       // 項目を選んだらメニューを閉じる
-  if (!e.target.closest('.menu-item')) return;
-  if (hasPopover) menu.hidePopover(); else menu.hidden = true;
-});
+if (!hasPopover) {                                            // 非対応: 開閉・Escape・外側のクリックを自前で持つ
+  sort.addEventListener('click', () => { if (menu.hidden) { placeMenu(); menu.hidden = false; } else closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
+  document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && !sort.contains(e.target)) closeMenu(); });
+}
+menu.addEventListener('click', (e) => { if (e.target.closest('.menu-item')) closeMenu(); });   // 項目を選んだらメニューを閉じる
 
 /* ツールチップ: 画面の端からはみ出さない位置に寄せる。最初の表示が済んだら暖機（data-warm）、離れて 300 ms で解除（目安） */
 const bar = document.querySelector('.toolbar');
@@ -273,13 +275,16 @@ for (const tip of bar.querySelectorAll('.tip')) {
 /* トースト: 6 秒で自動で消える（目安）。閉じるボタンで即座に消せる */
 function showToast(text) {
   document.getElementById('toast-text').textContent = text;
+  if (!toast.contains(document.activeElement)) toastFrom = document.activeElement;
   clearTimeout(toastTimer);
   if (hasPopover) { if (!toast.matches(':popover-open')) toast.showPopover(); } else { toast.hidden = false; }
   toastTimer = setTimeout(hideToast, 6000);
 }
 function hideToast() {
   clearTimeout(toastTimer);
+  const inside = toast.contains(document.activeElement);       // 閉じるボタンにフォーカスがあったら、出す前の要素へ戻す
   if (hasPopover) { if (toast.matches(':popover-open')) toast.hidePopover(); } else { toast.hidden = true; }
+  if (inside && toastFrom && document.contains(toastFrom)) toastFrom.focus({ preventScroll: true });
 }
 let dirty = false;                                            // 変更があるときだけ、保存したと伝える
 document.getElementById('add').addEventListener('click', () => {
@@ -314,8 +319,9 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 - 縮小版: 動きを減らす設定で、押下の縮みとメニュー・トーストの移動が消え、押下は明るさ、出入りは不透明度だけになる（押下の反応が無くならない）。設定は CSS のメディアクエリで、途中で変えても追従する
 - 非対応: `allow-discrete` が使えないときは、動きなしで出入りする。Popover API が使えないときは、`hidden` の切り替えで同じ機能を保つ
 - キーボード: Tab でボタンに着き、Enter・Space で押せ、メニューは Escape で閉じる。ツールチップはフォーカスでも出る。フォーカスの輪が見える
+- フォーカス: メニューを閉じたら起点の「並べ替える」へ、トーストの「閉じる」を押したら、トーストを出す前にフォーカスがあった要素（「変更を保存」）へ戻る。トーストが自動で消えたときは、別の要素にあるフォーカスを動かさない。Popover API の有無で同じ
 - 失敗パターン: 全部に同じ長さを当てていないか。出と入りを同じにしていないか。トーストを自動で消すとき、時間制限に関する基準（本 skill の台帳に無く、未照合）に当たらないか、実装前に確認する
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 0 → 0.47 → 0.92 → 1 と中間値を取り（待ち時間の指定値で 540・600・680 ms の時点）、入りの 150 ms が省かれない。暖機は 650 ms 後（修正前は 500 ms で、入りが 1 フレームに跳んだ）。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。メニューの入りは 0.15 s、トーストの入りは 0.25 s・出は 0.2 s。キーボードで開いたメニューは 20 ms 後に不透明度 1。閉じたトーストの `display` は `none` で、閉じるボタンは Tab で着かない（修正前は `flex` のまま不可視で残る構造だった）。保存は、変更が無いとき「保存する変更はありません」、在庫を追加した後は「変更を保存しました」と出た。動きを減らす設定では、メニューとトーストの `translate` が `none`。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。390 px・320 px では、メニューが画面の端に収まり、トーストが画面の幅の内側に中央で出た。機能検出を偽にした版（`popover` の属性を外して検出を偽にした版と、`allow-discrete` を無効にした版）で、動きなしの開閉になり、前者は Escape・メニューの外のクリック・項目の選択でも閉じた。閉じる遷移の間（メニューの閉じ始めから 40 ms 後・トーストの閉じ始めから 40 ms 後）は、閉じた popover の `pointer-events` が `none` で（指定の無い版は `auto`）、背後の「在庫を追加」の位置のヒットテストは「在庫を追加」だった。ただし、指定の無い版でも Chrome 156 では閉じつつある popover はクリックを塞がず、メニューを閉じた 30 ms 後に「在庫を追加」を押すと行が 3 から 4 に増えた（塞がる挙動は再現しなかった。この指定は、他のエンジンへの防御である）。実機・他のブラウザーは未検証
+- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 0 → 0.47 → 0.92 → 1 と中間値を取り（待ち時間の指定値で 540・600・680 ms の時点）、入りの 150 ms が省かれない。暖機は 650 ms 後（修正前は 500 ms で、入りが 1 フレームに跳んだ）。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。メニューの入りは 0.15 s、トーストの入りは 0.25 s・出は 0.2 s。キーボードで開いたメニューは 20 ms 後に不透明度 1。閉じたトーストの `display` は `none` で、閉じるボタンは Tab で着かない（修正前は `flex` のまま不可視で残る構造だった）。保存は、変更が無いとき「保存する変更はありません」、在庫を追加した後は「変更を保存しました」と出た。動きを減らす設定では、メニューとトーストの `translate` が `none`。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。390 px・320 px では、メニューが画面の端に収まり、トーストが画面の幅の内側に中央で出た。機能検出を偽にした版（`popover` の属性を外して検出を偽にした版と、`allow-discrete` を無効にした版）で、動きなしの開閉になり、前者は Escape・メニューの外のクリック・項目の選択でも閉じた。閉じる遷移の間（メニューの閉じ始めから 40 ms 後・トーストの閉じ始めから 40 ms 後）は、閉じた popover の `pointer-events` が `none` で（指定の無い版は `auto`）、背後の「在庫を追加」の位置のヒットテストは「在庫を追加」だった。ただし、指定の無い版でも Chrome 156 では閉じつつある popover はクリックを塞がず、メニューを閉じた 30 ms 後に「在庫を追加」を押すと行が 3 から 4 に増えた（塞がる挙動は再現しなかった。この指定は、他のエンジンへの防御である）。Popover 非対応版（`popover` の属性を外した版）で、メニュー項目にフォーカスを置いて Escape・項目の選択・Enter のいずれで閉じても、フォーカスは「並べ替える」に戻った（修正前は body に落ちた）。トーストの「閉じる」は、ボタンでも Enter でも、非対応版でも対応版でも、「変更を保存」へ戻った（修正前は body に落ちた）。トーストが自動で消えたとき、フォーカスが別の要素（「在庫を追加」）にあれば、そのまま残った。実機・他のブラウザーは未検証
 - 推測の明示: ツールチップは Esc で消えない（ホバーで出た内容を消す手段の基準は、本 skill の台帳に無く、未照合）。500 ms（ツールチップの遅延）・300 ms（暖機の解除）・6 秒（トーストの表示）・4 px・8 px・長さの段階の選択は、本 skill の目安である。スクリーンリーダーの読み上げ（`role="tooltip"`・`role="status"`）は、実機で確かめていない。`@starting-style` と `popover` は、取得した記述の範囲（S91・S92）で時点情報である
 
 ## この例の出典
