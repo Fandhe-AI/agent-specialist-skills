@@ -50,7 +50,8 @@ Fandhe-AI/actions の reusable workflow を `@latest` で呼び出す wrapper）
 - **スキル書式規約（P1）**: `skills/<name>/SKILL.md` は YAML frontmatter
   （`name` はディレクトリ名と一致・`description` は発火条件を含む）+ 手順の構成に従う
   （`.claude/rules/skill-authoring.md` / `description-style.md`）。任意で `references/` /
-  `sample/` / `scripts/` / `tests/` を持つ。frontmatter 不正・name 不一致・symlink
+  `examples/` / `sample/` / `scripts/` / `tests/` を持ち、付属ファイルの書式は
+  `.claude/rules/reference-template.md` に従う。frontmatter 不正・name 不一致・symlink
   リンク切れは指摘する
 - **symlink 構成の維持（P1）**: 新スキル追加時は `.claude/skills/<name>` への symlink
   （`../../skills/<name>`）と `CLAUDE.md` のスキル一覧更新を伴う。vendored スキルを導入した

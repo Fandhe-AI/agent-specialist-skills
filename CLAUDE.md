@@ -56,6 +56,7 @@ skills/                               -- スキル本体（各ディレクトリ
     delegation.md                     -- 委譲の原則（調査・設計フェーズ）
     delegation-impl.md                -- 委譲マッピング（作成・編集フェーズ）
     skill-authoring.md                -- 汎用スキル著作規約
+    reference-template.md             -- 付属ファイル（references・examples・sample）の書式規約
     specialist-authoring.md           -- スペシャリスト skill 固有の著作規約（1 agent 1 skill・model/effort 選定）
     agent-authoring.md                -- エージェント著作規約
     conventional-commits.md           -- Conventional Commits 詳細規約
@@ -155,6 +156,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `delegation.md` | main | 調査・設計フェーズの委譲原則 |
 | `delegation-impl.md` | main / author 系 Agent | 作成・編集フェーズの委譲マッピング |
 | `skill-authoring.md` | skill-author / skill-reviewer | 汎用スキル著作フォーマット・品質基準 |
+| `reference-template.md` | skill-author / skill-reviewer / create-skill / update-skill | 付属ファイル（references / examples / sample）の書式規約（ディレクトリの役割・冒頭・相互リンク・出典台帳・長さの目安） |
 | `specialist-authoring.md` | skill-author / init-claude-specialist | スペシャリスト skill 固有の著作規約（1 agent 1 skill・model/effort 選定・誠実性の原則） |
 | `agent-authoring.md` | agent-author | エージェント著作フォーマット・品質基準 |
 | `conventional-commits.md` | create-commit / create-pr 等 | Conventional Commits 詳細規約 |
