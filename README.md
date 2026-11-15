@@ -46,6 +46,7 @@ Claude Code の Claude Skills として使用するスキルは、原則とし�
 | **designer-dataviz** | データビジュアライゼーションデザイナー（統計グラフ・図表）。グラフの種類選定・軸と色・二軸・0 起点・色覚多様性・不確実性・sparkline・コロプレスを相談 |
 | **designer-web** | Web デザイナー（見た目の方向性）。方向性を言葉で決めてから作る・既定の見た目の点検・色と書体・構図・写真と質感・傾向（コラージュ・手触り・静かな Web）・AI っぽい見た目の作り直しを相談 |
 | **designer-creative-coding** | クリエイティブデベロッパー。WebGL・Three.js・シェーダー・粒子・ジェネラティブ・スクロールで進む 3D・性能予算・WebGL が無いときと動きを減らす設定の代替表示を相談 |
+| **designer-interaction** | インタラクションデザイナー・デザインエンジニア。操作感・マイクロインタラクション・ページ遷移・スクロール演出・ローディングの見せ方・アニメーションの長さ・AI の応答画面・楽観的更新・prefers-reduced-motion を相談 |
 
 今後も追加予定です。新規スペシャリスト skill の著作は `.claude/rules/specialist-authoring.md` の規約と `skills/init-claude-specialist/sample/specialist-skill-example.md`（見本）を参照してください。
 
