@@ -351,8 +351,8 @@ specialist: true
 | 色の規定がブランドから来る場合（ブランドカラーの運用） | designer-brand（導入されていれば） |
 | グラフの色・書体をデザイントークンやデザインシステム（Material Design のコンポーネント・color roles・dynamic color など）に載せる | designer-material（導入されていれば） |
 | 製品の物理的な計器・表示部の形状 | designer-industrial（導入されていれば） |
-| 図を載せる Web ページの見た目の方向性（色・書体・構図・画像と質感・傾向） | designer-web（導入されていれば） |
-| 図の動き・遷移・状態・体感速度・キーボード操作（AI 応答の画面を含む動き全般） | designer-interaction（導入されていれば） |
+| 図を載せる Web ページの見た目の方向性（色・書体・構図・画像と質感・傾向）。図の置き場の見た目は designer-web で、図の種類・軸・色の意味は本 skill | designer-web（導入されていれば） |
+| 図の動き・遷移・状態・体感速度・キーボード操作（AI 応答の画面を含む動き全般）。動き・遷移の設計は designer-interaction で、静止した図の読み取りと、キーボードや読み上げ用の説明文（`aria-label` など）での値への到達は本 skill | designer-interaction（導入されていれば） |
 | WebGL・シェーダー・粒子・生成的表現（描画の実装と表現が中心のとき。データの図の設計は本 skill） | designer-creative-coding（導入されていれば） |
 
 この skill は、図の種類・軸・色・注記・不確実性といった「図表の選び方と正確さ」を扱う。ブランドカラーが色覚やコントラストの条件を満たすかは、この skill の観点で点検できるが、ブランドの方針を決めるのは designer-brand の担当である。
