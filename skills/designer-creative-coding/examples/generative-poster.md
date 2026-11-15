@@ -67,7 +67,9 @@
 | 描画 DPR の上限 | 2 | 1 回描くだけだが、画素数は抑える |
 | 書き出しの色 | 紙 `#f2eee4`、墨 `#1c2b4a`（固定）。色の文字列は `#` と 6 桁の 16 進、`currentColor`、`none` だけを通す | 画面の配色と切り離す。色を利用者の入力にしても注入点にならないようにする |
 | 書き出しの大きさ | `width="300mm" height="400mm"` と `viewBox` を付ける（寸法は例。用紙に合わせて変える） | 単体で開いたときの表示の大きさを決める |
-| 網点の精度 | `GL_FRAGMENT_PRECISION_HIGH` があれば `highp` | 座標が 0〜400 で、線の計算の値が `mediump` の範囲（±2^14）を超える |
+| 網点の座標 | 図の単位を 400 で割って（高さが 1、幅が 0.75）シェーダーに渡す。円の中心・半径、線の端点、網目の大きさ（5 ÷ 400）、線の太さの比較（距離 × 400）も同じ尺度にする | 正規化しないと、線の長さ最大 220 で `dot(ba, ba)` が約 48,400 になり、`mediump` の保証範囲（±2^14 = 16,384）を超える |
+| 網点の中間値の最大 | `dot(ba, ba)` は 0.31 以下（線の長さ最大 220 ÷ 400 の二乗）、距離の二乗と `dot(pa, ba)` は約 1.6 以下、網目の座標は 100 以下（番号 0〜9999 の全 10,000 構成で計算した） | どれも `mediump` の範囲に収まる。`mediump` の実装でも線が欠けない |
+| 網点の精度 | `getShaderPrecisionFormat(FRAGMENT_SHADER, HIGH_FLOAT)` の `precision` が 0 より大きければ `highp`、そうでなければ `mediump` で組み立てる | 上のとおり中間値を範囲内にしたので、どちらの分岐でも同じ見た目になる。分岐は、`mediump` でコンパイルに通るので、コンパイル失敗による SVG への代替は働かない（中間値を範囲内にして防ぐ） |
 | 文脈の喪失中 | 網点のボタンを隠し、SVG を見せる。復帰したらボタンを戻す | 喪失中に押すと、図が消える |
 
 ### 色と文字
@@ -186,22 +188,19 @@ WCAG の相対輝度式で計算した（基準の 4.5:1 は、本台帳に原�
 
   // --- 任意の拡張: 網点の質感（WebGL）。1 回描くだけで、アニメーションは無い ---
   const VERT = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
-  const FRAG = `
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;                         // 座標が 0〜400 で、dot の値が mediump の範囲を超えるため
-#else
-precision mediump float;
-#endif
+  // 図の単位を H（400）で割った値（高さが 1、幅が 0.75）でシェーダーに渡す。距離の二乗・dot の最大は約 0.3、網目の座標の最大は 100 で、
+  // mediump の保証範囲（±2^14）に収まる。精度の分岐（highp の有無）があっても、同じ見た目になる
+  const frag = (prec) => `
+precision ${prec} float;
 uniform vec2 uRes; uniform vec3 uC[${NC}]; uniform float uTone[${NC}]; uniform vec4 uL[${NL}]; uniform vec3 uInk;
-float density(vec2 p) {                        // p は図の座標（0..300, 0..400）
+float density(vec2 p) {                        // p は正規化した図の座標（x は 0〜0.75、y は 0〜1）
   float d = 0.0;
   for (int i = 0; i < ${NC}; i++) if (length(p - uC[i].xy) < uC[i].z) d = max(d, uTone[i]);
   return d;
 }
 void main() {
-  float s = uRes.x / ${W}.0;
-  vec2 p = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) / s;
-  const float CELL = 5.0;
+  vec2 p = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) * (${W}.0 / ${H}.0 / uRes.x);   // 図の単位 ÷ ${H}。横幅（0.75）を基準に、SVG と同じ縮尺にする
+  const float CELL = 5.0 / ${H}.0;               // 網目の 1 つの大きさ（図の単位で 5）
   mat2 R = mat2(0.7071, -0.7071, 0.7071, 0.7071);   // 45 度の網目
   vec2 q = R * p / CELL, cell = floor(q) + 0.5;
   float dens = density(CELL * (cell * R));          // 網目の中心での濃さ（R の逆は転置）
@@ -212,7 +211,7 @@ void main() {
   for (int i = 0; i < ${NL}; i++) {
     vec2 a = uL[i].xy, ba = uL[i].zw - a, pa = p - a;
     float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-    line = max(line, 1.0 - smoothstep(0.4, 1.4, length(pa - ba * h)));
+    line = max(line, 1.0 - smoothstep(0.4, 1.4, length(pa - ba * h) * ${H}.0));   // 線の太さは図の単位で比べる
   }
   float a = max(ink, line);
   gl_FragColor = vec4(uInk * a, a);
@@ -225,7 +224,8 @@ void main() {
   function build() {
     const prog = gl.createProgram();
     gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);   // highp が使えるか（precision が 0 なら使えない）
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag(hp && hp.precision > 0 ? 'highp' : 'mediump')));
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
     gl.useProgram(prog);
@@ -242,9 +242,9 @@ void main() {
     const m = getComputedStyle(poster).color.match(/[\d.]+/g).map(Number);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniform2f(loc.uRes, canvas.width, canvas.height);
-    gl.uniform3fv(loc.uC, comp.circles.flatMap((o) => [o.x, o.y, o.r]));
+    gl.uniform3fv(loc.uC, comp.circles.flatMap((o) => [o.x / H, o.y / H, o.r / H]));
     gl.uniform1fv(loc.uTone, comp.circles.map((o) => o.tone));
-    gl.uniform4fv(loc.uL, comp.lines.flatMap((o) => [o.x1, o.y1, o.x2, o.y2]));
+    gl.uniform4fv(loc.uL, comp.lines.flatMap((o) => [o.x1 / H, o.y1 / H, o.x2 / H, o.y2 / H]));
     gl.uniform3f(loc.uInk, m[0] / 255, m[1] / 255, m[2] / 255);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
@@ -304,6 +304,7 @@ void main() {
 - 失われた文脈: 網点の表示をやめて SVG に戻す（S158、S159）
 - 書き出し: 紙色・墨色を固定した SVG。画面のダークや、網点の見た目は書き出しに含まれない。印刷の色の管理は、導入されていれば designer-brand、文面の組版は designer-typography
 - 画面での確認（2026-11-16）: ソフトウェア描画の WebGL で網点の表示が描け、同じ番号で通常の設定と動きを減らす設定の画像が一致し（SVG・網点・次の番号の 3 枚とも差 0 画素）、再読み込みでも同じ構成になった。WebGL を無効にした起動では、網点のボタンが隠れ、SVG の図が出た。`requestAnimationFrame` は 1 秒間で 0 回。保存される SVG は、`width="300mm" height="400mm"` と `viewBox` を持ち、XML として解釈できた。1440・390・320 px のライトとダークで、横にはみ出さなかった。実機・Safari・Firefox は未確認
+- 精度の確認（2026-11-16）: 番号 7・42・3・1234 の網点を、正規化前と正規化後で描いて比べた。差のある画素は 0.05〜0.11 %（浮動小数点の丸めで、網点の縁の数画素が入れ替わる程度）。`precision` を `mediump` に固定した版も描いたが、この確認環境（ソフトウェア描画）は `mediump` を単精度で扱うようで、固定の前後で差は 0 画素だった。低精度の実装での線の欠けは、この環境では再現できない（未検証）。正規化前の `dot(ba, ba)` の最大が約 48,398 で、保証範囲（±2^14）を超えることは、番号 0〜9999 の全構成の計算で確かめた。正規化後は 0.3025 以下だった
 - 操作の確認（2026-11-16）: 番号の入力・「別の構図」・「網点の質感で見る」は、上の確認のとおり動いた。「この構図を SVG で保存」は、`download="poster.svg"` と `blob:` の `href` を持つことを確認した。実際にファイルが保存されるかは、確認していない（未検証）
 - 文脈の喪失の確認（2026-11-16）: 網点の表示中に文脈を擬似的に失わせると、網点の表示が外れ（`aria-pressed` は `false`）、ボタンが隠れ、SVG の図が出た。復帰するとボタンが戻り、網点を押し直すと、喪失の前と同じ画像になった（差 0 画素）。喪失中にボタンの `click()` を呼んでも、図は消えなかった（修正前は、ポスターに `gl` のクラスが付いて SVG が `display: none` になり、図が消えた）
 - 直した不具合の再現の確認（2026-11-16）: 番号の欄に `abc<img src=x>`・空欄・-1・1.5・10000 を入れると、欄の値が `7` に戻り、先頭の円の `cx` が番号 7 の構成（263.1）と一致し、`img` 要素は入らなかった（修正前は、`abc<img src=x>` と空欄で欄が空のまま、番号 0 の構成の 91.9 だった）。42 は 42 のままで、構成が変わった。番号 7 から順に進めたときの先頭の円の `cx` は、修正後は 263.1・222.3・98.5・160.0・169.5・49.2・41.9 で、修正前の 128.6・133.8・139.1・144.3・149.5・154.8・160.0（一定量ずつ動く）と違い、隣の番号でも動きが揃わなかった

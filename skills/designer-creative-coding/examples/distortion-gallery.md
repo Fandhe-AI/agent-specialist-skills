@@ -68,6 +68,7 @@
 | ホバーの明るさ | `img` と `canvas` の両方に付ける（効果の出入りで、明るさが跳ねない） | canvas が `img` と入れ替わるため |
 | カーソルが静止したとき | 最後の移動から 150 ms で反応を終え、減衰させて止める | 写真の上で止まったまま描き続けない |
 | 時間 | シェーダーの時間は、波の周期（2π / 9）で巻き戻す | 時間が増え続けて、精度が落ちるのを避ける |
+| 精度 | `getShaderPrecisionFormat` で `highp` が使えるときだけ `highp`。そうでなければ `mediump` | テクスチャ座標が `mediump` だと、1600 px の写真で 1 画素ほどずれる。ほかの中間値（距離 `r` ≤ 約 1.8、`r * 38` ≤ 約 60、時間 × 9 ≤ 2π）は `mediump` の範囲に収まる |
 | リンク先 | 大きい版の写真ファイル（`photos/rin-01-1600.jpg` など。`img` の `srcset` の大きい側）。クリック・タップ・Enter で開く | 開く先を持たないリンクは、操作できない |
 | 写真ファイルが無い環境 | `img` は枠・下地の色・代替テキストが残る。リンク先は開けない（ブラウザの「見つからない」の表示）。リンク切れを許さない場合は、配信側でファイルを置くか、リンクを外す | 写真が無い状態で、画面が崩れないことと、操作が空振りになることを分けて書く |
 | 写真の解像度が切り替わったとき | `load` の通知で、テクスチャを作り直す | `srcset` で別の画像が選ばれても、初回の解像度のまま残さない |
@@ -175,8 +176,9 @@ WCAG の相対輝度式で計算した（基準の 4.5:1 は、本台帳に原�
   const IDLE_MS = 150;                         // マウスが止まってから、反応を終えるまでの時間
 
   const VERT = 'attribute vec2 aPos; varying vec2 vUv; void main(){ vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }';
-  const FRAG = `
-precision mediump float;
+  // 精度は highp が使えるときだけ highp（テクスチャ座標が 1600 px の写真で mediump だと、1 画素ほどずれる。ほかの中間値は小さい）
+  const frag = (prec) => `
+precision ${prec} float;
 uniform sampler2D uTex; uniform vec2 uPoint; uniform float uAmp, uTime, uAspect;
 varying vec2 vUv;
 void main() {
@@ -207,7 +209,9 @@ void main() {
     }
     function build() {
       const p = gl.createProgram();
-      gl.attachShader(p, compile(gl.VERTEX_SHADER, VERT)); gl.attachShader(p, compile(gl.FRAGMENT_SHADER, FRAG));
+      const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);   // highp が使えるか
+      gl.attachShader(p, compile(gl.VERTEX_SHADER, VERT));
+      gl.attachShader(p, compile(gl.FRAGMENT_SHADER, frag(hp && hp.precision > 0 ? 'highp' : 'mediump')));
       gl.linkProgram(p);
       if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
       gl.useProgram(p);
@@ -311,9 +315,9 @@ loader.load(img.currentSrc, (texture) => {
   const material = new THREE.ShaderMaterial({
     uniforms: { uTex: { value: texture }, uPoint: { value: new THREE.Vector2(0.5, 0.5) }, uAmp: { value: 0 }, uTime: { value: 0 }, uAspect: { value: 1.5 } },
     vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
-    // 本体の FRAG を、uniform の宣言ごと使う。ShaderMaterial が付けるのは組み込みだけで、uTex・uPoint・uAmp・uTime・uAspect は自分で宣言する。
-    // テクスチャの色空間の変換は入れない（本体と同じ見え方にするため）。FRAG は本体の GLSL の文字列定数をこの module に写す
-    fragmentShader: FRAG
+    // 本体の frag(prec) の結果を、uniform の宣言ごと使う。ShaderMaterial が付けるのは組み込みだけで、uTex・uPoint・uAmp・uTime・uAspect は自分で宣言する。
+    // テクスチャの色空間の変換は入れない（本体と同じ見え方にするため）。frag は本体の GLSL の関数をこの module に写す
+    fragmentShader: frag('highp')   // highp の有無の確認は、本体の getShaderPrecisionFormat と同じにする
   });
   const scene = new THREE.Scene();
   scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));

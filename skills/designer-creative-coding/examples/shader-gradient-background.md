@@ -64,6 +64,7 @@
 | 描画の倍率 | CSS ピクセルの 0.5 | 1440 × 630 の領域なら 720 × 315 の描画（画素は 4 分の 1） |
 | 劣化の順序 | (1) 解像度の倍率を下げる (2) 描画を止めて静止の 1 フレーム (3) 層 1 | 軽い順。実機で測って決める。本例のコードは、この順で自動に落とす実装を持たない（手動・未実装）。周期が約 30 秒の動きを毎フレーム描くので、30 fps に落とす案もある（未実装） |
 | 色 | `#0b3a35`・`#0e4a63`・`#1d5e50`（シェーダーと CSS で同じ） | 暗い緑と青。文字を載せやすい |
+| 時間の位相 | 時間そのものでなく、各項の位相（時間 × 係数）を、JS（倍精度）で 2π の剰余にして渡す（6 つの位相を 2 つの `vec3`） | 長く開いたままでも、シェーダーの中の値が小さいまま。`mediump` の実装で、位相の精度が落ちるのを避ける |
 | 動きの速さ | 時間の項の係数は 0.21 rad/s 以下（いちばん速い成分の周期は約 30 秒） | 1 秒に 3 回の明暗（S118）の約 100 分の 1。概算 |
 | 静止させる時刻 | 4 秒の位置 | 色が偏らない図を選んだ |
 | 高さ | 70svh（非対応の環境は 70vh） | 文字と背景の見える比率 |
@@ -167,21 +168,21 @@ precision highp float;
 precision mediump float;
 #endif
 uniform vec2 uRes;
-uniform float uTime;
+uniform vec3 uPhA, uPhB;                    // 時間の位相。JS（倍精度）で 2π の剰余にしてから渡す（時間そのものを渡すと、長く開くほど mediump の精度が落ちる）
 const vec3 A = vec3(0.043, 0.227, 0.208);   // #0b3a35
 const vec3 B = vec3(0.055, 0.290, 0.388);   // #0e4a63
 const vec3 C = vec3(0.114, 0.369, 0.314);   // #1d5e50
 void main() {
   vec2 p = gl_FragCoord.xy / uRes.y;        // 高さを 1 とする座標（横長でも歪まない）
   vec2 q = p * 1.6;
-  q += 0.35 * vec2(sin(q.y * 2.3 + uTime * 0.21), sin(q.x * 2.1 - uTime * 0.17));
-  q += 0.20 * vec2(sin(q.y * 4.1 - uTime * 0.13), sin(q.x * 3.7 + uTime * 0.19));
-  float f = 0.5 + 0.5 * sin(q.x * 2.2 + q.y * 1.4 + uTime * 0.10);
-  float g = 0.5 + 0.5 * sin(q.y * 2.6 - q.x * 0.9 - uTime * 0.08);
+  q += 0.35 * vec2(sin(q.y * 2.3 + uPhA.x), sin(q.x * 2.1 - uPhA.y));
+  q += 0.20 * vec2(sin(q.y * 4.1 - uPhA.z), sin(q.x * 3.7 + uPhB.x));
+  float f = 0.5 + 0.5 * sin(q.x * 2.2 + q.y * 1.4 + uPhB.y);
+  float g = 0.5 + 0.5 * sin(q.y * 2.6 - q.x * 0.9 - uPhB.z);
   gl_FragColor = vec4(mix(mix(A, B, f), C, g * 0.6), 1.0);
 }`;
 
-  let gl = null, uRes, uTime, raf = 0, last = 0, time = FREEZE_AT;
+  let gl = null, uRes, uPhA, uPhB, raf = 0, last = 0, time = FREEZE_AT;
   let inView = true, pageVisible = !document.hidden, userPaused = false, lost = false;
 
   function compile(type, src) {
@@ -203,7 +204,8 @@ void main() {
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     uRes = gl.getUniformLocation(prog, 'uRes');
-    uTime = gl.getUniformLocation(prog, 'uTime');
+    uPhA = gl.getUniformLocation(prog, 'uPhA');
+    uPhB = gl.getUniformLocation(prog, 'uPhB');
     resize();
   }
   function resize() {
@@ -215,7 +217,9 @@ void main() {
   }
   function draw() {
     gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, time);
+    const ph = (k) => (time * k) % (2 * Math.PI);   // 各項の位相（時間 × 係数）を、JS で 2π の剰余にする
+    gl.uniform3f(uPhA, ph(0.21), ph(0.17), ph(0.13));
+    gl.uniform3f(uPhB, ph(0.19), ph(0.10), ph(0.08));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
   function loop(now) {
@@ -296,10 +300,10 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPrefer
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1) * 0.5);   // 本体と同じ予算
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 const material = new THREE.ShaderMaterial({
-  uniforms: { uTime: { value: 4 }, uRes: { value: new THREE.Vector2(1, 1) } },
+  uniforms: { uPhA: { value: new THREE.Vector3() }, uPhB: { value: new THREE.Vector3() }, uRes: { value: new THREE.Vector2(1, 1) } },   // 位相は本体の ph() で計算して渡す
   vertexShader: 'void main() { gl_Position = vec4(position.xy, 0.0, 1.0); }',
   // FRAG は、本体の GLSL の文字列定数を、この module に写して使う。uniform の宣言ごと使う。ShaderMaterial が付けるのは、position・projectionMatrix などの組み込みだけで、
-  // uTime・uRes は自分で宣言する。precision の宣言が重ならないかは、実装時に確認する
+  // uPhA・uPhB・uRes は自分で宣言する。precision の宣言が重ならないかは、実装時に確認する
   fragmentShader: FRAG
 });
 const scene = new THREE.Scene();
@@ -328,6 +332,7 @@ scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
 - 失われた文脈: `webglcontextlost` で既定の動作を止めて層 1 を見せ、`webglcontextrestored` で作り直す（S158、S159）。利用者が品質を選べるようにする案もある（S52）が、背景では、止めるトグルで代える
 - 性能: 描画は CSS ピクセルの 0.5 倍、DPR の上限は 1。実機の fps・消費電力・熱は測っていない（未検証）。測ってから、倍率と劣化の順序を決める。初期表示の目安は LCP 2.5 秒（S69）で、この例の読み込みはコードだけ（素材 0）
 - 画面での確認（2026-11-16）: ソフトウェア描画の WebGL で 1 枚目が描け、1.5 秒後に絵が変わった。トグルを押すと `requestAnimationFrame` が 0 回になり（0.8 秒間）、`aria-pressed` が `true` から `false` に変わり、文言は変わらなかった。再開で `true` に戻った。動きを減らす設定では、1.5 秒間に `requestAnimationFrame` が 0 回で、前後の画像が一致した。`document.hidden` を真にして `visibilitychange` を送ると、0.6 秒間の `requestAnimationFrame` は 0 回だった。描画の解像度は、画面の倍率 3 でも 720 × 315（上限 1 × 倍率 0.5）だった。WebGL を無効にした起動では、層 1 の CSS グラデーションが見えた。1440・390・320 px のライトとダークの 30 通り（5 例の合計）で、横にはみ出さなかった。Safari・Firefox・実機は未確認
+- 精度の確認（2026-11-16）: 時間の位相を JS で渡す形に直す前後で、動きを減らす設定（4 秒の位置）の画像は一致した（差 0 画素）。`precision` を `mediump` に固定した版も差は 0 画素だった（この環境は `mediump` を単精度で扱うようで、低精度の実装での位相の精度の低下は再現できない。未検証）
 - 操作の確認（2026-11-16）: 申し込みのリンクをクリックすると `#apply` に移った。Tab を 2 回押すと、トグルのあとに申し込みのリンクへ移り、Enter で `#apply` に移った。トグルの押下は上の確認のとおり
 - 文脈の喪失の確認（2026-11-16）: 文脈を擬似的に失わせると、層 1 の背景に戻り、トグルが隠れ、可視状態の変化の通知が来ても `requestAnimationFrame` は再開しなかった（0.6 秒間で 0 回）。復帰させると、描画が再開し、描画の解像度は 720 に戻った
 - 隣の領域: 色・書体の方向性は designer-web、動きの時間・イージングは designer-interaction、LP の構成と文言は designer-apple（いずれも導入されていれば）
