@@ -8,6 +8,8 @@ description: >
 model: sonnet
 user-invocable: true
 argument-hint: "<skill-name> [check|apply [改訂内容]] (改訂内容を渡す場合は mode 必須。例: update-skill game-producer apply 専門領域に運営施策を追加)"
+metadata:
+  internal: "true"
 ---
 
 # update-skill

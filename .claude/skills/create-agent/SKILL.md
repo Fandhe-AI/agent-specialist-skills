@@ -6,6 +6,8 @@ description: >
 model: sonnet
 user-invocable: true
 argument-hint: "<category>/<agent-name> (例: create-agent quality/lint-runner)"
+metadata:
+  internal: "true"
 ---
 
 # create-agent
