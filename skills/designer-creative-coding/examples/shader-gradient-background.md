@@ -50,7 +50,7 @@
 |---|---|---|
 | 動きを減らす設定の検出 | `matchMedia('(prefers-reduced-motion: reduce)')`。括弧は必須 | S126、S149 |
 | その設定のときの挙動 | 動かさず、1 フレームだけ描いて静止させる（S127 は、代わりの動きを出す使い方を述べる。静止への置き換えは本 skill の整理） | S127 |
-| 動きの停止手段 | 自動で始まり 5 秒を超える背景に、止める手段（トグル。文言は固定し、状態は `aria-pressed` で示す） | S121 |
+| 動きの停止手段 | 自動で始まり 5 秒を超える背景に、止める手段（トグル。ラベルは固定し、状態は、支援技術へは `aria-pressed`、目には同じ値から作る短い文字「動いている」「止めている」で示す。塗りの有無だけで状態を示さない） | S121（状態の示し方は本 skill の整理） |
 | 描かない条件 | 画面外（IntersectionObserver）・タブが見えない・利用者が停止 | S160、S150、S61 |
 | 文脈が取れないとき | `getContext` は `null` を返しうる。そのとき層 1 のまま | S151 |
 | 文脈を失ったとき | 既定の動作を止め、層 1 を見せ、戻ったら資源を作り直す | S158、S159、S64 |
@@ -96,7 +96,8 @@
 | 見出し | Moss & Tide 春の試飲会 |
 | 本文 | 4 月 19 日（土）13:00〜16:00。定期便の新茶 6 種を、淹れたてで飲み比べる。 |
 | ボタン | 参加を申し込む |
-| トグル | 背景を動かす（文言は固定。`aria-pressed` が `true` なら動いている、`false` なら止めている） |
+| トグル | 背景を動かす（ラベルは固定。`aria-pressed` が `true` なら動いている、`false` なら止めている） |
+| トグルの状態の文字 | 動いている／止めている（`aria-pressed` と常に一致させる。`aria-hidden="true"` で、ボタンの名前には入れない。ラベルと同じ色で、コントラストは上の表のとおり。状態の文字で幅を変えない。見えない sizer に両方の文字を入れ、長い方に固定する） |
 | canvas | `aria-hidden="true"`。装飾なので読み上げない |
 
 ## コード断片
@@ -136,13 +137,15 @@
          font-weight: 700; text-decoration: none; border-radius: 0.25rem; }
   #motion-toggle { position: absolute; top: 1rem; right: 1rem; padding: 0.5rem 0.75rem; font: inherit; font-size: 0.875rem;
                    color: var(--ink); background: rgb(0 0 0 / 0.35); border: 1px solid var(--ink); border-radius: 0.25rem; }
+  #motion-toggle .state { display: inline-block; margin-left: 0.625rem; padding-left: 0.625rem; border-left: 1px solid var(--ink); }   /* 状態の文字。塗りの有無では示さない */
+  #motion-toggle .state::before { content: "動いている\A止めている"; display: block; height: 0; overflow: hidden; visibility: hidden; white-space: pre; }   /* 幅を長い方に固定する（書体で幅がずれても押しても動かない）。基準線は実際の文字の行 */
   main { max-width: 40rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
 </style>
 </head>
 <body>
 <header class="hero" id="hero">
   <canvas aria-hidden="true"></canvas>
-  <button type="button" id="motion-toggle" aria-pressed="true">背景を動かす</button>
+  <button type="button" id="motion-toggle" aria-pressed="true">背景を動かす<span class="state" aria-hidden="true">動いている</span></button>
   <h1>Moss &amp; Tide 春の試飲会</h1>
   <p>4 月 19 日（土）13:00〜16:00。定期便の新茶 6 種を、淹れたてで飲み比べる。</p>
   <a class="btn" href="#apply">参加を申し込む</a>
@@ -156,6 +159,7 @@
   const hero = document.getElementById('hero');
   const canvas = hero.querySelector('canvas');
   const toggle = document.getElementById('motion-toggle');
+  const toggleState = toggle.querySelector('.state');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const MAX_DPR = 1;      // 描画の DPR の上限（本 skill の目安。出典なし）
   const SCALE = 0.5;      // CSS ピクセルに対する描画解像度の倍率（本 skill の目安。出典なし）
@@ -248,7 +252,8 @@ void main() {
   reduce.addEventListener('change', update);
   toggle.addEventListener('click', () => {
     userPaused = !userPaused;
-    toggle.setAttribute('aria-pressed', String(!userPaused));   // 文言は固定し、状態は aria-pressed だけで示す
+    toggle.setAttribute('aria-pressed', String(!userPaused));   // ラベルは固定。支援技術へは aria-pressed で示す
+    toggleState.textContent = userPaused ? '止めている' : '動いている';   // 目には、同じ値から作った文字で示す（ずれない）
     update();
   });
   canvas.addEventListener('webglcontextlost', (e) => {
@@ -321,20 +326,21 @@ scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
 |---|---|---|
 | 何に注意するか | 春の試飲会が 4 月 19 日にある | 見出しと日時 |
 | 何を操作できるか | 申し込む。背景の動きを止める | 申し込みのボタン、右上のトグル |
-| どう操作するか | ボタンを押す。トグルは、押すたびに止める・再開する | トグルの `aria-pressed`（文言は固定） |
+| どう操作するか | ボタンを押す。トグルは、押すたびに止める・再開する。いまの状態は、トグルの中の文字（動いている／止めている）で分かる | トグルの文字と `aria-pressed`（ラベルは固定。2 つは常に一致する） |
 
-観察で確かめる: (1) 背景を見せずに、日時を読み上げさせて、2 秒以内に答えられるか。(2) 背景が動いていることに気づいたか、気づいたとき邪魔だったか。(3) 動きのトグルを見つけられたか。押したあと、動いているか止まっているかを、読み上げでも判別できたか。(4) OS の「視差効果を減らす」相当の設定にして、背景が止まった静止の図を見て、違和感が無いか。(5) 古い端末か、WebGL を切った環境で、層 1 の背景になっているか。
+観察で確かめる: (1) 背景を見せずに、日時を読み上げさせて、2 秒以内に答えられるか。(2) 背景が動いていることに気づいたか、気づいたとき邪魔だったか。(3) 動きのトグルを見つけられたか。押したあと、動いているか止まっているかを、目でも読み上げでも判別できたか（塗りや枠の変化を見ずに、文字だけで答えられるか）。(4) OS の「視差効果を減らす」相当の設定にして、背景が止まった静止の図を見て、違和感が無いか。(5) 古い端末か、WebGL を切った環境で、層 1 の背景になっているか。
 
 ## 点検
 
 - 3 層の分担: 本文・ボタンは canvas の外（層 0）。背景だけが WebGL（層 2）。WebGL が無い・失われた・動きを減らす設定のときも、内容と操作は同じ
-- 動きの規則: 自動で動く背景に止めるトグルがある（S121）。点滅は無い。動きを減らす設定では 1 フレームで静止する（置き換えは S127 の考え方で、静止は本 skill の整理）
+- 動きの規則: 自動で動く背景に止めるトグルがある（S121）。トグルの状態は、`aria-pressed` と目に見える文字の両方で示し、塗りの有無だけにしない。状態の文字で幅を変えず、押してもボタンの位置を動かさない（本 skill の整理）。点滅は無い。動きを減らす設定では 1 フレームで静止する（置き換えは S127 の考え方で、静止は本 skill の整理）
 - 描かない条件: 画面外・別タブ・停止中は `requestAnimationFrame` を回さない（S160、S150、S61）
 - 失われた文脈: `webglcontextlost` で既定の動作を止めて層 1 を見せ、`webglcontextrestored` で作り直す（S158、S159）。利用者が品質を選べるようにする案もある（S52）が、背景では、止めるトグルで代える
 - 性能: 描画は CSS ピクセルの 0.5 倍、DPR の上限は 1。実機の fps・消費電力・熱は測っていない（未検証）。測ってから、倍率と劣化の順序を決める。初期表示の目安は LCP 2.5 秒（S69）で、この例の読み込みはコードだけ（素材 0）
-- 画面での確認（2026-11-16）: ソフトウェア描画の WebGL で 1 枚目が描け、1.5 秒後に絵が変わった。トグルを押すと `requestAnimationFrame` が 0 回になり（0.8 秒間）、`aria-pressed` が `true` から `false` に変わり、文言は変わらなかった。再開で `true` に戻った。動きを減らす設定では、1.5 秒間に `requestAnimationFrame` が 0 回で、前後の画像が一致した。`document.hidden` を真にして `visibilitychange` を送ると、0.6 秒間の `requestAnimationFrame` は 0 回だった。描画の解像度は、画面の倍率 3 でも 720 × 315（上限 1 × 倍率 0.5）だった。WebGL を無効にした起動では、層 1 の CSS グラデーションが見えた。1440・390・320 px のライトとダークの 30 通り（5 例の合計）で、横にはみ出さなかった。Safari・Firefox・実機は未確認
+- 画面での確認（2026-11-16）: ソフトウェア描画の WebGL で 1 枚目が描け、1.5 秒後に絵が変わった。トグルを押すと `requestAnimationFrame` が 0 回になり（0.8 秒間）、`aria-pressed` が `true` から `false` に変わり、ラベルは変わらず、状態の文字が「動いている」から「止めている」に変わった。再開で `true` と「動いている」に戻った。動きを減らす設定では、1.5 秒間に `requestAnimationFrame` が 0 回で、前後の画像が一致した。`document.hidden` を真にして `visibilitychange` を送ると、0.6 秒間の `requestAnimationFrame` は 0 回だった。描画の解像度は、画面の倍率 3 でも 720 × 315（上限 1 × 倍率 0.5）だった。WebGL を無効にした起動では、層 1 の CSS グラデーションが見えた。1440・390・320 px のライトとダークの 30 通り（5 例の合計）で、横にはみ出さなかった。Safari・Firefox・実機は未確認
 - 精度の確認（2026-11-16）: 時間の位相を JS で渡す形に直す前後で、動きを減らす設定（4 秒の位置）の画像は一致した（差 0 画素）。`precision` を `mediump` に固定した版も差は 0 画素だった（この環境は `mediump` を単精度で扱うようで、低精度の実装での位相の精度の低下は再現できない。未検証）
 - 操作の確認（2026-11-16）: 申し込みのリンクをクリックすると `#apply` に移った。Tab を 2 回押すと、トグルのあとに申し込みのリンクへ移り、Enter で `#apply` に移った。トグルの押下は上の確認のとおり
+- トグルの状態の確認（2026-11-16）: 1440・390・320 px のライトとダークで、押す前（`true`・動いている）・押した後（`false`・止めている）・再開後（`true`・動いている）の 3 点で、`aria-pressed` と状態の文字が一致した。ボタンの幅は 3 点とも 200 px で、押しても動かず、320 px でも横にはみ出さなかった。320〜1440 px を 10 px 刻み（113 幅）で、押す前・押した後・再開後のボタンの矩形が一致した（状態の文字の幅を長い方に固定する前は、書体の幅の差で 0.14 px ずれた）。動きを減らす設定の 390 px では、トグルが隠れ（`display: none`）、状態の文字だけが残ることは無かった。スクリーンリーダーでの読み上げは未検証（状態の文字は `aria-hidden` で、名前に入らない構造のみ確認）
 - 文脈の喪失の確認（2026-11-16）: 文脈を擬似的に失わせると、層 1 の背景に戻り、トグルが隠れ、可視状態の変化の通知が来ても `requestAnimationFrame` は再開しなかった（0.6 秒間で 0 回）。復帰させると、描画が再開し、描画の解像度は 720 に戻った
 - 隣の領域: 色・書体の方向性は designer-web、動きの時間・イージングは designer-interaction、LP の構成と文言は designer-apple（いずれも導入されていれば）
 
