@@ -1,13 +1,13 @@
 # 例: AI 下書きの応答画面（待ち・停止・採用・取り消し・自動スクロールしない）
 
-メールの返信を AI が下書きする機能の画面を設計する例。題材は架空のメールアプリで、実在の製品の画面・文言の模倣は含まない。AI の応答の画面（生成中・ストリーミング・停止・編集・採用・取り消し）を頼まれたとき、待たせず、直しやすく、勝手に実行しない作りを決めたいときに開く。AI 機能を評価する調査の設計は、導入されていれば designer-ux-research の担当である。
+メールの返信を AI が下書きする機能の画面を設計する例。題材は架空のメールアプリで、実在の製品の画面・文言の模倣は含まない。AI の応答の画面（生成中・ストリーミング・停止・編集・採用・取り消し）を頼まれたとき、待たせず、直しやすく、勝手に実行しない作りを決めたいときに開く。この例は、メールの送信と、下書きの履歴の一覧を持たない（書き直しの取り消しのために、1 つ前の版だけを 1 段保持する）。AI 機能を評価する調査の設計は、導入されていれば designer-ux-research の担当である。
 
 ## 依頼
 
 - 製品: メールアプリ「ふくろう便」の返信の下書き機能「かきだし」（架空。運営は架空の会社「ふくろう舎」）
 - 依頼文: 「メールの下書きを AI が書く機能を付けたい。待たせず、直しやすく、勝手に送らないようにしたい」
 - 現状（案）: 「何でも聞いてください」の入力欄が 1 つ。生成が終わると全文が一度に出て、画面が下へ自動で動く。生成中は止められず、採用すると書きかけの返信が上書きされる
-- 想定するユーザー: 1 日に何通も返信する社員。急いでいて、下書きを読んで直してから送る。画面の幅が狭いスマートフォンでも使う。動きを減らす設定の人もいる
+- 想定するユーザー: 1 日に何通も返信する社員。急いでいて、下書きを読んで直してから使う。画面の幅が狭いスマートフォンでも使う。動きを減らす設定の人もいる
 
 ### 根拠の範囲（先に読む）
 
@@ -15,10 +15,11 @@
 - ストリーミングの文字の速さ・停止ボタンを出す時間・再生成の上限・待ちの文言を切り替える時間の出典は、取得していない。この例の値（2 文字・50 ms・700 ms など）は、本 skill の目安（出典なし）である
 - Google の自社研究は、生成の速さを無視すれば生成 UI が好まれたと述べる（S127。自称）。速さを評価から外しているため、画面設計の根拠にしない。MeasuringU の調査は 153 人の小標本で（S128）、個別の操作の設計の根拠にならない
 - 応答は擬似（スクリプトが決まった文を、決まった速さで出す）。実在の生成 AI・通信は使わない。この例に、新しい CSS 機能は使わない（非対応の姿の分岐は不要）
+- この例は、メールの送信ボタンと、下書きの履歴の一覧を持たない（目的の一文に無い機能のため、削った）。AI は送信を一切しない。書き直し・提案の押下は今の下書き（利用者が直した文を含む）を置き換えるので、置き換える前の版を 1 段だけ保持し、「書き直しを取り消す」で戻せる。2 段以上は保持しない
 
 ## 目的の一文
 
-AI の下書きを、待っている間も状態が分かり、いつでも止められ、直してから使え、使った後も取り消せる形で見せる。送信は、人が押すまでしない。
+AI の下書きを、待っている間も状態が分かり、いつでも止められ、直してから使え、書き直しても 1 つ前の版へ戻せ、使った後も取り消せる形で見せる。AI は返信を送らない。
 
 ## 削るもの
 
@@ -30,17 +31,21 @@ AI の下書きを、待っている間も状態が分かり、いつでも止�
 | 生成が終わるまで止められない作り | いつでも止められる。止めても、ここまでの下書きを残す（S125 の考え方） |
 | 全文が出たら画面を下へ自動で動かすこと | 読み始めた位置を見失わせる（S120）。画面の位置は動かさない |
 | 生成中の全文を支援技術に読み上げさせ続けること | 状態（生成中・停止・完了）だけを通知する（S100。全文を読ませない選択は本 skill の整理） |
+| 書き直し・提案の押下で、直した下書きが黙って消えること | 置き換えの前の版を 1 段だけ保持し、戻せるようにする（S125 の復旧しやすさ・S72）。履歴の一覧は持たない |
 | 採用で返信欄を黙って上書きすること | 取り消しにくい操作を、取り消せるようにする（S71・S72） |
-| 生成の完了後の自動送信 | 取り消しにくい操作を自動化しない（S71） |
+| 生成の完了後の自動送信 | 取り消しにくい操作を自動化しない（S71）。この例は、送信の機能そのものを持たない |
+| 状態でボタンを隠す・入れ替える作り | 押した位置に別のボタンが来て、二度押しで別の操作が走る。ボタンは固定の位置に置き、`aria-disabled` で切り替える |
+| 時間で押下を無視する仕組み | 完了を待たせない。押した操作を捨てる。二度押しは、位置を動かさないこと、キーの押しっぱなしとダブルクリックを無視することで防ぐ |
 
 ## 構成
 
 | 要素 | 内容 |
 |---|---|
 | 受信したメール | 返信の対象の文 |
-| 下書きの領域 | できることの説明（能力）・正確とは限らない旨（精度）・提案のボタン・状態の表示と停止・下書き（編集できる）・採用などのボタン |
-| 返信 | 人が書く欄。採用で下書きが入る。採用の取り消しと、送信（自動ではない） |
-| メッセージ欄 | 状態を、フォーカスを移さず伝える（`role="status"`） |
+| 下書きの領域 | できることの説明（能力）・正確とは限らない旨（精度）・提案のボタン・操作のボタン（停止・使う・続きを書く・書き直す・書き直しを取り消す。固定の位置）・状態の文・下書き（編集できる） |
+| 書き直しの取り消し | 書き直し・提案で置き換える前の版を 1 段だけ保持する。保持がないときは `aria-disabled`（隠さない）。新しい下書きを直したら、直した分を失わないよう保持を捨てる |
+| 返信 | 人が書く欄。採用で下書きが入る。採用の取り消し |
+| 状態の文 | 状態を、フォーカスを移さず伝える（`role="status"`）。停止ボタンとは別の行で、停止ボタンの位置を動かさない |
 
 状態の遷移:
 
@@ -48,33 +53,44 @@ AI の下書きを、待っている間も状態が分かり、いつでも止�
 待機 --(提案を押す)--> 整理中（「返信の要点を整理しています」700 ms）--> 書き中（「下書きを書いています」）--> 完了
 整理中・書き中 --(停止・Esc)--> 停止（ここまでを残す。続きを書く / 書き直す / 使う）
 書き中 --(失敗)--> 失敗（ここまでを残す。続きを書く / 書き直す）
-完了・停止 --(この下書きを使う)--> 返信に入る（採用を取り消す / 送信は人が押す）
+完了・停止 --(この下書きを使う)--> 返信に入る（採用を取り消す）
+完了・停止・失敗 --(書き直す・提案)--> 整理中（直前の版を 1 段保持）
+停止・完了・失敗 --(書き直しを取り消す)--> 直前の版と、その状態に戻る（保持は空になる）
 ```
+
+操作のボタンは、どの状態でも同じ位置にある。押せない状態は `aria-disabled="true"`（`disabled` 属性は使わない。フォーカスが外れるため）で示し、押しても何も起きない。
+
+| 状態 | 提案 | 停止 | 使う | 続きを書く | 書き直す | 書き直しを取り消す |
+|---|---|---|---|---|---|---|
+| 待機 | 押せる | 押せない | 押せない | 押せない | 押せない | 押せない |
+| 整理中・書き中 | 押せない | 押せる | 押せない | 押せない | 押せない | 押せない |
+| 停止・失敗 | 押せる | 押せない | 押せる（下書きがあるとき） | 押せる（強調） | 押せる | 保持があるとき押せる |
+| 完了 | 押せる | 押せない | 押せる（強調） | 押せない | 押せる | 保持があるとき押せる |
 
 ## 仕様
 
 | 項目 | 値 | 根拠 |
 |---|---|---|
-| 能力の説明 | 「返信の下書きを作ります。送信は、あなたが押すまでされません。」 | S123・S71 |
-| 精度の説明 | 「内容が正しいとは限りません。送る前に読んで直してください。」 | S124 |
-| 提案 | ボタン 3 つ（丁寧に承諾する・火曜を提案する・日程の再調整を頼む）。入力欄は置かない。生成中は隠さず無効にして、位置を保つ | S121 |
+| 能力の説明 | 「返信の下書きを作ります。この画面から送信はしません。」 | S123・S71 |
+| 精度の説明 | 「内容が正しいとは限りません。使う前に読んで直してください。」 | S124 |
+| 提案 | ボタン 3 つ（丁寧に承諾する・火曜を提案する・日程の再調整を頼む）。入力欄は置かない。生成中は隠さず `aria-disabled` にして、位置を保つ | S121 |
 | 注意書き | 能力（できること・送信しないこと）と精度（正確とは限らないこと）を、2 つの短い段落に分ける | S123・S124・S71 |
-| 状態の枠 | 停止・使う・続きは、下書き欄の上の同じ枠に出す。状態が変わっても下書き欄は動かない（枠の高さを固定する） | 本 skill の整理 |
-| ボタンの位置 | 枠の中のボタン（使う・続きを書く・書き直す・前の下書きに戻す）は、隠さず無効にして、並び順と位置を状態で動かさない。押した直後に、別のボタンが同じ位置へ来ない。返信の行は、送信を先に、採用の取り消しを後ろに置く（取り消しが消えても、送信が押した位置へ来ない） | 本 skill の整理 |
-| 二度押し | 状態が変わった直後の 350 ms は、枠の中のボタンと停止の押下を受け付けない。停止を押した位置に、使う・続きを書く・書き直すが現れるため（Esc はすぐ効く） | 本 skill の実装の目安（350 ms は出典なし） |
-| 待ちの表示 | 「返信の要点を整理しています」→「下書きを書いています」。具体的な処理名 | S70 |
+| 操作のボタン | 停止・使う・続きを書く・書き直す・書き直しを取り消すは、1 つの行に、常に同じ順序・位置で置く。隠さず、`aria-disabled` で切り替える。押した位置に、別のボタンが来ない | 本 skill の整理 |
+| 二度押しの対策 | 時間で押下を捨てない。キーの押しっぱなし（`keydown` の `repeat`）の Enter・Space と、同じ位置の 2 回目以降の押下（`mousedown` と `click` の `detail` が 1 より大きい。`mousedown` では、フォーカスも動かさない）を無視する。スクリプトを持つ 4 例で同じ書き方。限界: OS のダブルクリックの間隔内の、同じ位置の 2 回目は、意図した操作でも 1 回に数える | 本 skill の整理 |
+| 待ちの表示 | 状態の文に「返信の要点を整理しています」→「下書きを書いています」。具体的な処理名 | S70 |
+| 状態の文 | 停止ボタンと別の行に置く。文言の長さが変わっても、停止ボタンは動かない。2 行分の高さを確保し、下書き欄は動かない | 本 skill の整理 |
 | 整理中の長さ | 700 ms | 本 skill の目安（出典なし） |
-| 停止 | 生成を始めた同じ描画で、「停止」ボタンを出す。Esc でも止まる（入力できる欄にフォーカスがあるときを除く）。止めたら、ここまでの下書きを残し、フォーカスが消える所か body にあれば、次の操作（下書きが空なら提案）へ移す。入力中の欄からは奪わない | 出す時間の出典は無い（本 skill の整理）。残すのは S125 の考え方 |
+| 停止 | 生成を始めた同じ描画で、停止を押せる状態にする。Esc でも止まる（入力できる欄にフォーカスがあるときを除く）。止めたら、ここまでの下書きを残す。フォーカスは、押したボタンに残し、プログラムで移さない | 出す時間の出典は無い（本 skill の整理）。残すのは S125 の考え方 |
 | ストリーミング | 2 文字ずつ 50 ms 間隔（目安）。動きを減らす設定では、ストリーミングせず、書き終えてから全文を出す | 本 skill の目安・整理（出典なし） |
 | 画面の位置 | 生成中も完了時も、スクロールを動かさない。下書き欄は固定の高さ（8 行）で、あふれたら欄の中でスクロールする | S120 |
-| 通知 | 状態は下書きの枠の近くの欄、採用・取り消し・送信は返信の近くの欄（どちらも `role="status"`）に、状態だけ出す。下書きの全文を通知しない。生成中の欄は `aria-busy` | S100・本 skill の整理 |
+| 通知 | 状態は下書きの近くの状態の文、採用・取り消しは返信の近くの欄（どちらも `role="status"`）に、状態だけ出す。下書きの全文を通知しない。生成中の欄は `aria-busy` | S100・本 skill の整理 |
 | 編集 | 停止後と完了後は、下書きを直せる。生成中は読み取り専用 | S125 |
-| 続きを書く・書き直す | 続きは、直した分を残したまま、停止した位置の続きを足す。書き直しは最初から。書き直しで消える下書きは、「前の下書きに戻す」で戻せる（本文・種別・位置・状態（停止・失敗・完了）をまとめて保存し、まとめて戻す。停止した下書きは、戻した後も「続きを書く」で続けられる）。次の一手は 1 つだけ強調する（完了なら「使う」、停止・失敗なら「続きを書く」） | S125・S72。強調の選び方は本 skill の整理 |
-| 採用 | 下書きを返信欄へ入れる。返信欄に文があれば置き換える。続けて採用しても、元の本文は上書きしない。「採用を取り消す」で元の本文に戻し、結果を言葉で伝える。返信を直した後は、直した分を失わないよう、取り消しを外す | S71・S72 |
-| 送信 | 人が押すまでしない。返信が空なら押せない | S71 |
-| 失敗 | 失敗してもここまでの下書きを残し、「続きを書く」（強調）と「書き直す」を出す | S125 |
+| 続きを書く・書き直す | 続きは、直した分を残したまま、停止した位置の続きを足す。書き直しは今の下書きを最初から置き換える。置き換える前の版（直した文を含む）を 1 段だけ保持し、「書き直しを取り消す」で戻す（提案ボタンで作り直したときも同じ。2 段以上は保持しない）。次の一手は 1 つだけ強調する（完了なら「使う」、停止・失敗なら「続きを書く」） | S125。強調の選び方は本 skill の整理 |
+| 書き直しの取り消し | 固定の位置（操作のボタンの行）に置き、保持が無いとき・生成中は `aria-disabled`（隠さない・位置は動かさない）。押したら、保持した版と、その時の状態（完了・停止・失敗）に戻し、状態の文に「書き直しを取り消しました。1 つ前の下書きに戻しました。」を出す。フォーカスはプログラムで移さず、押したボタンに残る（押した後は `aria-disabled` になるが、ほかのボタンと同じ扱い。Enter の押しっぱなしが下書き欄に届いて、改行が入ることがない）。保持は戻したら空になる。新しい下書きを直したら、直した分を失わないよう、保持を捨てる（採用の取り消しと同じ規則）。下書きが空のときの置き換えでは、既にある保持を上書きしない | S125・S72。1 段だけにする判断は本 skill の整理 |
+| 採用 | 下書きを返信欄へ入れる。返信欄に文があれば置き換える。続けて採用しても、元の本文は上書きしない。「採用を取り消す」で元の本文に戻し、結果を言葉で伝える。返信を直した後は、直した分を失わないよう、取り消しを押せなくする | S71・S72 |
+| 失敗 | 失敗してもここまでの下書きを残し、「続きを書く」（強調）と「書き直す」を押せる | S125 |
 | 縮小版 | 生成中の点の脈動をやめ、静的な「…」にする | 必要性は S79（アプリ側も設定を尊重する）。置き換えは本 skill の整理 |
-| 自動の動き | 生成は 5 秒を超えることがある。自動で始まる動き・更新に、止める手段（停止ボタン）がある | S94 の考え方（本 skill の当てはめ。WCAG 2.2.2 の適合判断はしない） |
+| 自動の動き | 生成は 5 秒を超えることがある。自動で始まる動き・更新に、止める手段（停止ボタン・Esc）がある | S94 の考え方（本 skill の当てはめ。WCAG 2.2.2 の適合判断はしない） |
 | 速さの扱い | 速さの数値は評価の根拠にしない | S127（速さを評価から外す自称）・S128（小標本） |
 
 コントラスト比（WCAG の相対輝度式で計算。基準の 4.5:1・3:1 の原文は本 skill の台帳に無く、未照合）:
@@ -93,16 +109,17 @@ AI の下書きを、待っている間も状態が分かり、いつでも止�
 
 | 場所 | before | after | 理由 |
 |---|---|---|---|
-| 導入 | 何でも聞いてください | 返信の下書きを作ります。送信は、あなたが押すまでされません。 | できることを具体的に言う（S122・S123） |
-| 精度 | （無し） | 内容が正しいとは限りません。送る前に読んで直してください。 | 精度を示す（S124） |
+| 導入 | 何でも聞いてください | 返信の下書きを作ります。この画面から送信はしません。 | できることを具体的に言う（S122・S123） |
+| 精度 | （無し） | 内容が正しいとは限りません。使う前に読んで直してください。 | 精度を示す（S124） |
+| 待機 | （無し） | 提案を選ぶと、下書きを作ります。止めるには「停止」か Esc。 | 次の一手と、止め方を言う |
 | 待ち | 処理中… | 返信の要点を整理しています → 下書きを書いています | 具体的な処理名（S70） |
 | 停止 | （無し） | 停止 | 止められることを示す |
 | 停止後 | （無し） | 停止しました。ここまでの下書きは残してあります。 | 現状を言う |
 | 完了 | （全文が出るだけ） | 下書きができました。直して使えます。 | 状態を伝える（S100） |
 | 失敗 | エラーが発生しました | 下書きを最後まで作れませんでした。ここまでの下書きは残してあります。 | 何が起きたかと現状を言う（S125） |
-| 採用 | （黙って上書き） | 下書きを返信に入れました。送信はしていません。 | 結果を伝え、送信していないことを言う（S71・S72） |
+| 採用 | （黙って上書き） | 下書きを返信に入れました。 | 結果を伝える（S71・S72） |
+| 書き直しの取り消し | （直した下書きが消える） | 書き直しを取り消しました。1 つ前の下書きに戻しました。 | 結果を見せる（S72）・復旧しやすく（S125） |
 | 採用の取り消し | （無し） | 採用を取り消しました。返信を元の本文に戻しました。 | 結果を見せる（S72） |
-| 送信 | （自動） | 送信（人が押す） | 自動化しない（S71） |
 
 ## コード断片
 
@@ -118,27 +135,21 @@ AI の下書きを、待っている間も状態が分かり、いつでも止�
 
   <section class="ai" aria-labelledby="ai-title">
     <h2 id="ai-title">下書きを作る</h2>
-    <p class="note">返信の下書きを作ります。送信は、あなたが押すまでされません。</p>
-    <p class="note">内容が正しいとは限りません。送る前に読んで直してください。</p>
+    <p class="note">返信の下書きを作ります。この画面から送信はしません。</p>
+    <p class="note">内容が正しいとは限りません。使う前に読んで直してください。</p>
     <div id="suggest" class="row">
-      <button type="button" class="btn" data-kind="polite">丁寧に承諾する</button>
-      <button type="button" class="btn" data-kind="tue">火曜を提案する</button>
-      <button type="button" class="btn" data-kind="decline">日程の再調整を頼む</button>
+      <button type="button" class="btn" data-kind="polite" aria-disabled="false">丁寧に承諾する</button>
+      <button type="button" class="btn" data-kind="tue" aria-disabled="false">火曜を提案する</button>
+      <button type="button" class="btn" data-kind="decline" aria-disabled="false">日程の再調整を頼む</button>
     </div>
-    <div class="slot">
-    <p id="hint" class="hint">提案を選ぶと、ここに状態と操作が出ます。</p>
-    <div id="run" class="row run" hidden>
-      <span id="phase"></span><span class="dots" aria-hidden="true">…</span>
-      <button type="button" id="stop" class="btn">停止</button>
+    <div id="controls" class="row">
+      <button type="button" id="stop" class="btn" aria-disabled="true">停止</button>
+      <button type="button" id="adopt" class="btn" aria-disabled="true">この下書きを使う</button>
+      <button type="button" id="resume" class="btn" aria-disabled="true">続きを書く</button>
+      <button type="button" id="again" class="btn" aria-disabled="true">書き直す</button>
+      <button type="button" id="undo-again" class="btn" aria-disabled="true">書き直しを取り消す</button>
     </div>
-    <div id="after" class="row" hidden>
-      <button type="button" id="adopt" class="btn btn-main">この下書きを使う</button>
-      <button type="button" id="resume" class="btn" disabled>続きを書く</button>
-      <button type="button" id="again" class="btn">書き直す</button>
-      <button type="button" id="restore" class="btn" disabled>前の下書きに戻す</button>
-    </div>
-    </div>
-    <div id="status" class="status" role="status"></div>
+    <div id="status" class="status" role="status">提案を選ぶと、下書きを作ります。止めるには「停止」か Esc。</div>
     <label for="draft" class="lbl">下書き</label>
     <textarea id="draft" rows="8" readonly></textarea>
   </section>
@@ -147,8 +158,7 @@ AI の下書きを、待っている間も状態が分かり、いつでも止�
     <h2 id="reply-title">返信</h2>
     <textarea id="reply" rows="6" aria-label="返信の本文"></textarea>
     <div class="row">
-      <button type="button" id="send" class="btn btn-main" disabled>送信</button>
-      <button type="button" id="undo-adopt" class="btn" hidden>採用を取り消す</button>
+      <button type="button" id="undo-adopt" class="btn" aria-disabled="true">採用を取り消す</button>
     </div>
     <div id="reply-status" class="status" role="status"></div>
   </section>
@@ -171,25 +181,19 @@ body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.7;
 h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 h2 { font-size: 18px; line-height: 26px; margin: 24px 0 8px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-[hidden] { display: none !important; }
 .mail { padding: 12px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .mail p { margin: 0; }
 .meta { color: var(--text-2); font-size: 14px; }
-.note { color: var(--text-2); }
+.note { margin: 0 0 4px; color: var(--text-2); }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
 .btn { min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; cursor: pointer; }
 .btn-main { border-color: var(--accent); background: var(--accent); color: var(--on-accent); font-weight: 600; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }       /* 押せない状態。disabled 属性は使わない（フォーカスが外れる）*/
 .lbl { display: block; margin-top: 12px; font-size: 14px; color: var(--text-2); }
 textarea { display: block; box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
   background: var(--bg); color: var(--text); font: inherit; line-height: 1.7; resize: vertical; }
 #draft[readonly] { background: var(--surface); }
-.run, .hint { color: var(--text-2); }
-.hint { margin: 8px 0; }
-.slot { min-height: 112px; }                                      /* 状態が変わっても、下書き欄が動かない（狭い画面は 2 行分）*/
-@media (min-width: 560px) { .slot { min-height: 60px; } }
 .status { min-height: 3.4em; margin: 4px 0 0; }                   /* 2 行分を確保し、文言の長さで下の欄が動かない */
-.note { margin: 0 0 4px; }
 .error { color: var(--error); }
 .flash { background: var(--flash); }
 
@@ -200,6 +204,12 @@ textarea { display: block; box-sizing: border-box; width: 100%; padding: 10px 12
 ```
 
 ```js
+/* 連打対策（スクリプトを持つ 4 例で共通）: 時間で押下を捨てず、キーの押しっぱなしと、同じ位置の 2 回目以降のクリックだけを無視する */
+const actionable = (t) => t.closest && t.closest('button, a[href], input[type="checkbox"]');
+document.addEventListener('keydown', (e) => { if (e.repeat && (e.key === 'Enter' || e.key === ' ') && actionable(e.target)) e.preventDefault(); }, true);
+document.addEventListener('click', (e) => { if (e.detail > 1 && actionable(e.target)) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+document.addEventListener('mousedown', (e) => { if (e.detail > 1 && actionable(e.target)) e.preventDefault(); }, true);   // 2 回目の押下で、フォーカスを動かさない（行が上がってきて、別の削除へ移るのを防ぐ）
+
 const params = new URLSearchParams(location.hash.slice(1));
 const clamp = (v, min, max, d) => {                                           // 未指定（null・空）は、必ず既定値 d にする
   if (v === null || v.trim() === '') return d;
@@ -214,89 +224,86 @@ const DRAFTS = {
 };
 const $ = (id) => document.getElementById(id);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const enable = (b, on) => b.setAttribute('aria-disabled', String(!on));       // 隠さず、位置を保つ
+const onClick = (b, fn) => b.addEventListener('click', () => { if (b.getAttribute('aria-disabled') !== 'true') fn(); });
 // pos: 擬似の応答のうち、ここまで出した文字数。base: この回の前から欄にあった文（直した分を含む）。startPos: この回を始めた位置
-let kind = null, pos = 0, base = '', startPos = 0, timer = 0, state = 'idle', failedOnce = false, saved = null, prevReply = null;   // saved: 書き直す前の下書き（本文・種別・位置・状態をまとめて持つ）
+let kind = null, pos = 0, base = '', startPos = 0, timer = 0, state = 'idle', failedOnce = false, prevReply = null;
+let saved = null;                                                            // 書き直しの前の版（1 段だけ）。{ value, kind, pos, state }
 
-function say(id, text, isError) { const s = $(id); s.textContent = text; s.className = 'status' + (isError ? ' error' : ''); }   // 状態だけを通知（S100）
-const sayAi = (t, e) => say('status', t, e), sayReply = (t, e) => say('reply-status', t, e);
-const GUARD_MS = 350;                                                        // 状態が変わった直後は、ボタンの押下を受け付けない（目安）
-let guardUntil = 0;
-const armed = () => performance.now() >= guardUntil;                          // 二度押しで、同じ位置に出た別のボタンを押さないため
-function setState(next) {
-  state = next; guardUntil = performance.now() + GUARD_MS;
-  const busy = next === 'thinking' || next === 'writing';
-  $('run').hidden = !busy; $('after').hidden = busy || next === 'idle'; $('hint').hidden = next !== 'idle';
-  $('suggest').querySelectorAll('button').forEach((b) => { b.disabled = busy; });          // 隠さず無効にして、位置を保つ
-  $('draft').readOnly = busy; $('draft').setAttribute('aria-busy', String(busy));
-  $('resume').disabled = !(next === 'stopped' || next === 'error');                       // 隠さず無効にして、ボタンの位置を保つ
-  $('restore').disabled = saved === null;
-  $('adopt').disabled = $('draft').value.trim() === '';
-  $('adopt').classList.toggle('btn-main', next === 'done');                               // 次の一手を 1 つだけ強調する
-  $('resume').classList.toggle('btn-main', next === 'stopped' || next === 'error');
+function say(id, text, { busy = false, error = false } = {}) {               // 状態だけを通知（S100）
+  const s = $(id); s.textContent = text; s.className = 'status' + (error ? ' error' : '');
+  if (busy) { const d = document.createElement('span'); d.className = 'dots'; d.setAttribute('aria-hidden', 'true'); d.textContent = '…'; s.append(d); }
 }
-function focusIfFree(el) {                                                   // 非同期の後は、フォーカスが消える所か body にあるときだけ移す。入力中の欄は奪わない
-  const a = document.activeElement;
-  if (!a || a === document.body || $('suggest').contains(a) || $('run').contains(a) || $('after').contains(a)) el.focus({ preventScroll: true });
+const sayAi = (t, o) => say('status', t, o), sayReply = (t, o) => say('reply-status', t, o);
+function setState(next) {                                                    // 状態の表のとおりに、ボタンを押せる・押せないにする
+  state = next;
+  const busy = next === 'thinking' || next === 'writing', has = $('draft').value.trim() !== '';
+  $('suggest').querySelectorAll('button').forEach((b) => enable(b, !busy));
+  enable($('stop'), busy); enable($('adopt'), !busy && has); enable($('again'), !busy && has);
+  enable($('resume'), next === 'stopped' || next === 'error'); enable($('undo-again'), !busy && saved !== null);
+  $('draft').readOnly = busy; $('draft').setAttribute('aria-busy', String(busy));
+  $('adopt').classList.toggle('btn-main', next === 'done');                  // 次の一手を 1 つだけ強調する
+  $('resume').classList.toggle('btn-main', next === 'stopped' || next === 'error');
 }
 function start(k, resume) {
   clearInterval(timer); clearTimeout(timer);
   if (!resume) {
-    if ($('draft').value.trim()) saved = { value: $('draft').value, kind, pos, state };      // 本文だけでなく、続きを書くのに要る値も一緒に持つ
+    if ($('draft').value.trim() !== '') saved = { value: $('draft').value, kind, pos, state };   // 置き換える前の版（直した文を含む）を 1 段だけ残す。空なら、既にある保持を上書きしない
     pos = 0; base = ''; $('draft').value = '';
   }
-  else base = $('draft').value;                                                           // 直した分を残し、その後ろへ続きを足す
-  startPos = pos; kind = k; setState('thinking'); focusIfFree($('stop'));   // 停止を同じ描画で出し、キーボードの利用者も止められる
-  $('phase').textContent = '返信の要点を整理しています'; sayAi('下書きを作っています');
+  else base = $('draft').value;                                              // 直した分を残し、その後ろへ続きを足す
+  startPos = pos; kind = k; setState('thinking');
+  sayAi('返信の要点を整理しています', { busy: true });
   timer = setTimeout(write, resume ? 0 : THINK);
 }
 function write() {
-  setState('writing'); $('phase').textContent = '下書きを書いています';
+  setState('writing'); sayAi('下書きを書いています', { busy: true });
   const text = DRAFTS[kind];
   if (reduce.matches) { pos = text.length; $('draft').value = base + text.slice(startPos); return finish(); }   // 動きを減らす設定では、書き終えてから全文を出す
   timer = setInterval(() => {
     pos = Math.min(text.length, pos + STEP); $('draft').value = base + text.slice(startPos, pos);
-    if (FAIL && !failedOnce && pos >= text.length / 2) { failedOnce = true; clearInterval(timer); setState('error'); sayAi('下書きを最後まで作れませんでした。ここまでの下書きは残してあります。', true); focusIfFree($('resume')); }
-    else if (pos >= text.length) { clearInterval(timer); finish(); }
+    if (FAIL && !failedOnce && pos >= text.length / 2) {
+      failedOnce = true; clearInterval(timer); setState('error'); sayAi('下書きを最後まで作れませんでした。ここまでの下書きは残してあります。', { error: true });
+    } else if (pos >= text.length) { clearInterval(timer); finish(); }
   }, TICK);
 }
-function finish() { setState('done'); sayAi('下書きができました。直して使えます。'); focusIfFree($('adopt')); }
+function finish() { setState('done'); sayAi('下書きができました。直して使えます。'); }
 function stop() {
   if (state !== 'thinking' && state !== 'writing') return;
   clearInterval(timer); clearTimeout(timer); setState('stopped');
   sayAi('停止しました。ここまでの下書きは残してあります。');
-  focusIfFree(!$('adopt').disabled ? $('resume') : $('suggest').querySelector('button'));   // 下書きが空なら、提案へ戻す
 }
-document.querySelectorAll('#suggest [data-kind]').forEach((b) => b.addEventListener('click', () => start(b.dataset.kind, false)));
-$('stop').addEventListener('click', () => { if (armed()) stop(); });   // Esc は、すぐ効く
+document.querySelectorAll('#suggest [data-kind]').forEach((b) => onClick(b, () => start(b.dataset.kind, false)));
+onClick($('stop'), stop);
 addEventListener('keydown', (e) => {                                          // 返信などを入力しているときの Esc は、生成を止めない
   if (e.key === 'Escape' && !document.activeElement.matches('textarea:not([readonly])')) stop();
 });
-$('resume').addEventListener('click', () => { if (armed()) start(kind, true); });
-$('again').addEventListener('click', () => { if (armed()) start(kind, false); });
-$('restore').addEventListener('click', () => {
-  if (!armed()) return;
-  ({ kind, pos } = saved); $('draft').value = saved.value; const back = saved.state; saved = null;   // 全部戻す
-  setState(back); sayAi('前の下書きに戻しました'); focusIfFree(back === 'done' ? $('adopt') : $('resume'));   // 押したボタンが消えるので、フォーカスを移す
+onClick($('resume'), () => start(kind, true));
+onClick($('again'), () => start(kind, false));
+$('draft').addEventListener('input', () => {
+  const has = $('draft').value.trim() !== '';
+  enable($('adopt'), has); enable($('again'), has);
+  saved = null; enable($('undo-again'), false);                              // 新しい下書きを直したら、直した分を失わないよう、取り消しは押せなくする
 });
-$('draft').addEventListener('input', () => { $('adopt').disabled = $('draft').value.trim() === ''; });
+onClick($('undo-again'), () => {                                             // 1 つ前の版と、その時の状態へ戻す
+  if (!saved) return;
+  const prev = saved; saved = null;
+  $('draft').value = prev.value; kind = prev.kind; pos = prev.pos; setState(prev.state);
+  sayAi('書き直しを取り消しました。1 つ前の下書きに戻しました。');
+});
 
 function flash() { $('reply').classList.add('flash'); setTimeout(() => $('reply').classList.remove('flash'), 1200); }
-$('adopt').addEventListener('click', () => {                                 // 置き換えは取り消せる（S71・S72）
-  if (!armed()) return;
-  if ($('undo-adopt').hidden) prevReply = $('reply').value;                  // 採用済みなら、元の返信を上書きしない
-  $('reply').value = $('draft').value;
-  $('undo-adopt').hidden = false; $('send').disabled = $('reply').value.trim() === '';
-  flash(); sayReply('下書きを返信に入れました。送信はしていません。');
+onClick($('adopt'), () => {                                                  // 置き換えは取り消せる（S71・S72）
+  if ($('undo-adopt').getAttribute('aria-disabled') === 'true') prevReply = $('reply').value;   // 採用済みなら、元の返信を上書きしない
+  $('reply').value = $('draft').value; enable($('undo-adopt'), true);
+  flash(); sayReply('下書きを返信に入れました。');
 });
-$('undo-adopt').addEventListener('click', () => {
-  $('reply').value = prevReply; $('undo-adopt').hidden = true; $('send').disabled = $('reply').value.trim() === '';
-  flash(); sayReply('採用を取り消しました。返信を元の本文に戻しました。'); $('reply').focus({ preventScroll: true });
+onClick($('undo-adopt'), () => {
+  $('reply').value = prevReply; enable($('undo-adopt'), false);
+  flash(); sayReply('採用を取り消しました。返信を元の本文に戻しました。');
 });
-$('reply').addEventListener('input', () => {
-  $('send').disabled = $('reply').value.trim() === '';
-  $('undo-adopt').hidden = true;                                             // 返信を直したら、採用の取り消しは外す（直した分を失わないため）
-});
-$('send').addEventListener('click', () => sayReply('送信しました（この例では実際には送りません）'));   // 送信は人が押す（S71）
+$('reply').addEventListener('input', () => enable($('undo-adopt'), false));   // 返信を直したら、採用の取り消しは押せなくする（直した分を失わないため）
+setState('idle');
 ```
 
 試作のため、スクリプトはインラインで書いてよい。本番では外部ファイルにするか、CSP の nonce を付ける。
@@ -305,25 +312,26 @@ $('send').addEventListener('click', () => sayReply('送信しました（この�
 
 | 問い | 期待する答え | 確認する場所 |
 |---|---|---|
-| 何に注意するか | 下書きは AI が作り、正確とは限らない。送信は自分が押すまでされない | 下書きの領域の説明 |
-| 何を操作できるか | 提案から下書きを作る・止める・直す・使う・取り消す・送る | 提案のボタン、停止、下書き、「この下書きを使う」、返信と送信 |
+| 何に注意するか | 下書きは AI が作り、正確とは限らない。この画面から送信はしない | 下書きの領域の説明 |
+| 何を操作できるか | 提案から下書きを作る・止める・直す・書き直す・書き直しを取り消す・使う・採用を取り消す | 提案のボタン、停止、下書き、「書き直す」、「書き直しを取り消す」、「この下書きを使う」、返信と「採用を取り消す」 |
 | どう操作するか | 提案を押す。止めたいときは「停止」か Esc。使うときは「この下書きを使う」 | 44 px 以上のボタン |
 
 動きの検証は、動きを減らす設定をオンにしても同じ 3 問に答えられることを確かめる。縮小版でも、待ちの文言・停止・完了の文言で状態が分かる（S64）。
 
 ## 点検
 
-- 目的: 待ち・停止・編集・採用・取り消しのそれぞれで、人が主導権を持つか。送信を自動化していないか（S71）
-- 待ち: 具体的な処理名が出る（S70）。停止が生成の開始と同じ描画で出る。Esc でも止まる
-- 位置: 生成中も完了時も、ページのスクロール位置が動かない（S120）。下書き欄は固定の高さで、あふれても欄の中だけ動く
-- 通知: メッセージ欄が状態だけを出し、下書きの全文を出さない。非同期の完了（生成の開始・完了・失敗・停止）でフォーカスを移すのは、フォーカスが消える所（提案・停止・続きなどの行）か body にあるときだけ。返信欄などで入力している最中は、フォーカスを奪わず、状態の通知だけにする。Esc は、入力できる欄にフォーカスがあるときは生成を止めない（S100）
-- 編集と復旧: 停止後・完了後に下書きを直せる。書き直しで消える下書きを戻せる。失敗してもここまでの下書きが残る（S125）。「前の下書きに戻す」は、停止した下書きなら停止の状態に戻り、「続きを書く」が出る
-- ボタンの位置と二度押し: 状態が変わっても、枠の中のボタンの並び順が動かない。停止・「前の下書きに戻す」を素早く二度押しても、2 回目が別のボタン（続きを書く・書き直す・使う）を押さない（状態の変更から 350 ms は無視する）
-- 採用と取り消し: 返信欄の文を置き換えるとき、取り消せる。取り消した結果が言葉と強調で分かる（S72）。送信は人が押す（S71）
+- 目的: 待ち・停止・編集・採用・取り消しのそれぞれで、人が主導権を持つか。AI が返信を送る機能が無いか（S71）
+- 待ち: 具体的な処理名が出る（S70）。停止が生成の開始と同じ描画で押せる。Esc でも止まる。停止が効かない時間帯が無い（時間で押下を捨てる仕組みが無い）
+- 位置: 生成中も完了時も、ページのスクロール位置が動かない（S120）。下書き欄は固定の高さで、あふれても欄の中だけ動く。状態が変わっても、下書き欄・操作のボタンの位置が動かない（幅を振って確かめる）
+- 通知: 状態の文が状態だけを出し、下書きの全文を出さない。フォーカスは、プログラムで移さない（押したボタンに残る）。返信欄で入力している最中の Esc は、生成を止めない（S100）
+- 編集と復旧: 停止後・完了後に下書きを直せる。失敗してもここまでの下書きが残る（S125）。書き直し・提案の押下は今の下書き（直した文を含む）を置き換えるが、「書き直しを取り消す」で 1 つ前の版に戻る（フォーカスは押したボタンに残り、通知あり）。新しい下書きを直した後は取り消せない（直した分を失わないため）。履歴の一覧は持たない（範囲外）
+- ボタンの位置と二度押し: 操作のボタン（書き直しを取り消すを含む 5 つ）は、どの状態でも同じ位置にあり、押せない間は `aria-disabled` である。キーの押しっぱなしと、ダブルクリックの 2 回目は無視される。停止を押した位置に、別のボタンが来ない
+- 採用と取り消し: 返信欄の文を置き換えるとき、取り消せる。取り消した結果が言葉と強調で分かる（S72）。AI は送信しない（S71）
 - 縮小版: 動きを減らす設定で、点の脈動が止まり、全文は書き終えてから出る。設定は CSS とスクリプトの判定で、途中で変えても CSS の部分は追従する
-- 横はみ出し: 1440・390・320 px で横スクロールが出ない。下書きと返信の欄が幅に収まる
+- 横はみ出し: 320 px から 1440 px まで、横スクロールが出ない。下書きと返信の欄が幅に収まる
 - 能力と精度: できることと、正確とは限らないことが、使う前に読める（S123・S124）。提案はボタンで、導入文は具体的（S121・S122）
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: ハッシュ無しで開くと、ストリーミング間隔 50 ms・整理中 700 ms で、提案を押した直後（約 1 ms）に「返信の要点を整理しています」が出て、停止ボタンにフォーカスがあった（修正前は 5 ms・0 ms で、待ちの文言が出ずに全文が出た）。約 703 ms で「下書きを書いています」に替わり、下書きは 1 秒で 10 文字、2 秒で 50 文字、3 秒で 90 文字、約 3.1 秒で全 95 文字になり、フォーカスが「この下書きを使う」へ移った（スクロール位置は 0 のまま）。状態を変えても、下書き欄の上端は、1440・390・320 px とも動かなかった（修正前は 390 px で 52 px 動いた）。「この下書きを使う」は、320 px（画面の高さ 640 px）でも画面の内側（上端 562 px）にある。整理中に Esc で停止すると、フォーカスが最初の提案へ移った（修正前は失われた）。停止（ボタンと Esc）でここまでの下書き（24 文字・14 文字）が残った。停止して下書きに一文を足し、「続きを書く」を押すと、足した文が残ったまま最後まで書き終えた（修正前は消えた）。失敗（擬似）では途中の 50 文字が残り、「続きを書く」にフォーカスが移って、「続きを書く」で完了した。採用は、元の返信を置き換え、続けて 2 回採用しても、「採用を取り消す」で元の返信（「元の返信」）に戻り、フォーカスは返信欄へ移った（修正前は下書きに戻った）。採用後に返信を直すと、取り消しが外れた。書き直しで消えた編集済みの下書きは、「前の下書きに戻す」で戻った。送信は自動で起きなかった。390 px と 320 px で、スクロールを 90 px にして生成しても、生成中・完了時とも 90 px のままだった。動きを減らす設定では、点の `animation-name` が `none` で、全文が書き終えた後に一度に出た。通常は `pulse`・1.2 s。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。狭い画面では、下書き欄が画面の下側（390 px で上端 665 px、320 px で 768 px）にあり、生成中の文字は自分でスクロールして読む（画面は動かさない）。返信欄にフォーカスを置いたまま生成を始めると、開始時も完了時（約 1.5 秒後）も、フォーカスは返信欄に残った（修正前は停止ボタン、続いて「使う」に奪われた）。失敗（擬似）の時点でも返信欄に残った。返信欄で Esc を押しても、生成は止まらなかった（修正前は止まった）。「前の下書きに戻す」を押すと、フォーカスは「この下書きを使う」へ移った（修正前は body に落ちた）。停止した下書き（54 文字）の後に別の提案を生成し、完了してから「前の下書きに戻す」を押すと、修正前は本文だけ戻って状態が完了になり、「続きを書く」が消え、続きを書けなかった（54 文字のまま）。修正後は状態が停止、種別が元の提案に戻り、「続きを書く」が出て、押すと元の提案の全文（95 文字）で完了した。「前の下書きに戻す」を 100 ms 間隔で二度押すと、修正前は 2 回目が「書き直す」を押して生成が再開し、戻した下書きが消えた（状態は writing、本文 34 文字）。修正後は 2 回目が無視され、状態は停止のまま、戻した下書き（64 文字）が残り、「続きを書く」が使える。1440・390・320 px とも同じ。「停止」を 100 ms 間隔で二度押すと、修正前は 2 回目が「続きを書く」を押して生成が再開した（状態は writing）。修正後は停止のまま。「採用を取り消す」の二度押しは、修正前も送信は押されなかった（再現せず）が、送信を先に置く並びに直した。実機・スクリーンリーダー・実際の生成 AI は未検証
+- 未対応: 狭い画面では、下書き欄が画面の下側にあり、生成中の文字は自分でスクロールして読む（画面は動かさない）。キーボードで提案を押すと、フォーカスは押した提案に残るので、停止は Esc か Tab で行く（フォーカスをプログラムで移すと、入力中の欄から奪う危険があるため、移さない）
+- 実測（Chrome 156、2026-11-16、1440・390・320 px）: 位置は、幅 320・390・480・559・560・572・640・719・720・800・1024・1440 px の 12 通りで、擬似の通信を「通常」と「途中で 1 回失敗」にして、提案・停止・続きを書く・採用・書き直す・採用の取り消しを通した全経路で、提案 3 つ・操作の 5 つ（書き直しを取り消すを含む）・状態の文・下書き欄・返信欄・採用の取り消し・返信の通知欄の矩形（ページ上の位置と大きさ）が 1 種類のままだった（560〜572 px でも下書き欄は動かない）。停止は、提案を押してから 79・127・227・375・427・579・775・1077 ms のどの時点でも、押した直後に止まり、フォーカスは「停止」に残った（時間で押下を捨てる仕組みは無い）。「停止」のダブルクリックは、止まったまま、別のボタンが押されなかった。提案のダブルクリックで開始は 1 回だけ。Enter の押しっぱなしでは、開始は 1 回だけで、Esc で止めた後も、押しっぱなしの Enter が次の生成を始めなかった。書き直しの取り消し: 停止して下書きに「【私が直した文】」を足し、「書き直す」でも提案（「丁寧に承諾する」）でも置き換えた後、「書き直しを取り消す」を押すと、直した文を含む 1 つ前の版が戻り、状態は「停止」に戻り、フォーカスは「書き直しを取り消す」に残り、状態の文は「書き直しを取り消しました。1 つ前の下書きに戻しました。」になった（390×844 と 1440×900）。ダブルクリックしても取り消しは 1 回で、押した後は押せない状態になり、操作のボタンの位置は変わらなかった。キーボード（提案で Enter → Esc → 直す → 提案で Enter → 取り消しで Enter）でも戻った。新しい下書きを直すと取り消しは押せなくなり、生成中も押せず、停止すると押せて、失敗の状態へも戻った。「続きを書く」は、直した下書き（先頭に「【直した】」を足した）を残したまま続きを足し、フォーカスは「続きを書く」に残った。「この下書きを使う」と「書き直す」の後に「採用を取り消す」をダブルクリックしても、返信は元の本文に戻り、取り消しは 1 回だけ。返信欄の Esc は生成を止めず、下書き欄（読み取り専用）の Esc は止めた。生成と失敗の全経路で、`activeElement` が body になることは無く、ページのスクロール位置は動かなかった。動きを減らす設定では、ストリーミングせず、書き終えてから全文が出た。横はみ出し（`scrollWidth` が `innerWidth` を超えること）は、1440・390・320 px のどれにも無かった。他のブラウザー・実機は未検証。スクリーンリーダーでの読み上げは未検証
 - 推測の明示: 2 文字・50 ms・700 ms・1.2 秒・8 行は本 skill の目安である。ストリーミングの速さ・停止を出す時間・再生成の上限の出典は取得していない。画面の位置を動かさない設計と、全文を読み上げさせない選択は、NN/g の観察（S120）と本 skill の整理であり、スクリーンリーダーでの実際の読み上げは実機で確かめていない。生成 AI の実際の応答の遅さ・誤りは、擬似では再現していない
 
 ## この例の出典

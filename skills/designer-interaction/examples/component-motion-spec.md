@@ -16,6 +16,7 @@
 - 押下の縮みは、頻繁な操作への動きの追加に当たる。HIG は頻繁な操作に動きを足さない（S67）一方、フィードバックの動きは短く的確にとも述べる（S66）。この例は後者を根拠に、100 ms の小さな縮みだけを残す（本 skill の判断）。外す場合は、明るさの変化だけにする
 - 「キーボードで開いたときは動かさない」は、個人の強い主張（S33）に基づく選択肢である。HIG は頻繁な操作に動きを足さないとまでしか述べない（S67）。採用するかは、利用者の頻度で決める
 - `popover`・`@starting-style`・`allow-discrete` の対応状況は時点情報（2026-11-15）。取得した記述は、`@starting-style` が 2024 年 8 月から（S91）、Popover API が 2025 年 1 月から（S92）。`allow-discrete` は、台帳に出典が無い
+- 範囲外: 並べ替えの処理（メニューは、開閉と選択の印だけを見せる）、同期と書き出しの処理（ボタンは、ツールチップの動きを見せるための見本）は持たない。目的の一文に無い機能は、作り込まずに範囲外とした
 
 ## 目的の一文
 
@@ -70,6 +71,10 @@
   | 残る（persistent）: トリガーを外すか、利用者が消すまで残る | タイマーで消さない。ホバー・フォーカスを外すか Escape で消えるまで出ている |
 
 - 動きの完了前に次の操作を受け付ける（S68・S74）。閉じる遷移の間も、閉じた popover と `::backdrop` はポインタを受けない（`pointer-events: none`）。開閉ボタンやページを塞がない（本 skill の実装の防御。Chrome 156 では、この指定が無くても塞がなかった）
+- 連打（時間で押下を捨てない）: キーの押しっぱなし（`keydown` の `repeat`）の Enter・Space と、同じ位置の 2 回目以降の押下（`mousedown` と `click` の `detail` が 1 より大きい。`mousedown` では、フォーカスも動かさない）を無視する。押した位置の部品は、押した後も動かない（トーストは画面の下に重なるだけで、ボタンの位置を変えない）。スクリプトを持つ 4 例（本例・ページ遷移・待ちと取り消し・AI の下書き）で同じ書き方。限界: OS のダブルクリックの間隔内の、同じ位置の 2 回目は、意図した操作でも 1 回に数える（例: 「在庫を追加」を続けて 2 行足したい場合）
+- メニューを開くと、先頭の項目へフォーカスを移し、起点のボタンの `aria-expanded` を更新する（Popover API の有無にかかわらず）。項目は `role="menuitemradio"` と `aria-checked` で選択を示し、矢印キー・Home・End で移る（並べ替えの処理は範囲外）
+- トーストの通知（ステータスメッセージを、フォーカスを移さず伝える。S100）: 見えるトーストに `role="status"` を付けても、表示（`display`）が変わる要素は読み上げられないことがある（S100 の記述ではなく、本 skill の見立てで、出典なし・実機未検証）。常に存在する見えない通知欄（`role="status"`）に、トーストを出した後で文を書く（同じ文が続いても、いったん空にして書き直す）
+- ツールチップは、右端を画面でなく、切れる `.page` の端で止める（`overflow-x: clip` の端で切れて欠けないため）
 - 動きを減らす設定では、位置・拡大縮小の動きを、不透明度の変化か即時の切り替えにする（必要性は S76・S79・S149。置き換えの表は本 skill の整理）
 
 仕様の選択（個人の強い主張に基づく。採用は利用者の頻度で決める）:
@@ -81,7 +86,7 @@
 | 状況 | 姿 |
 |---|---|
 | `allow-discrete` に非対応 | `transition` の宣言ごと無効になり、メニューとトーストは動きなしで出入りする。機能は変わらない |
-| Popover API に非対応 | スクリプトが検出し、`hidden` の切り替えで同じ開閉をする。Escape・メニューの外のクリック・項目の選択でも閉じる（閉じる処理は 1 か所）。メニューの中にフォーカスがあれば、起点の「並べ替える」へ戻す。動きなし |
+| Popover API に非対応 | スクリプトが検出し、`hidden` の切り替えで同じ開閉をする。開いたら先頭の項目へフォーカスし、`aria-expanded` を更新する。Escape・メニューの外のクリック・項目の選択でも閉じる（閉じる処理は 1 か所）。メニューの中にフォーカスがあれば、起点の「並べ替える」へ戻す。動きなし |
 | 動きを減らす設定 | 上の縮小版の列のとおり |
 
 コントラスト比（WCAG の相対輝度式で計算。基準の 4.5:1・3:1 の原文は本 skill の台帳に無く、未照合）:
@@ -118,7 +123,7 @@
   <div class="toolbar" role="toolbar" aria-label="一覧の操作">
     <button class="btn" type="button" id="add">在庫を追加</button>
     <button class="btn btn-sub" type="button" id="save">変更を保存</button>
-    <button class="btn btn-sub" type="button" id="sort" popovertarget="sort-menu">並べ替える</button>
+    <button class="btn btn-sub" type="button" id="sort" popovertarget="sort-menu" aria-haspopup="menu" aria-expanded="false">並べ替える</button>
     <span class="tip">
       <button class="btn btn-sub" type="button" aria-describedby="tip-sync">在庫を同期</button>
       <span class="tip-text" role="tooltip" id="tip-sync">最終同期 10:42 に完了</span>
@@ -135,16 +140,17 @@
   </ul>
 </main>
 
-<div id="sort-menu" class="menu" popover>
-  <button type="button" class="menu-item">名前順</button>
-  <button type="button" class="menu-item">在庫の少ない順</button>
-  <button type="button" class="menu-item">更新の新しい順</button>
+<div id="sort-menu" class="menu" popover role="menu" aria-label="並べ方">
+  <button type="button" class="menu-item" role="menuitemradio" aria-checked="true">名前順</button>
+  <button type="button" class="menu-item" role="menuitemradio" aria-checked="false">在庫の少ない順</button>
+  <button type="button" class="menu-item" role="menuitemradio" aria-checked="false">更新の新しい順</button>
 </div>
 
-<div id="toast" class="toast" popover="manual" role="status">
+<div id="toast" class="toast" popover="manual">
   <span id="toast-text"></span>
   <button type="button" class="toast-close" id="toast-close">閉じる</button>
 </div>
+<div id="live" class="vh" role="status"></div>   <!-- 常に存在する通知欄。トーストの文はここへ書く -->
 ```
 
 ```css
@@ -164,7 +170,8 @@
 }
 body { margin: 0; background: var(--bg); color: var(--text);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif; }
-.page { max-width: 640px; margin: 0 auto; padding: 24px 16px 96px; overflow-x: clip; }   /* 見えないツールチップが横スクロールを作らないための保険 */
+.page { max-width: 640px; margin: 0 auto; padding: 24px 16px 96px; overflow-x: clip; }   /* 見えないツールチップが横スクロールを作らないための保険。右端はここで切れる（place() が基準にする）*/
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* 見えない通知欄 */
 h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .rows { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: 8px; }
@@ -208,6 +215,7 @@ h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 .menu-item { display: block; width: 100%; min-height: 44px; padding: 0 12px; border: 0; border-radius: 6px;
   background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
 .menu-item:hover { background: var(--bg); }
+.menu-item[aria-checked="true"]::before { content: "✓ "; }
 
 /* トースト: 入り 250 ms（不透明度と 8 px 上へ）・出 200 ms */
 .toast { position: fixed; margin: 0 auto; inset: auto 16px 24px 16px; width: max-content; max-width: calc(100vw - 32px); translate: 0 8px;
@@ -242,41 +250,76 @@ h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 ```
 
 ```js
+/* 連打対策（スクリプトを持つ 4 例で共通）: 時間で押下を捨てず、キーの押しっぱなしと、同じ位置の 2 回目以降のクリックだけを無視する */
+const actionable = (t) => t.closest && t.closest('button, a[href], input[type="checkbox"]');
+document.addEventListener('keydown', (e) => { if (e.repeat && (e.key === 'Enter' || e.key === ' ') && actionable(e.target)) e.preventDefault(); }, true);
+document.addEventListener('click', (e) => { if (e.detail > 1 && actionable(e.target)) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+document.addEventListener('mousedown', (e) => { if (e.detail > 1 && actionable(e.target)) e.preventDefault(); }, true);   // 2 回目の押下で、フォーカスを動かさない（行が上がってきて、別の削除へ移るのを防ぐ）
+
 const hasPopover = 'popover' in HTMLElement.prototype;       // 非対応なら hidden の切り替えで同じ機能を保つ
 const menu = document.getElementById('sort-menu');
 const sort = document.getElementById('sort');
 const toast = document.getElementById('toast');
+const live = document.getElementById('live');
+const items = [...menu.querySelectorAll('.menu-item')];
 let toastTimer, toastFrom = null;                              // toastFrom: トーストを出したときにフォーカスがあった要素
 if (!hasPopover) { document.documentElement.classList.add('no-popover'); menu.hidden = true; toast.hidden = true; }
 
-/* メニュー: 位置をボタンの下に置く。キーボードで開いたときは動きを付けない（detail が 0 のクリック）*/
+/* メニュー: 位置をボタンの下に置く。キーボードで開いたときは動きを付けない（detail が 0 のクリック）。開いたら先頭の項目へフォーカスする */
 sort.addEventListener('click', (e) => { menu.dataset.input = e.detail === 0 ? 'keyboard' : 'pointer'; });
 function placeMenu() {
   const r = sort.getBoundingClientRect();
   menu.style.top = (r.bottom + 4) + 'px';
   menu.style.left = Math.max(8, Math.min(r.left, innerWidth - 216)) + 'px';             // 画面の端からはみ出さない（幅 200 px + 余白）
 }
+function onOpenChange(open) {                                 // 開閉の状態を、起点のボタンへ伝える。開いたら、先頭の項目へ
+  sort.setAttribute('aria-expanded', String(open));
+  if (open) items[0].focus({ preventScroll: true });
+}
 menu.addEventListener('beforetoggle', (e) => { if (e.newState === 'open') placeMenu(); });
+const lost = () => document.activeElement === document.body;   // フォーカスが行き場を失った（何も無い所のクリックなど）。別のボタンにあるなら、奪わない
+if (hasPopover) menu.addEventListener('toggle', (e) => {
+  onOpenChange(e.newState === 'open');
+  if (e.newState === 'closed' && lost()) sort.focus({ preventScroll: true });
+});
 function closeMenu() {                                        // 閉じる処理は 1 か所。メニューの中にフォーカスがあれば、起点のボタンへ戻す
   const inside = menu.contains(document.activeElement);
-  if (hasPopover) { if (menu.matches(':popover-open')) menu.hidePopover(); } else menu.hidden = true;
-  if (inside) sort.focus({ preventScroll: true });
+  if (hasPopover) { if (menu.matches(':popover-open')) menu.hidePopover(); } else { menu.hidden = true; onOpenChange(false); }
+  if (inside || lost()) sort.focus({ preventScroll: true });
 }
 if (!hasPopover) {                                            // 非対応: 開閉・Escape・外側のクリックを自前で持つ
-  sort.addEventListener('click', () => { if (menu.hidden) { placeMenu(); menu.hidden = false; } else closeMenu(); });
+  sort.addEventListener('click', () => { if (menu.hidden) { placeMenu(); menu.hidden = false; onOpenChange(true); } else closeMenu(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
   document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && !sort.contains(e.target)) closeMenu(); });
 }
-menu.addEventListener('click', (e) => { if (e.target.closest('.menu-item')) closeMenu(); });   // 項目を選んだらメニューを閉じる
+menu.addEventListener('click', (e) => {                       // 項目を選んだら、選択を印（aria-checked）で示して閉じる。並べ替えの処理は、この例の範囲外
+  const it = e.target.closest('.menu-item'); if (!it) return;
+  items.forEach((x) => x.setAttribute('aria-checked', String(x === it)));
+  closeMenu();
+});
+menu.addEventListener('mousedown', (e) => { if (!e.target.closest('.menu-item')) e.preventDefault(); });   // 余白・枠の押下で、フォーカスを body へ落とさない（閉じない）
+menu.addEventListener('focusout', (e) => {                    // フォーカスがメニューの外へ出たら閉じる（Tab で抜けたとき）。フォーカスは奪わない
+  if (e.relatedTarget && menu.contains(e.relatedTarget)) return;
+  if (!document.hasFocus()) return;                           // ウィンドウを離れただけなら、閉じない
+  if (hasPopover) { if (menu.matches(':popover-open')) menu.hidePopover(); } else if (!menu.hidden) { menu.hidden = true; onOpenChange(false); }
+  if (!e.relatedTarget) setTimeout(() => { if (lost()) sort.focus({ preventScroll: true }); }, 0);   // 行き場が無いときだけ、起点へ戻す
+});
+menu.addEventListener('keydown', (e) => {                     // 矢印キー・Home・End で項目を移る
+  const i = items.indexOf(document.activeElement); let n = -1;
+  if (e.key === 'ArrowDown') n = (i + 1) % items.length; else if (e.key === 'ArrowUp') n = (i - 1 + items.length) % items.length;
+  else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = items.length - 1;
+  if (n >= 0) { e.preventDefault(); items[n].focus(); }
+});
 
 /* ツールチップ: 画面の端からはみ出さない位置に寄せる。最初の表示が済んだら暖機（data-warm）、離れて 300 ms で解除（目安） */
-const bar = document.querySelector('.toolbar');
+const bar = document.querySelector('.toolbar'), page = document.querySelector('.page');
 let showTimer, coolTimer;
 for (const tip of bar.querySelectorAll('.tip')) {
   const text = tip.querySelector('.tip-text');
   const place = () => {
     const r = tip.getBoundingClientRect();
-    text.style.left = Math.min(0, innerWidth - 16 - r.left - text.offsetWidth) + 'px';
+    const edge = Math.min(innerWidth, page.getBoundingClientRect().right) - 8;           // 右端は、画面ではなく、切れる .page の端を基準にする
+    text.style.left = Math.min(0, edge - r.left - text.offsetWidth) + 'px';
   };
   const on = () => { place(); clearTimeout(coolTimer); showTimer = setTimeout(() => { bar.dataset.warm = ''; }, 650); };   // 遅延 500 ms + 入り 150 ms が済んでから暖機する
   const off = () => { clearTimeout(showTimer); coolTimer = setTimeout(() => { delete bar.dataset.warm; }, 300); };
@@ -296,6 +339,8 @@ function showToast(text) {
   clearTimeout(toastTimer);
   if (hasPopover) { if (!toast.matches(':popover-open')) toast.showPopover(); } else { toast.hidden = false; }
   toastTimer = setTimeout(hideToast, 6000);
+  live.textContent = '';                                       // 通知欄は常に存在する。出した後に文を書くと、同じ文でも読み上げられる
+  requestAnimationFrame(() => { live.textContent = text; });
 }
 function hideToast() {
   clearTimeout(toastTimer);
@@ -321,8 +366,8 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 | 問い | 期待する答え | 確認する場所 |
 |---|---|---|
 | 何に注意するか | 押したボタンが一瞬縮み、受理されたことが分かる。保存すると下からトーストが出る | ボタンの押下、トーストの出現 |
-| 何を操作できるか | 在庫の追加・保存・並べ替え・同期・書き出し（ボタンの名前が動詞で何をするかを言う）。補足のツールチップは、ポインタを乗せたまま読め、Escape で消せる | ツールバーのボタン（補足はツールチップ） |
-| どう操作するか | ボタンを押す。並べ替えはメニューから選ぶ。トーストは「閉じる」で消せる | 44 px 以上のボタン |
+| 何を操作できるか | 在庫の追加・保存・並べ方の選択（選択の印だけ。並べ替えの処理は範囲外）。同期と書き出しは、ツールチップを見せる見本（ボタンの名前が動詞で何をするかを言う）。補足のツールチップは、ポインタを乗せたまま読め、Escape で消せる | ツールバーのボタン（補足はツールチップ） |
+| どう操作するか | ボタンを押す。並べ方はメニューから選ぶ（選択の印だけが付く）。トーストは「閉じる」で消せる | 44 px 以上のボタン |
 
 動きの検証は、動きを減らす設定をオンにしても同じ 3 問に答えられることを確かめる。縮小版でも、状態は文言（「変更を保存しました」）で伝わる（S64）。
 
@@ -336,12 +381,18 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 - 中断: メニューを開閉している最中に、再度押しても止まらず、向きが変わる。トーストの表示中に再保存しても、タイマーが更新される
 - 縮小版: 動きを減らす設定で、押下の縮みとメニュー・トーストの移動が消え、押下は明るさ、出入りは不透明度だけになる（押下の反応が無くならない）。設定は CSS のメディアクエリで、途中で変えても追従する
 - 非対応: `allow-discrete` が使えないときは、動きなしで出入りする。Popover API が使えないときは、`hidden` の切り替えで同じ機能を保つ
-- キーボード: Tab でボタンに着き、Enter・Space で押せ、メニューは Escape で閉じる。ツールチップはフォーカスでも出る。フォーカスの輪が見える
-- フォーカス: メニューを閉じたら起点の「並べ替える」へ、トーストの「閉じる」を押したら、トーストを出す前にフォーカスがあった要素（「変更を保存」）へ戻る。トーストが自動で消えたときは、別の要素にあるフォーカスを動かさない。Popover API の有無で同じ
+- メニューの余白・枠（フォーカスできない所）を押しても、フォーカスは動かず、メニューは閉じない（`mousedown` で、項目以外は `preventDefault`）
+- メニューの外へ出る: メニューの項目から Tab・Shift+Tab で外へ出ると、メニューが閉じ、`aria-expanded` が `false` になる（Popover API の有無にかかわらず）。フォーカスは奪わず、移った先にある。何も無い所へ出たときだけ、起点の「並べ替える」へ戻す
+- キーボード: Tab でボタンに着き、Enter・Space で押せる。メニューは、開くと先頭の項目にフォーカスが移り、矢印キー・Home・End で移り、Enter で選び、Escape で閉じる。起点のボタンの `aria-expanded` が開閉に追従する（Popover API の有無にかかわらず）。ツールチップはフォーカスでも出る。フォーカスの輪が見える
+- 連打: ダブルクリックで「在庫を追加」が 1 行しか増えず、「変更を保存」が 1 回しか効かない。Enter の押しっぱなしでも 1 行だけ増える。「並べ替える」のダブルクリックで、開いたメニューが閉じ直されない。トーストの「閉じる」で Enter を押しっぱなしにしても、保存が再実行されない（別に押し直した 2 回目の Enter は、意図した操作として保存を実行する。変更が無ければ「保存する変更はありません」と出るだけ）
+- トーストの通知: 見えない通知欄（常設の `role="status"`）に、トーストを出した後で文が書かれる。同じ文が続いても、保存のたびに通知される。トースト自体には `role` を付けない
+- 未対応: (1) トーストの「閉じる」で、Enter を別々に 2 回押す（押しっぱなしでない）と、フォーカスが戻った「変更を保存」を 2 回目の Enter が押す。意図した 2 回の操作と区別できず、時間で捨てない方針のため直していない。結果は、変更が無ければ「保存する変更はありません」と出るだけ。(2) 並べ替え・同期・書き出しの処理は、範囲外（上の「根拠の範囲」）。(3) スクリーンリーダーの読み上げは、実機で確かめていない
+- ツールチップの右端: 320〜1440 px のどの幅でも、`.page` の右端を超えない（欠けない）
+- フォーカス: メニューを閉じたら起点の「並べ替える」へ（Escape・項目の選択・外側の何も無い所のクリックのどれでも。別のボタンをクリックして閉じたときは、そのボタンにフォーカスが残り、奪わない）、トーストの「閉じる」を押したら、トーストを出す前にフォーカスがあった要素（「変更を保存」）へ戻る。トーストが自動で消えたときは、別の要素にあるフォーカスを動かさない。Popover API の有無で同じ
 - 失敗パターン: 全部に同じ長さを当てていないか。出と入りを同じにしていないか。トーストを自動で消すとき、時間制限に関する基準（本 skill の台帳に無く、未照合）に当たらないか、実装前に確認する
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 0 → 0.47 → 0.92 → 1 と中間値を取り（待ち時間の指定値で 540・600・680 ms の時点）、入りの 150 ms が省かれない。暖機は 650 ms 後（修正前は 500 ms で、入りが 1 フレームに跳んだ）。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。メニューの入りは 0.15 s、トーストの入りは 0.25 s・出は 0.2 s。キーボードで開いたメニューは 20 ms 後に不透明度 1。閉じたトーストの `display` は `none` で、閉じるボタンは Tab で着かない（修正前は `flex` のまま不可視で残る構造だった）。保存は、変更が無いとき「保存する変更はありません」、在庫を追加した後は「変更を保存しました」と出た。動きを減らす設定では、メニューとトーストの `translate` が `none`。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。390 px・320 px では、メニューが画面の端に収まり、トーストが画面の幅の内側に中央で出た。機能検出を偽にした版（`popover` の属性を外して検出を偽にした版と、`allow-discrete` を無効にした版）で、動きなしの開閉になり、前者は Escape・メニューの外のクリック・項目の選択でも閉じた。閉じる遷移の間（メニューの閉じ始めから 40 ms 後・トーストの閉じ始めから 40 ms 後）は、閉じた popover の `pointer-events` が `none` で（指定の無い版は `auto`）、背後の「在庫を追加」の位置のヒットテストは「在庫を追加」だった。ただし、指定の無い版でも Chrome 156 では閉じつつある popover はクリックを塞がず、メニューを閉じた 30 ms 後に「在庫を追加」を押すと行が 3 から 4 に増えた（塞がる挙動は再現しなかった。この指定は、他のエンジンへの防御である）。Popover 非対応版（`popover` の属性を外した版）で、メニュー項目にフォーカスを置いて Escape・項目の選択・Enter のいずれで閉じても、フォーカスは「並べ替える」に戻った（修正前は body に落ちた）。トーストの「閉じる」は、ボタンでも Enter でも、非対応版でも対応版でも、「変更を保存」へ戻った（修正前は body に落ちた）。トーストが自動で消えたとき、フォーカスが別の要素（「在庫を追加」）にあれば、そのまま残った。ツールチップの 1.4.13 を、修正前（6bfd363 の版）と修正後で比べた。ポインタを最初のボタンに乗せて 800 ms 後に出た状態から、(1) 6 px の隙間へ動かして 350 ms 後、修正前は不透明度 0（消えた）、修正後は 1。ツールチップの文字の上へ動かしても修正後は 1。離れると 0・`visibility: hidden`。(2) Escape を押すと、修正後は 60 ms 後に不透明度 0・`visibility: hidden` になり、ホバーは `:hover` のまま・`activeElement` も変わらず、800 ms 後も消えたまま。離れて戻ると再び出た（修正前は Escape で消えなかった）。(3) フォーカスでも同じで、Escape で消えて、`focus-within` とフォーカスは動かず、いったん blur して再びフォーカスすると出た。動きを減らす設定・390 px・320 px でも同じ値だった。実機・他のブラウザーは未検証
+- 実測（Chrome 156、2026-11-16、1440・390・320 px）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 500 ms までは 0、583 ms で 0.92、666 ms で 1 になり、入りの 150 ms が省かれない。暖機は 650 ms 後に付いた。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。Escape で不透明度 0・`visibility: hidden`。メニューの入りは 0.15 s・出は 0.1 s、トーストの入りは 0.25 s。閉じたトーストの `display` は `none`。動きを減らす設定では、メニューとトーストの `translate` が `none`。ツールチップの右端は、1440・1024・800・720・700・680・660・641・390・320 px のすべてで `.page` の右端以内（欠けた量 0）。キーボードで開いたメニューは、20 ms 後に不透明度 1（`transition-duration: 0s`）で、フォーカスは「名前順」。項目からの Tab・Shift+Tab で外へ出ると、メニューが閉じて `aria-expanded` が `false` になった（対応版・非対応版とも。対応版は「在庫を同期」へ、非対応版は「並べ替える」と「CSV に書き出す」へフォーカスが移った）。メニューは、開くと `aria-expanded` が `true`・フォーカスが「名前順」、選ぶと `false`・フォーカスが「並べ替える」・`aria-checked` が選んだ項目だけ `true`、外側の何も無い所をクリックして閉じてもフォーカスが「並べ替える」へ戻り、別のボタン（在庫を追加）をクリックして閉じるとフォーカスはそのボタンに残った（Popover API 対応と非対応の両方）。保存の通知は、通知欄に「変更を保存しました」「保存する変更はありません」の順に書かれた。メニューを選んだ直後（30 ms）と、トーストを閉じた直後（40 ms）に、背後のボタンが押せた。横はみ出し（`scrollWidth` が `innerWidth` を超えること）は、1440・390・320 px のどれにも無かった。他のブラウザー・実機は未検証
 - 推測の明示: ツールチップが 1.4.13 の 3 条件を満たすかの判断（適合の宣言）はしない（S167 の条件を実装した例である）。ブラウザーが描く `title` のツールチップは例外とされる（S167 の備考）が、この例は自前の要素である。500 ms（ツールチップの遅延）・300 ms（暖機の解除）・6 秒（トーストの表示）・4 px・8 px・長さの段階の選択は、本 skill の目安である。スクリーンリーダーの読み上げ（`role="tooltip"`・`role="status"`）は、実機で確かめていない。`@starting-style` と `popover` は、取得した記述の範囲（S91・S92）で時点情報である
 
 ## この例の出典
 
-S19、S20、S21、S22、S23、S24、S25、S27、S28、S29、S33、S35、S36、S37、S43、S47、S52、S63、S64、S66、S67、S68、S74、S76、S79、S91、S92、S149、S163、S167。台帳は `../references/sources.md`。
+S19、S20、S21、S22、S23、S24、S25、S27、S28、S29、S33、S35、S36、S37、S43、S47、S52、S63、S64、S66、S67、S68、S74、S76、S79、S91、S92、S100、S149、S163、S167。台帳は `../references/sources.md`。

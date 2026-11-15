@@ -48,14 +48,16 @@
 | 背景のクロスフェード | 200 ms・ease-out | 範囲は S21。値は本 skill の目安 |
 | 画像の変形 | 300 ms・`cubic-bezier(0, 0, 0, 1)` | 範囲は S21、曲線は S29（standard-decelerate）。ease-out が基本（S24）。300 ms は本 skill の目安 |
 | 全体の上限 | 300 ms。500 ms を超えない。ページ自体は 1 秒以内に出す | S22・S08 |
-| 戻る | 開くときと同じ長さ・同じ曲線。ブラウザーの戻る・進む、リンクの両方で動く。一覧を離れたときのスクロール位置を復元する | 本 skill の整理 |
+| 戻る | 開くときと同じ長さ・同じ曲線。ブラウザーの戻る・進む、リンクの両方で動く。一覧を離れたときのスクロール位置を復元する。「一覧へ戻る」は、一覧から開いた詳細なら `history.back()` で戻り、履歴を積まない（戻るを何度も押す羽目にならない）。URL を直接開いた詳細だけ、一覧の項目を足す | 本 skill の整理 |
+| 見出しと題 | 一覧は `h1`、詳細は題を `h1` にする（同時に見えるのは片方）。画面が変わったら `document.title` も変える（「記事の題 - ナレッジ棚」「記事一覧 - ナレッジ棚」） | 本 skill の整理（出典なし） |
+| 連打 | 時間で押下を捨てない。キーの押しっぱなし（`keydown` の `repeat`）の Enter・Space と、同じ位置の 2 回目以降の押下（`mousedown` と `click` の `detail` が 1 より大きい。`mousedown` では、フォーカスも動かさない）を無視する。スクリプトを持つ 4 例で同じ書き方。限界: OS のダブルクリックの間隔内の、同じ位置の 2 回目は、意図した操作でも 1 回に数える | 本 skill の整理 |
 | 中断 | 遷移中に戻る・進むを押すと、新しい遷移が前の遷移に取って代わり、最新の状態へ向かう。DOM の状態は常に最新へ揃える。演出中（約 300 ms）に画面を押すと、演出がすぐ終わり、最終の画面で操作できる（押した操作そのものは転送しない。利用者は、見えている最終の画面を押し直す） | 完了を待たせない（S68）、中断（S74）。実測では、演出中はページの要素に押下が届かず `<html>` が受ける（`pointer-events` の指定では通らなかった）。演出が見せているのはスナップショットで、座標から実 DOM の操作を押すと、出ていく画像を押しても同じ座標の別の要素が開くので、転送しない（本 skill の判断）。押下で `skipTransition()` を呼ぶ処理は本 skill の実装 |
-| 縮小版 | 画像は変形せず、150 ms のクロスフェードだけ | 必要性は S76・S79。置き換えと 150 ms は本 skill の整理・目安 |
+| 縮小版 | 画像は変形せず、150 ms のクロスフェードだけ。`hero` の名前を付けないので、画像も背景と一緒にクロスフェードする（背景だけが切り替わって画像が跳ぶことがない） | 必要性は S76・S79。置き換えと 150 ms は本 skill の整理・目安 |
 | 非対応のブラウザー | 即時に切り替える。URL・戻る操作・フォーカスは同じ | 本 skill の整理（機能検出） |
 | フォーカス | 詳細を開いたら題（`tabindex="-1"`）へ。戻ったら開いた記事のリンクへ。リンクが画面の外なら、最小限だけスクロールして見せる（`scrollIntoView` の `nearest`） | 可視のフォーカス・予測できる移動（S101） |
 | 存在しない番号 | `#/99` のような番号は、一覧を出す（例外にしない） | 本 skill の実装の注意（入力の検査） |
 | キーボード | 記事はリンクで、Enter で開く。「一覧へ戻る」もリンク | S98 |
-| 名前の付け方 | `view-transition-name` は、遷移の直前に、いまの要素と次の要素の 1 つずつにだけ付ける。同じ名前が同時に 2 つあると遷移が失敗する | 本 skill の整理（実装の注意）。名前は一意でなければならない（出典は未取得） |
+| 名前の付け方 | `view-transition-name` は、遷移の直前に、いまの要素の 1 つにだけ付ける（付ける前に、全部外す）。更新の中でも全部外してから、次の要素の 1 つにだけ付ける。取って代わられた遷移が名前を残しても、次の遷移が重ねない。同じ名前が同時に 2 つあると遷移が失敗する | 本 skill の整理（実装の注意）。名前は一意でなければならない（出典は未取得） |
 
 コントラスト比（WCAG の相対輝度式で計算。基準の 4.5:1・3:1 の原文は本 skill の台帳に無く、未照合）:
 
@@ -98,7 +100,7 @@
   <article id="detail-view" hidden>
     <a class="back" href="#/">一覧へ戻る</a>
     <div class="hero" aria-hidden="true"><span id="hero-glyph"></span></div>
-    <h2 id="detail-title" tabindex="-1"></h2>
+    <h1 id="detail-title" tabindex="-1"></h1>
     <p id="detail-text"></p>
   </article>
 </main>
@@ -117,7 +119,7 @@ body { margin: 0; background: var(--bg); color: var(--text);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif; line-height: 1.7; }
 .page { max-width: 560px; margin: 0 auto; padding: 24px 16px 64px; }
 h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
-h2 { font-size: 22px; line-height: 30px; margin: 16px 0 8px; }
+#detail-title { font-size: 22px; line-height: 30px; margin: 16px 0 8px; }
 a { color: var(--link); }
 :focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
 .articles { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -135,14 +137,20 @@ a { color: var(--link); }
 ::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 200ms; animation-timing-function: var(--ease-out); }
 ::view-transition-group(hero) { animation-duration: 300ms; animation-timing-function: var(--ease-out); }
 
-/* 動きを減らす設定: 画像は変形せず、150 ms のクロスフェードだけ */
+/* 動きを減らす設定: 画像は変形せず（JS が hero の名前を付けない）、150 ms のクロスフェードだけ */
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(hero) { animation: none; }
   ::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 150ms; }
 }
 ```
 
 ```js
+/* 連打対策（スクリプトを持つ 4 例で共通）: 時間で押下を捨てず、キーの押しっぱなしと、同じ位置の 2 回目以降のクリックだけを無視する */
+const actionable = (t) => t.closest && t.closest('button, a[href], input[type="checkbox"]');
+document.addEventListener('keydown', (e) => { if (e.repeat && (e.key === 'Enter' || e.key === ' ') && actionable(e.target)) e.preventDefault(); }, true);
+document.addEventListener('click', (e) => { if (e.detail > 1 && actionable(e.target)) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+document.addEventListener('mousedown', (e) => { if (e.detail > 1 && actionable(e.target)) e.preventDefault(); }, true);   // 2 回目の押下で、フォーカスを動かさない（行が上がってきて、別の削除へ移るのを防ぐ）
+
+const SITE = ' - ナレッジ棚';
 const articles = {
   1: ['貸', '備品の貸し出しは 3 つの手順で済む', '申請フォームを出し、総務で受け取り、使い終わったら同じ棚へ返す。貸し出しの記録は総務が残す。', '#1f5f8b', '#12385a'],
   2: ['会', '会議室の予約は前日の 17 時まで', '予約の変更と取り消しも前日の 17 時までに済ませる。当日の急な変更は総務へ連絡する。', '#7a3b8f', '#4a2159'],
@@ -153,7 +161,9 @@ const listView = document.getElementById('list-view');
 const detailView = document.getElementById('detail-view');
 const hero = detailView.querySelector('.hero');
 const title = document.getElementById('detail-title');
+const clearNames = () => { for (const e of document.querySelectorAll('.thumb, .hero')) e.style.viewTransitionName = ''; };   // 名前は一意でなければならない。付ける前に、必ず全部外す
 const thumbOf = (id) => listView.querySelector(`[data-id="${id}"] .thumb`);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const idFromHash = () => { const m = /^#\/(\d+)$/.exec(location.hash); return m && m[1] in articles ? m[1] : null; };   // 存在する番号だけを通す
 let current = null;                                   // 表示中の記事の番号。一覧なら null
 let seq = 0;                                          // 最新の遷移の通し番号
@@ -165,6 +175,7 @@ history.scrollRestoration = 'manual';                 // 戻るときのスク�
 function show(id) {                                   // DOM を最終の状態にする（同期）
   const [glyph, head, text, c1, c2] = id ? articles[id] : [];
   listView.hidden = !!id; detailView.hidden = !id;
+  document.title = (id ? articles[id][1] : '記事一覧') + SITE;          // 画面が変わったら、題も変える
   if (id) {
     hero.style.setProperty('--c1', c1); hero.style.setProperty('--c2', c2);
     document.getElementById('hero-glyph').textContent = glyph;
@@ -179,23 +190,24 @@ function navigate(next, push) {
   current = next;                                     // 連続した操作に備え、先に更新する
   if (!prev) listY = window.scrollY;                  // 一覧を離れる前の位置を覚える
   const mine = ++seq;
-  if (push) history.pushState(null, '', next ? `#/${next}` : '#/');
+  if (push) history.pushState(next ? { fromList: true } : null, '', next ? `#/${next}` : '#/');   // 一覧から開いた詳細の項目に印を付ける
   const id = next || prev;
   const oldEl = prev ? hero : thumbOf(id);            // 変形の起点と終点を、同じ名前で結ぶ
   const newEl = next ? hero : thumbOf(id);
   const update = () => {
-    oldEl.style.viewTransitionName = '';
+    clearNames();
     show(next);
-    newEl.style.viewTransitionName = 'hero';
+    if (!reduce.matches) newEl.style.viewTransitionName = 'hero';
     if (!next) {                                      // 戻ったら、見ていた位置と、開いた記事のカードへ
       window.scrollTo(0, listY);
       const card = listView.querySelector(`[data-id="${id}"]`);
       card.focus({ preventScroll: true }); card.scrollIntoView({ block: 'nearest' });
     }
   };
-  const finish = () => { if (mine === seq) { newEl.style.viewTransitionName = ''; playing = false; vt = null; } };   // 取って代わられた遷移は触らない
+  const finish = () => { if (mine === seq) { clearNames(); playing = false; vt = null; } };   // 取って代わられた遷移は触らない
   if (!('startViewTransition' in document)) { update(); finish(); return; }   // 非対応: 即時に切り替える
-  oldEl.style.viewTransitionName = 'hero';
+  clearNames();                                       // 取って代わられた遷移の名前が残っていても、名前を重ねない
+  if (!reduce.matches) oldEl.style.viewTransitionName = 'hero';       // 動きを減らす設定では名前を付けず、画像も背景と一緒にクロスフェードする
   playing = true;
   const t = vt = document.startViewTransition(update);
   t.ready.catch(() => {});                            // 取って代わられた遷移のエラーは無視する
@@ -211,9 +223,13 @@ listView.addEventListener('click', (e) => {
   if (!a || !plain(e)) return;
   e.preventDefault(); navigate(a.dataset.id, true);
 });
-detailView.querySelector('.back').addEventListener('click', (e) => { if (!plain(e)) return; e.preventDefault(); navigate(null, true); });
+detailView.querySelector('.back').addEventListener('click', (e) => {
+  if (!plain(e)) return; e.preventDefault();
+  if (history.state && history.state.fromList) history.back();     // 一覧から開いた詳細なら、履歴を積まずに戻る（popstate が遷移を起こす）
+  else navigate(null, true);                                       // URL を直接開いた詳細なら、一覧の項目を足す
+});
 addEventListener('popstate', () => navigate(idFromHash(), false));
-if (idFromHash()) { current = idFromHash(); show(current); }
+if (idFromHash()) { current = idFromHash(); show(current); } else document.title = '記事一覧' + SITE;
 ```
 
 試作のため、スクリプトはインラインで書いてよい。本番では外部ファイルにするか、CSP の nonce を付ける。
@@ -236,8 +252,11 @@ if (idFromHash()) { current = idFromHash(); show(current); }
 - 戻る: ブラウザーの戻る・進む、一覧へ戻るリンク、URL の直接入力（`#/2`）で同じ画面になる。戻ると、一覧を離れた位置に戻り、開いた記事のリンクにフォーカスがある。存在しない番号（`#/99`）を直接開いても、一覧が出る
 - 縮小版: 動きを減らす設定で、画像が変形せず、150 ms のクロスフェードだけになる。設定は CSS のメディアクエリで、途中で変えても追従する
 - 非対応: `startViewTransition` が無いブラウザーで、即時に切り替わる。URL・戻る・フォーカスは同じ
-- キーボード: Tab でカードへ着き、Enter で開き、詳細では題にフォーカスがある。「一覧へ戻る」へ Tab で着ける。フォーカスの輪が見える
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 遷移中のアニメーションは、`::view-transition-group(hero)` が 300 ms、`::view-transition-old(root)` と `::view-transition-new(root)` が 200 ms。動きを減らす設定では、hero のアニメーションが消え、背景の 150 ms だけが残る。開く・戻る・遷移中の戻る・進む→戻る→進むの連打のいずれも、最終の画面が URL と一致し、`view-transition-name` の残りは 0 件。詳細ではフォーカスが題、戻ると元のカードにある。`#/2` を付けた URL を直接開くと詳細が開き、存在しない `#/99` を開いても一覧が出る（修正前は例外）。画面の高さ 300 px で、一覧を 200 px スクロールして 4 件目を開き、戻ると、位置が 206 px（200 px を復元し、カードを画面内へ最小限だけ動かした値）、フォーカスは 4 件目のカード、カードの上端は 205 px で画面内。ブラウザーの戻るでも同じ値（修正前は 0 px で、カードは画面の外）。演出中の押下を、修正前（座標から実 DOM の操作を押す版）と修正後（押下で演出を終わらせる版）で比べた。(a) 戻る遷移の 100 ms 後に、出ていく詳細の画像を押すと、修正前は同じ座標の一覧カードが開いて別の詳細（`#/3`）になったが、修正後は一覧のまま（押下と同じ時刻の 1 ms 以内に演出が終わり、新しい遷移は起きなかった）。(b) 開く遷移の約 100 ms 後に押すと、修正後は演出が押下と同じ時刻（1 ms 以内。取って代わられなければ約 300 ms 後）に終わって最終の詳細が出て、その後に「一覧へ戻る」を押すと一覧へ戻り、フォーカスは元のカードにあった。(a)(b) とも、1440・390・320 px と動きを減らす設定で同じだった。`::view-transition` 系に `pointer-events: none` を指定しても、演出中の実 DOM へのヒットテストは `<html>` のままだった（指定した版で確認）。「一覧へ戻る」への Ctrl・Cmd・Shift・Alt・中ボタンのクリックは、修正前は `preventDefault` されて遷移したが、修正後はブラウザーの既定に任された。非対応の版（機能検出を偽にした版）でも、`playing` は偽、`vt` は null のまま、押下の処理が何も起こさない。機能検出を偽にした版では、アニメーションが 0 件で即時に切り替わる。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。他のブラウザー・文書間の遷移・実機は未検証
+- キーボード: Tab でカードへ着き、Enter で開き、詳細では題にフォーカスがある。「一覧へ戻る」は DOM 順で題より前にあるので、題から Shift+Tab で着く（Tab では、題の後ろに操作対象が無い）。フォーカスの輪が見える
+- 連打: カードや「一覧へ戻る」のダブルクリック・Enter の押しっぱなしで、遷移が 1 回だけ起きる。履歴が余分に増えない
+- 履歴: 一覧から開いて「一覧へ戻る」を押しても、履歴の件数が増えない。URL を直接開いた詳細で押したときだけ 1 件増える
+- 題と見出し: 詳細は `h1` が 1 つで、`document.title` が記事の題に変わり、戻ると一覧の題に戻る
+- 実測（Chrome 156、2026-11-16、1440・390・320 px）: 遷移中のアニメーションは、`::view-transition-group(hero)` が 300 ms、`::view-transition-old(root)` と `::view-transition-new(root)` が 200 ms。動きを減らす設定では、`hero` の名前が付かず、アニメーションは背景の 150 ms だけ（`::view-transition-group(hero)` が無い）。履歴の件数は、一覧から詳細を開くと 1 件増え、「一覧へ戻る」を押しても増えない（`history.back()`）。URL を直接開いた詳細で「一覧へ戻る」を押すと 1 件増える。ダブルクリック・Enter の押しっぱなしでは、開く操作が 1 回だけ（履歴は 1 件）。詳細は `h1` が 1 つで、`document.title` が「記事の題 - ナレッジ棚」になり、戻ると「記事一覧 - ナレッジ棚」。`#/2` を付けた URL を直接開くと詳細が開き、存在しない `#/99` を開いても一覧が出る。画面の高さ 250 px で、一覧を 200 px スクロールして 4 件目を開き、戻ると、リンクでもブラウザーの戻るでも、位置が 218 px（200 px を復元し、カードを画面内へ最小限だけ動かした値）、フォーカスは 4 件目のカード、カードは 160〜250 px で画面内。演出中の押下: (a) 戻る遷移の 100 ms 後に、出ていく詳細の画像を押しても、一覧のまま（別の詳細は開かない）。(b) 開く遷移の 100 ms 後に押すと、演出が終わって最終の詳細が出て、その後の「一覧へ戻る」で一覧へ戻り、フォーカスは元のカードにある。(a)(b) とも 1440・390・320 px で同じだった。開く・戻る・進む・ハッシュの変更・画面の押下を、間隔 0〜350 ms の乱数で 3〜7 回続ける 60 通りを 3 回（種 1・7・99）流して、最終の画面が URL と一致し、`view-transition-name` の残りが 0 件、演出中の印（`playing`）が偽に戻った。遷移の失敗は、取って代わられた（`New ViewTransition started`）・押下で終わらせた（`skipTransition() called`）の 2 種類だけで、名前の重複による失敗は無かった。他のブラウザー・実機は未検証。`::view-transition` の疑似要素を直接押す操作は、座標から実 DOM を押す版を採らないため、検証の対象外
 - 推測の明示: 200 ms・300 ms・150 ms は本 skill の目安である。遷移が認知負荷を下げるという効果は MDN の記述で、実験の裏づけを取得していない（S87）。他ブラウザーの対応と、文書間の遷移は未検証である
 
 ## この例の出典
