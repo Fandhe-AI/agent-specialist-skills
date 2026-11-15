@@ -69,7 +69,7 @@ skills/                               -- スキル本体（各ディレクトリ
     references/
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
       design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
-    examples/                         -- 制作例（需要予測の不確実性帯・sparkline の一覧表・率のコロプレス・二軸の指数化・構成比の棒。5 件）
+    examples/                         -- 制作例（需要予測の不確実性帯・sparkline の一覧表・率のコロプレス・二軸の指数化・構成比の棒・図のダーク配色。6 件）
   designer-web/                       -- Web デザイナー（Web の見た目の方向性・傾向・画像と質感・構図。スペシャリスト skill）
     SKILL.md
     references/
