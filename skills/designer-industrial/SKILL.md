@@ -308,6 +308,9 @@ specialist: true
 | designer-brand | ブランドの語り・ロゴ・体験の一貫性 | ロゴの大きさの判断（S04）は本 skill で触れるが、ブランド戦略は designer-brand |
 | designer-material | Material Design とデザインシステム（トークン・コンポーネント仕様・Android） | 機器の画面 UI をデザインシステムや Material の部品で組む場合は designer-material。素材の物性・データシートはどの designer-* も扱わないため、材料メーカー・成形メーカー・専門家に確認する（本 skill の範囲外） |
 | designer-ux-research | 利用者調査・評価設計 | 使用誤り・初見検証の調査設計は designer-ux-research |
+| designer-web | Web の見た目の方向性・傾向・画像と質感・構図 | 製品紹介ページや画面付き製品の画面の見た目の方向性は designer-web に回す。製品そのものの形・素材・仕上げ・量産・人体・修理は本 skill。製品写真の質感の見せ方は designer-web、実物の仕上げの仕様は本 skill |
+| designer-interaction | 動き・遷移・状態・体感速度・キーボード操作・AI 応答の画面 | 画面付き製品の画面の動き・状態表示・応答の体感は designer-interaction に回す。物理操作（ボタン・つまみ・握り）の形と力は本 skill |
+| designer-creative-coding | WebGL・シェーダー・粒子・生成的表現 | 製品の 3D 表現・粒子・生成的な映像演出は designer-creative-coding に回す。実物の形状・素材・成形の制約は本 skill |
 
 ### デザイン例の索引
 
