@@ -72,9 +72,9 @@
 
 | 項目 | 値 | 根拠 |
 |---|---|---|
-| 色 | ゆず黄 `#ffd23a`、水色 `#35c3d8`、桃色 `#ff6b8b`、藍 `#1d1b3a`（`oklch()` で上書き）、地 `#fbfbf8` | 本 skill の目安 |
+| 色 | ゆず黄 `#ffd23a`、水色 `#35c3d8`、桃色 `#ff6b8b`、藍 `#1d1b3a`（`oklch()` で上書き）、地 `#fbfbf8` | 本 skill の目安。`oklch()` の値は、すべて sRGB の範囲に収めた。桃色は彩度を 0.17 に抑えた（0.19 では赤の成分が範囲を超え、広色域の画面と標準の画面で色が変わる）。広色域の色を使うなら、sRGB の色を既定にして、`@media (color-gamut: p3)` の中で差し替える（S110。本例は使わない） |
 | 傾き | 札 -2.5°・+1.5°・-1°、ステッカー +10°、ゆず -12°〜+40° | 本 skill の目安 |
-| 盤の比 | 狭い画面は 4:5.6、広い画面（48em 以上）は 16:10。狭い画面では、瓶は幅 28%・ステッカーは右上、藍の札は全幅で、瓶の栓とステッカー・札と瓶が重ならない配置にした。藍の札には水色の段差の影を付け、ダークでも地から分ける | 本 skill の目安。320・390・768 px の描画で、重なりを確かめた |
+| 盤の比 | 狭い画面は 4:4.7、広い画面（48em 以上）は 16:10。狭い画面では、藍の札を盤の外（下）に通常の流れで置き、盤の下端に重ねる（盤は `overflow: hidden` のため、文字を拡大しても札の文字が切れない）。広い画面では札は盤の中に置く。瓶は幅 28%、ステッカーは右上で、瓶の栓とステッカー・札と瓶が重ならない配置にした。藍の札には水色の段差の影を付け、ダークでも地から分ける | 本 skill の目安。320・390・768 px の描画で、重なりを確かめた |
 | 手順の札 | 56em 以上で 3 列、それより狭いと 1 列 | 本 skill の目安。768 px で 3 枚目が孤立した不具合を直した |
 | 紙の粒 | 題字の札にだけ、不透明度 0.12 | 本 skill の目安（出典なし） |
 | 動き | 読み込み時に断片が 0.45 秒で現れる（一度だけ）。動きを減らす設定では付けない | 本 skill の目安。自動で 5 秒を超えて続く動きは無い（S75）。動きを減らす設定（S76） |
@@ -83,12 +83,12 @@
 
 非対応時の姿（本 skill の目安。対応状況は版を照合していない。次の宣言を無効にして描画し、`@supports` の分岐を反転して確かめた。ほかの機能の非対応は未確認）:
 
-- `oklch()`: 先に `#` 形式の色を宣言し、`@supports` で上書きする。非対応では `#` 形式の色になる（水色が少し濃く見える）
+- `oklch()`: 先に `#` 形式の色を宣言し、`@supports` で上書きする（`@supports` は構文への対応の判定で、色域などの表示装置の判定ではない。S111）。非対応では `#` 形式の色になる（水色が少し濃く見える）
 - コンテナークエリの単位（`cqi`）: 先に `vw` の値で宣言する。非対応では `vw`（題字は上限つき）に落ち、広い画面では札の説明文などが相対的に小さく見える（描画で確認。題字は上限を置いたので、札とテープに収まる）
 - `rotate`: 非対応では傾かず、位置は変わらない
 - `mask-image`: 非対応ではハーフトーンの端が薄くならず、四角のまま出る
 - `clip-path`: 非対応では破れ縁が直線になる
-- `translate`（ボタンの押下の動き）: 非対応では動かず、影だけが変わる
+- `translate`（ボタンの押下の動き）: 非対応では動かず、影だけが変わる。この動きはホバーできる環境（`@media (hover: hover)`）だけに付ける（ポインタの種類は環境の判定で、`@supports` ではない）
 
 コントラスト比（WCAG の相対輝度式。文字 4.5:1。S74。`oklch()` を解決した sRGB で計算）:
 
@@ -96,7 +96,7 @@
 |---|---|
 | 藍の文字 / ゆず黄（題字の札・1 の札） | 11.54（`#` 形式の色: 11.44） |
 | 藍の文字 / 水色（2 の札） | 9.26（7.83） |
-| 藍の文字 / 桃色（3 の札・ステッカー） | 5.98（6.08） |
+| 藍の文字 / 桃色（3 の札・ステッカー） | 6.17（6.08） |
 | 白の文字 / 藍（藍の札） | 16.53 |
 | ゆず黄の文字 / 藍（ボタン） | 11.54 |
 | 本文 / 地（ライト・ダーク） | 15.95・16.43 |
@@ -135,6 +135,7 @@
 <header class="bar"><a class="logo" href="/">ひなた</a><a class="shop-link" href="#shops">取扱店</a></header>
 <main>
   <section class="hero" aria-labelledby="t">
+    <div class="stage">
     <div class="board">
       <div class="dots" aria-hidden="true"></div>
       <div class="slab">
@@ -152,7 +153,8 @@
       <svg class="yz y2" aria-hidden="true"><use href="#yuzu"/></svg>
       <svg class="yz y3" aria-hidden="true"><use href="#yuzu"/></svg>
       <p class="badge"><b>6</b>週間<br>だけ</p>
-      <p class="plate">ゆず 100% 果汁のソーダ。<br>ぱちっとはじけて、ふわっとゆず。</p>
+    </div>
+    <p class="plate">ゆず 100% 果汁のソーダ。<br>ぱちっとはじけて、ふわっとゆず。</p>
     </div>
   </section>
 
@@ -185,7 +187,7 @@
   --gut: clamp(1rem, 4vw, 3rem);
 }
 @supports (color: oklch(0% 0 0)) {
-  :root { --yuzu: oklch(88% 0.17 95); --aqua: oklch(80% 0.12 205); --pink: oklch(72% 0.19 10); }
+  :root { --yuzu: oklch(88% 0.17 95); --aqua: oklch(80% 0.12 205); --pink: oklch(72% 0.17 10); }
 }
 @media (prefers-color-scheme: dark) { :root { --paper: #15132b; --text: #f4f3fb; --text-2: #bdbad8; } }
 
@@ -193,19 +195,20 @@
 body { margin: 0; background: var(--paper); color: var(--text); font-family: var(--round); line-height: 1.7; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
-.bar { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem var(--gut); }
+.bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 1rem; padding: 0.25rem var(--gut); }
 .bar a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; }
 .logo { text-decoration: none; font-size: 1.25rem; }
 
 /* 構造は 12 列相当の割合の座標。断片の位置と傾きは変数で決め、文字は無地の面にだけ載せる */
 .hero { padding: 0.5rem var(--gut) 3rem; }
 .sprite { position: absolute; }
-.board { position: relative; container-type: inline-size; max-width: 72rem; margin-inline: auto; aspect-ratio: 4 / 5.6; overflow: hidden; }
+.stage { position: relative; container-type: inline-size; max-width: 72rem; margin-inline: auto; }
+.board { position: relative; aspect-ratio: 4 / 4.7; overflow: hidden; }
 .board > * { position: absolute; margin: 0; }
-.dots { left: 0; bottom: 0; width: 70%; height: 34%;
+.dots { left: 0; bottom: 0; width: 70%; height: 39%;
         background: radial-gradient(circle, var(--aqua) 38%, transparent 41%) 0 0 / 0.9rem 0.9rem;
         mask-image: linear-gradient(60deg, #000 30%, transparent 95%); }
-.slab { left: 2%; top: 3%; width: 96%; height: 33%; rotate: -2.5deg; background: var(--yuzu); color: var(--ink);
+.slab { left: 2%; top: 3%; width: 96%; height: 38%; rotate: -2.5deg; background: var(--yuzu); color: var(--ink);
         clip-path: polygon(0 2%, 8% 0, 17% 3%, 29% 0, 41% 2%, 55% 0, 68% 3%, 82% 0, 93% 2%, 100% 0, 100% 96%, 91% 100%,
                            78% 97%, 64% 100%, 50% 96%, 37% 100%, 24% 97%, 11% 100%, 0 96%); }
 .slab::after { content: ""; position: absolute; inset: 0; z-index: -1; background-image: var(--grain); opacity: 0.12; mix-blend-mode: multiply; pointer-events: none; }
@@ -214,18 +217,18 @@ h1 { margin: 0; position: absolute; inset: 0; display: grid; align-content: cent
 h1 span { display: block; }
 .tape { position: absolute; width: 22%; height: 11%; background: rgba(255, 255, 255, 0.55); z-index: 1; }
 .t1 { left: -3%; top: 2%; rotate: -35deg; } .t2 { right: -3%; bottom: 4%; rotate: -35deg; }
-.bottle { left: 60%; top: 30%; width: 28%; height: auto; rotate: 7deg;
+.bottle { left: 60%; top: 34%; width: 28%; height: auto; rotate: 7deg;
           filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
                   drop-shadow(5px 8px 0 rgba(0, 0, 0, 0.2)); }
 .yz { filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)
               drop-shadow(4px 6px 0 rgba(0, 0, 0, 0.2)); aspect-ratio: 1; height: auto; }
-.y1 { left: 6%; top: 40%; width: 30%; rotate: -12deg; }
-.y2 { left: 36%; top: 62%; width: 20%; rotate: 20deg; }
-.y3 { left: 86%; top: 52%; width: 11%; rotate: 40deg; }
+.y1 { left: 6%; top: 46%; width: 30%; rotate: -12deg; }
+.y2 { left: 36%; top: 71%; width: 20%; rotate: 20deg; }
+.y3 { left: 86%; top: 59%; width: 11%; rotate: 40deg; }
 .badge { left: 72%; top: 3%; z-index: 2; width: 22%; aspect-ratio: 1; display: grid; place-content: center; text-align: center;
          border-radius: 50%; background: var(--pink); color: var(--ink); rotate: 10deg; font-weight: 800; font-size: 0.75rem; font-size: max(0.75rem, 3.6cqi); line-height: 1.2; }
 .badge b { font-size: 10vw; font-size: 11cqi; line-height: 1; }
-.plate { left: 4%; top: 80%; width: 92%; padding: 0.9rem 1rem; rotate: 1.5deg; background: var(--ink); color: #fff; box-shadow: 4px 5px 0 var(--aqua);
+.plate { position: relative; margin: -1.5rem 4% 0; padding: 0.9rem 1rem; rotate: 1.5deg; background: var(--ink); color: #fff; box-shadow: 4px 5px 0 var(--aqua);
          font-weight: 700; font-size: 0.875rem; font-size: max(0.875rem, 3.7cqi); line-height: 1.6; }
 @media (min-width: 48em) {
   .board { aspect-ratio: 16 / 10; }
@@ -234,12 +237,12 @@ h1 span { display: block; }
   .bottle { left: 60%; top: 6%; width: 17%; }
   .y1 { left: 44%; top: 52%; width: 15%; } .y2 { left: 76%; top: 40%; width: 14%; } .y3 { left: 71%; top: 76%; width: 9%; }
   .badge { left: 84%; top: 5%; width: 13%; font-size: 0.75rem; font-size: max(0.75rem, 1.9cqi); } .badge b { font-size: 4.4vw; font-size: 6.4cqi; }
-  .plate { left: 5%; top: 66%; width: 40%; font-size: 0.875rem; font-size: max(0.875rem, 1.9cqi); padding: 1rem 1.25rem; }
+  .plate { position: absolute; left: 5%; top: 66%; width: 40%; margin: 0; font-size: 0.875rem; font-size: max(0.875rem, 1.9cqi); padding: 1rem 1.25rem; }
   .dots { width: 48%; height: 40%; }
 }
 @keyframes pop { from { scale: 0.85; opacity: 0; } to { scale: 1; opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
-  .board > :not(.dots) { animation: pop 0.45s ease-out both; }
+  .board > :not(.dots), .plate { animation: pop 0.45s ease-out both; }
   .bottle { animation-delay: 0.15s; } .badge { animation-delay: 0.3s; } .plate { animation-delay: 0.4s; }
 }
 
@@ -253,13 +256,13 @@ h2 { margin: 0 0 1.5rem; font-family: var(--heavy); font-size: clamp(1.5rem, 4.4
 .cta p { margin: 0 0 1.25rem; }
 .btn { display: inline-flex; align-items: center; min-height: 52px; padding: 0 1.75rem; background: var(--ink); color: var(--yuzu);
        font-weight: 900; text-decoration: none; border-radius: 0.5rem; box-shadow: 4px 5px 0 var(--aqua); }
-.btn:hover { translate: -1px -1px; box-shadow: 5px 6px 0 var(--aqua); }
+@media (hover: hover) { .btn:hover { translate: -1px -1px; box-shadow: 5px 6px 0 var(--aqua); } }
 .foot { padding: 1.5rem var(--gut) 2.5rem; color: var(--text-2); font-size: 0.875rem; }
 .foot p { margin: 0; }
-@media (prefers-reduced-motion: reduce) { .btn:hover { translate: none; } }
+@media (hover: hover) and (prefers-reduced-motion: reduce) { .btn:hover { translate: none; } }
 ```
 
-描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、動きを減らす設定（全要素の `animation-name` が `none`）、新しい CSS の非対応の模擬。どの幅でも要素の右端は画面内に収まった。Tab でフォーカスの枠が見えた。
+描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、動きを減らす設定（全要素の `animation-name` が `none`）、新しい CSS の非対応の模擬。どの幅でも要素の右端は画面内に収まった; 320 px・文字 200%（ルートの `font-size` を 2 倍）と 320 x 256 px（1280 px の 400% 拡大に相当）でも、横にはみ出さず、`overflow: hidden` の祖先から切れる要素も無いことを測った。Tab でフォーカスの枠が見えた。
 
 ## 初見検証
 
@@ -276,6 +279,7 @@ h2 { margin: 0 0 1.5rem; font-family: var(--heavy); font-size: clamp(1.5rem, 4.4
 
 - 傾向に日付・出どころ・批判を添え、被写体（ゆず・泡・瓶）から採る理由を言えた
 - 秩序の土台（盤の座標）があり、読み順（題字 → 説明 → 飲み方 → 期間）が崩れていない
+- 320 px・文字 200%（ルートの `font-size` を 2 倍）で横にはみ出さず、盤の外へ切れる要素が無い。ヘッダーの行は折り返す（`flex-wrap`）
 - 小さい文字は無地の面に載っている。質感の上の大きい題字は、最も不利な画素で測って基準以上（上の表）。粒は文字の背面にある
 - 動きは読み込み時の一度だけで、動きを減らす設定で止まる
 - 320 px で、題字・札・ステッカーが欠けず、横にはみ出さない
@@ -283,4 +287,4 @@ h2 { margin: 0 0 1.5rem; font-family: var(--heavy); font-size: clamp(1.5rem, 4.4
 
 ## この例の出典
 
-S36、S37、S39、S42、S46、S55、S74、S75、S76、S77。台帳は `../references/sources.md`。
+S36、S37、S39、S42、S46、S55、S74、S75、S76、S77、S110、S111。台帳は `../references/sources.md`。

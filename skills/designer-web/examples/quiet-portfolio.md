@@ -204,10 +204,10 @@ body { margin: 0; background: var(--ground); color: var(--ink); font-family: var
 a { color: inherit; text-underline-offset: 0.25em; }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 
-.top { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem var(--gut); }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 1rem; padding: 0.5rem var(--gut); }
 .top a { display: inline-flex; align-items: center; min-height: 44px; }
 .mark { font-weight: 700; text-decoration: none; letter-spacing: 0.08em; }
-.top nav { display: flex; gap: 0.25rem; }
+.top nav { display: flex; flex-wrap: wrap; gap: 0.25rem; }
 .top nav a { padding: 0 0.5rem; font-size: 0.9375rem; }
 
 .intro { padding: clamp(4rem, 14vw, 10rem) var(--gut) clamp(3rem, 8vw, 6rem); max-width: 64rem; }
@@ -237,12 +237,13 @@ dl { margin: 0 0 1.5rem; }
 dl div { display: grid; grid-template-columns: 4.5rem 1fr; padding: 0.5rem 0; border-top: 1px solid var(--line); }
 dt { color: var(--ink-2); } dd { margin: 0; font-variant-numeric: tabular-nums; }
 .piece p, .contact p { margin: 0; }
+.contact a { overflow-wrap: anywhere; }
 .contact { border-top: 1px solid var(--line); }
 .foot { padding: 1.5rem var(--gut) 3rem; color: var(--ink-2); font-size: 0.875rem; }
 .foot p { margin: 0; }
 ```
 
-描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、写真ファイルあり / なし、新しい CSS の非対応の模擬。急須の取っ手が `viewBox` の内側に収まることを拡大して確かめた。どの幅でも要素の右端は画面内に収まった。
+描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、写真ファイルあり / なし、新しい CSS の非対応の模擬。急須の取っ手が `viewBox` の内側に収まることを拡大して確かめた。どの幅でも要素の右端は画面内に収まった; 320 px・文字 200%（ルートの `font-size` を 2 倍）と 320 x 256 px（1280 px の 400% 拡大に相当）でも、横にはみ出さず、`overflow: hidden` の祖先から切れる要素も無いことを測った。
 
 ## 初見検証
 
@@ -261,7 +262,7 @@ dt { color: var(--ink-2); } dd { margin: 0; font-variant-numeric: tabular-nums; 
 - 差し色が無く、色は 3 つ。書体は 1 系統
 - 写真が無くても崩れない。一覧は輪郭で成立する
 - 文字は 4.5:1 以上。器の輪郭は装飾で、スクリーンリーダーには名前と寸法の文字が読まれる（輪郭は `aria-hidden`）
-- 320 px で、器の輪郭と文字が欠けず、横にはみ出さない
+- 320 px・文字 200%（ルートの `font-size` を 2 倍）で、器の輪郭と文字が欠けず、横にはみ出さない。ヘッダーの行は折り返し（`flex-wrap`）、メールアドレスは `overflow-wrap: anywhere` で折り返す
 - 推測の明示: 器を探す人の反応はこの例からは分からない。実物の写真・権利は別に確認する
 
 ## この例の出典

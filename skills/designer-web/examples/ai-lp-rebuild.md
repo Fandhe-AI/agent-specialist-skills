@@ -112,7 +112,7 @@ AI で作ったら「どこかで見たサイト」になった LP を、既定�
 
 非対応時の姿（本 skill の目安。対応状況は版を照合していない。次の宣言を無効にして描画し、`@supports` の分岐を反転して確かめた。ほかの機能の非対応は未確認）:
 
-- `oklch()`: 先に `#` 形式の色を宣言し、`@supports` で上書きする。非対応では `#` 形式の色
+- `oklch()`: 先に `#` 形式の色を宣言し、`@supports` で上書きする（`@supports` は構文への対応の判定で、色域などの表示装置の判定ではない。S111）。非対応では `#` 形式の色。`oklch()` の値は sRGB の範囲内
 - `mask-image`: 帳簿の罫は `@supports (mask-image: …)` の中でだけ出す。非対応では罫を出さない（文字の下に罫が出ない）
 - `rotate`: 非対応では伝票と判子が傾かない
 - `text-wrap: balance`・`text-wrap: pretty`: 非対応では通常の折り返し（説明文の末尾に短い行が残ることがある）
@@ -162,7 +162,7 @@ AI で作ったら「どこかで見たサイト」になった LP を、既定�
     <figure class="slip">
       <figcaption class="slip-head"><b>請求書</b><span>No. 0412　状態 確認済</span></figcaption>
       <table>
-        <thead><tr><th scope="col">品名</th><th scope="col">数量</th><th scope="col">金額（円）</th></tr></thead>
+        <thead><tr><th scope="col">品名</th><th scope="col">数量</th><th scope="col">金額</th></tr></thead>
         <tbody>
           <tr><td>配送費（4 月分）</td><td>1</td><td>38,000</td></tr>
           <tr><td>梱包資材</td><td>120</td><td>41,400</td></tr>
@@ -170,7 +170,7 @@ AI で作ったら「どこかで見たサイト」になった LP を、既定�
         </tbody>
         <tfoot><tr><th scope="row" colspan="2">合計</th><td>92,400</td></tr></tfoot>
       </table>
-      <p class="match">発注書 No. 0388 と一致</p>
+      <p class="match">単位は円。発注書 No. 0388 と一致</p>
       <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="60" cy="60" r="54" stroke-width="5"/>
         <circle cx="60" cy="60" r="46" stroke-width="1.5"/>
@@ -224,12 +224,12 @@ a { color: inherit; }
 .top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 1rem; padding: 0.5rem var(--gut); }
 .top a { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
 .mark { font-weight: 800; font-size: 1.25rem; text-decoration: none; }
-.top nav { display: flex; align-items: center; gap: 0.25rem; }
+.top nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
 .top nav a { padding: 0 0.5rem; font-size: 0.9375rem; }
 .top .btn-s { background: var(--ink); color: var(--ground); text-decoration: none; font-weight: 700; padding: 0 1rem; margin-left: 0.5rem; }
 
 /* 声を出す 1 か所は、伝票そのもの。罫は帳簿の罫線の色、朱は判子だけ */
-.hero { position: relative; isolation: isolate; display: grid; gap: 3rem; padding: clamp(2rem, 6vw, 5rem) var(--gut) clamp(3rem, 8vw, 6rem); }
+.hero { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem; padding: clamp(2rem, 6vw, 5rem) var(--gut) clamp(3rem, 8vw, 6rem); }
 .hero::before { display: none; content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
                 background-image: repeating-linear-gradient(to bottom, transparent 0 calc(2rem - 1px), var(--rule) calc(2rem - 1px) 2rem);
                 mask-image: linear-gradient(90deg, transparent 45%, #000 85%); }
@@ -240,21 +240,21 @@ h1 { margin: 0 0 1.5rem; font-size: clamp(1.5rem, 6.6vw, 3.25rem); line-height: 
 .link { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 0.25em; }
 
 @supports (mask-image: linear-gradient(90deg, #000, transparent)) { @media (min-width: 56em) { .hero::before { display: block; } } }
-.slip { position: relative; margin: 0; padding: 1.25rem 1.25rem 5.75rem; background: var(--paper); color: #17202b; rotate: 1.2deg; isolation: isolate;
+.slip { position: relative; margin: 0; padding: 1.25rem 0.5rem 5.75rem; background: var(--paper); color: #17202b; rotate: 1.2deg; isolation: isolate;
         box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 18px 32px -14px rgba(20, 30, 40, 0.45); max-width: 30rem; justify-self: center; width: 100%; }
 .slip-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #17202b; font-size: 0.9375rem; }
 .slip-head b { font-size: 1.25rem; letter-spacing: 0.3em; }
-.slip table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+.slip table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
 .slip th, .slip td { padding: 0.5rem 0; border-bottom: 1px solid var(--rule); text-align: left; }
 .slip thead th { font-weight: 600; color: #435063; }
 .slip th:last-child, .slip td:last-child, .slip td:nth-child(2), .slip thead th:nth-child(2) { text-align: right; }
-.slip th { white-space: nowrap; }
-.slip tfoot th, .slip tfoot td { border-bottom: 0; font-weight: 800; font-size: 1.125rem; }
+.slip tfoot th, .slip tfoot td { border-bottom: 0; font-weight: 800; font-size: 0.875rem; }
 .match { margin: 0.5rem 0 0; font-size: 0.875rem; color: #435063; }
+@media (min-width: 30em) { .slip { padding-inline: 1.25rem; } .slip table { font-size: 0.9375rem; } .slip tfoot th, .slip tfoot td { font-size: 1.125rem; } }
 .stamp circle { fill: none; stroke: var(--stamp); }
 .stamp text { fill: var(--stamp); }
 .stamp { position: absolute; right: 1rem; bottom: 0.75rem; width: 6.5rem; rotate: -11deg; mix-blend-mode: multiply; opacity: 0.92; }
-@media (min-width: 56em) { h1 { font-size: clamp(1.75rem, 3.6vw, 3.25rem); } .hero { grid-template-columns: 6fr 5fr; align-items: center; } .slip { justify-self: end; margin-right: 1rem; } }
+@media (min-width: 56em) { h1 { font-size: clamp(1.75rem, 3.6vw, 3.25rem); } .hero { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; } .slip { justify-self: end; margin-right: 1rem; } }
 
 .flow, .price { max-width: 64rem; padding: clamp(2.5rem, 7vw, 5rem) var(--gut); }
 h2 { margin: 0 0 1.5rem; font-size: clamp(1.5rem, 3.6vw, 2.25rem); line-height: 1.35; font-weight: 800; }
@@ -266,13 +266,13 @@ h2 { margin: 0 0 1.5rem; font-size: clamp(1.5rem, 3.6vw, 2.25rem); line-height: 
 .price table { width: 100%; max-width: 40rem; border-collapse: collapse; margin-bottom: 2rem; }
 .price th, .price td { padding: 0.75rem 0.5rem 0.75rem 0; border-bottom: 1px solid var(--ink-2); text-align: left; }
 .price thead th { color: var(--ink-2); font-weight: 600; font-size: 0.9375rem; }
-.price td:nth-child(2) { font-weight: 800; white-space: nowrap; }
-.price th[scope="row"] { white-space: nowrap; }
+.price td:nth-child(2) { font-weight: 800; }
+@media (min-width: 30em) { .price td:nth-child(2), .price th[scope="row"] { white-space: nowrap; } }
 .foot { padding: 1.5rem var(--gut) 3rem; color: var(--ink-2); font-size: 0.875rem; }
 .foot p { margin: 0; }
 ```
 
-描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、新しい CSS の非対応の模擬。どの幅でも要素の右端は画面内に収まった。320 px でヘッダーが折り返しても、文字が 1 字ずつ折れないことを確かめた。Tab でフォーカスの枠が見えた。
+描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、新しい CSS の非対応の模擬。どの幅でも要素の右端は画面内に収まった; 320 px・文字 200%（ルートの `font-size` を 2 倍）と 320 x 256 px（1280 px の 400% 拡大に相当）でも、横にはみ出さず、`overflow: hidden` の祖先から切れる要素も無いことを測った。320 px でヘッダーが折り返しても、文字が 1 字ずつ折れないことを確かめた。Tab でフォーカスの枠が見えた。
 
 ## 初見検証
 
@@ -292,9 +292,9 @@ h2 { margin: 0 0 1.5rem; font-size: clamp(1.5rem, 3.6vw, 2.25rem); line-height: 
 - 慣習の層（ナビ・料金表・ボタン）は慣習のまま、声を出す層だけが既定値を避けている
 - 伝票の数字が桁を揃え、合計が読める。判子が数字に重ならない
 - 文字は 4.5:1 以上。罫・判子は装飾で、情報は文字でも書かれる
-- 320 px で、伝票・料金表が欠けず、横にはみ出さない
+- 320 px・文字 200%（ルートの `font-size` を 2 倍）で、伝票・料金表が欠けず、横にはみ出さない。伝票の表は、狭い画面で文字を 14px、余白を 0.5rem に絞り、見出しは「金額」とし単位は注記に出した（修正前は 200% で表が 30px はみ出した）。ヘッダーのナビは折り返す
 - 推測の明示: 経理の担当者の反応・転換率はこの例からは分からない。AI を使う場合も、方向性のメモを先に作り、最終の見た目は人が決める（S21 の線引き。自己申告）。AI の提供元の文書は時点情報
 
 ## この例の出典
 
-S21、S50、S53、S54、S55、S56、S57、S59、S74、S75。台帳は `../references/sources.md`。
+S21、S50、S53、S54、S55、S56、S57、S59、S74、S75、S111。台帳は `../references/sources.md`。

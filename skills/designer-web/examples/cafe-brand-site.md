@@ -102,7 +102,7 @@
 
 非対応時の姿（本 skill の目安。対応状況は版を照合していない。次の宣言を無効にして描画し、`@supports` の分岐を反転して確かめた。ほかの機能の非対応は未確認）:
 
-- `oklch()`: 先に `#` 形式の色を宣言し、`@supports (color: oklch(0% 0 0))` で上書きする。非対応では `#` 形式の色になり、見た目はほぼ同じ（コントラスト比も下の表）
+- `oklch()`: 先に `#` 形式の色を宣言し、`@supports (color: oklch(0% 0 0))` で上書きする（`@supports` は構文への対応の判定で、色域などの表示装置の判定ではない。S111）。非対応では `#` 形式の色になり、見た目はほぼ同じ（コントラスト比も下の表）。`oklch()` の値はすべて sRGB の範囲内で、広色域の画面でも同じ色になる
 - `svh`: 先に `vh` で宣言する。非対応では少し高さが変わる程度
 - `rotate`・`translate`（個別の変形プロパティ。光の束の位置合わせと振れ）: 非対応では光の束が位置合わせされず、見えなくなる。灯と帯と題字は残る（描画で確認）
 - `picture` の `source` の `width`・`height`: 非対応では `img` の比（4:5）で場所を確保し、画像の読み込み後に実際の比になる
@@ -226,7 +226,7 @@ body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 
-.bar { position: absolute; z-index: 3; inset: 0 0 auto 0; display: flex; justify-content: flex-end; align-items: center;
+.bar { position: absolute; z-index: 3; inset: 0 0 auto 0; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center;
        gap: 0 1rem; padding: 0.5rem var(--gut); }
 .mark { display: none; margin-right: auto; font-weight: 800; text-decoration: none; min-height: 44px; align-items: center; }
 .bar nav { display: flex; flex-wrap: wrap; background: var(--paper); }
@@ -287,7 +287,7 @@ h2 { margin: 0 0 1.5rem; font-size: clamp(1.5rem, 4vw, 2.25rem); line-height: 1.
 .p { grid-column: 3; font-variant-numeric: tabular-nums; font-weight: 700; }
 .p::before { content: "¥"; font-size: 0.8em; margin-right: 0.15em; }
 .d { grid-column: 1 / -1; color: var(--ink-2); font-size: 0.9375rem; }
-.about { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem 1rem; align-items: start; }
+.about { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem 1rem; align-items: start; }
 .shot { grid-column: 1 / -1; grid-row: 1; margin: 0; }
 .shot img { display: block; width: 100%; height: auto; background: linear-gradient(160deg, #3a4a66, #1c2a44); color: #ffffff; }
 figcaption { margin-top: 0.5rem; font-size: 0.875rem; color: var(--ink-2); }
@@ -295,6 +295,7 @@ figcaption { margin-top: 0.5rem; font-size: 0.875rem; color: var(--ink-2); }
 .story h2 { margin-top: 0; }
 .story p { margin: 0 0 1em; }
 @media (min-width: 48em) {
+  .about { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .shot { grid-column: 1 / 9; }
   .story { grid-column: 7 / -1; grid-row: 1; margin: 22% 0 0 -3rem; padding: 2.5rem; position: relative; }
 }
@@ -308,7 +309,7 @@ dt { color: var(--ink-2); } dd { margin: 0; font-weight: 700; }
 
 `<head>` には、`<meta charset="utf-8">`、`<meta name="viewport" content="width=device-width, initial-scale=1">`、`<html lang="ja">` を置く前提である。
 
-描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、動きを減らす設定（全要素の `animation-name` が `none`）、写真ファイルあり / なし、光の束の途中のフレーム、新しい CSS の非対応の模擬。どの幅でも要素の右端は画面内に収まった。キーボードの Tab でフォーカスの枠が見えた。
+描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、動きを減らす設定（全要素の `animation-name` が `none`）、写真ファイルあり / なし、光の束の途中のフレーム、新しい CSS の非対応の模擬。どの幅でも要素の右端は画面内に収まった; 320 px・文字 200%（ルートの `font-size` を 2 倍）と 320 x 256 px（1280 px の 400% 拡大に相当）でも、横にはみ出さず、`overflow: hidden` の祖先から切れる要素も無いことを測った。キーボードの Tab でフォーカスの枠が見えた。
 
 ## 初見検証
 
@@ -328,9 +329,10 @@ dt { color: var(--ink-2); } dd { margin: 0; font-weight: 700; }
 - 質感の上の文字は、最も不利な画素で測って基準以上（上の表）。小さい文字（上部のリンク）は無地の面に置き、質感は文字の背面にある
 - 動きは 1 か所で、一度だけ。動きを減らす設定では `animation` が付かない（全要素 `none` を測った）
 - 320 px・600 px・768 px で、題字と帯の文字が欠けず、灯と重ならず、横にはみ出さない
+- 320 px・文字 200%（ルートの `font-size` を 2 倍）で横にはみ出さない。ヘッダーのリンクの行は折り返す（`flex-wrap`）。「店について」の 12 列の格子は、狭い画面では 1 列にした
 - 色の数と書体の数を絞り、声を出す場所が題字と灯の 2 つだけである
 - 推測の明示: 来店・予約への効果はこの例からは分からない。実際の写真・店の営業情報で見え方は変わる
 
 ## この例の出典
 
-S03、S11、S12、S13、S15、S17、S51、S54、S55、S60、S61、S71、S72、S74、S75、S76、S77。台帳は `../references/sources.md`。
+S03、S11、S12、S13、S15、S17、S51、S54、S55、S60、S61、S71、S72、S74、S75、S76、S77、S111。台帳は `../references/sources.md`。

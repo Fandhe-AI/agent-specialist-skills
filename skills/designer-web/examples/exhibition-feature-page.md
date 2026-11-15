@@ -216,7 +216,7 @@ a { color: inherit; }
 figure { margin: 0; }
 img { display: block; width: 100%; height: auto; background: #b9beb8; color: #1c211f; }
 
-.top { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem var(--gut); font-size: 0.9375rem; }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 1rem; padding: 0.25rem var(--gut); font-size: 0.9375rem; }
 .top a { display: inline-flex; align-items: center; min-height: 44px; }
 .mark { font-family: var(--serif); font-weight: 700; text-decoration: none; }
 
@@ -275,7 +275,7 @@ dt { color: var(--ink-2); } dd { margin: 0; font-weight: 700; }
 
 本例はライブラリを使わない。スクロール連動の動きを、ライブラリ（アニメーション用のスクリプトなど）で書くのが現場で一般的な場合はあるが、本 skill はライブラリの版と配布物の整合性（Subresource Integrity のハッシュ）を照合していないため、コードを置かない。使う場合は、版を固定し、外部から配布されるファイルには整合性の検証を付け、本体の断片がライブラリ無しで動くこと（非対応では作品が最初から見えること）を保つ。
 
-描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、動きを減らす設定（全要素の `animation-name` が `none`）、写真ファイルあり / なし、新しい CSS の非対応の模擬。スクロール連動は、各作品の位置までスクロールして撮り、作品が現れること、動きを減らす設定で全部見えることを確かめた。どの幅でも要素の右端は画面内に収まった。
+描画して確かめた条件: 1440・768・600・390・320 px、ライトとダーク、動きを減らす設定（全要素の `animation-name` が `none`）、写真ファイルあり / なし、新しい CSS の非対応の模擬。スクロール連動は、各作品の位置までスクロールして撮り、作品が現れること、動きを減らす設定で全部見えることを確かめた。どの幅でも要素の右端は画面内に収まった; 320 px・文字 200%（ルートの `font-size` を 2 倍）と 320 x 256 px（1280 px の 400% 拡大に相当）でも、横にはみ出さず、`overflow: hidden` の祖先から切れる要素も無いことを測った。
 
 ## 初見検証
 
@@ -294,7 +294,7 @@ dt { color: var(--ink-2); } dd { margin: 0; font-weight: 700; }
 - 作品が画面幅ごとに切り抜かれ、狭い画面は寄りの版である。写真ファイルが無くても場所が確保される
 - 最初の作品だけ `fetchpriority="high"`、ほかは遅延読み込み。LCP の実測は別に行う（S77）
 - 文字は画像の外にあり、比は表のとおり
-- 320 px で横にはみ出さない
+- 320 px・文字 200%（ルートの `font-size` を 2 倍）で横にはみ出さない。ヘッダーのリンクの行は折り返す（`flex-wrap`）
 - 推測の明示: 作品画像の実物（色・粒度）での見え、来館への効果はこの例からは分からない。画像の権利は確認事項
 
 ## この例の出典
