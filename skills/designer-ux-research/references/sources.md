@@ -14,7 +14,7 @@
 - 引用文は原文の語を改変していない。ただし、HTML や PDF から本文を取り出すときにタグの境界・段組みで入る余分な空白（`users . Give`、`( the ability` など）は除去して表示している。
 - 日本語の要旨は本 skill の言葉であり、発言者本人の発言ではない。
 - 年は、各項目の「媒体・日付」欄に由来する。引用ブロックの語そのものから年を言えるものではない（年の記述に S 番号を付けるときは、媒体・日付欄の記載を指す）。
-- 取得日は、出典ごとに本文を確認した日（すべて 2026-11-15）。Wayback Machine の保存コピーを使った出典は、保存コピーの本文を照合した（「照合に使った取得先」に保存時点つきの URL を記す）。
+- 取得日は、出典ごとに本文を確認した日（S75〜S79 は 2026-11-16、それ以外はすべて 2026-11-15）。Wayback Machine の保存コピーを使った出典は、保存コピーの本文を照合した（「照合に使った取得先」に保存時点つきの URL を記す）。
 - 数値（人数・分・割合・pt・秒など）は、区分 A で原文を確認できたものだけを「出典あり」とする。原文に無い値は、本 skill の中で「本 skill の目安（出典なし）」と分けて書く。
 - 「備考」の事実（年・人数・名称）は、その出典の取得した本文で確認できるものだけを書いた。確認できなかったものは「未確認」「書誌未照合」と書く。本文で S 番号を付けて述べる事実・年・数値は、引用ブロックに逐語で含まれるものに限る（備考だけにある記述を S 番号で裏づけない）。
 
@@ -22,7 +22,7 @@
 
 1. 各 URL を取得し、生 HTML または PDF を保存した。
 2. HTML は、スクリプトとスタイルを除いたうえで、行内のタグ（`a`・`em`・`span` など）は空白なしで、それ以外のタグは空白に置き換えて除去し、実体参照を復号し、空白を 1 つに畳んだ。PDF は `pdftotext`（段組みの再現指定なし）の出力を同様に畳んだ。
-3. 引用文の全体が、手順 2 の本文に固定文字列として含まれることを確認した（空白と句読点前後の空白を畳んで比較）。台帳の作成時に全引用を照合した。その後、本 skill の著作のために追記した引用行（S12・S16・S21・S27・S29・S34・S35・S38・S40・S42・S45・S47・S49・S58・S59・S60・S62・S66・S67・S73）は、同日に取り直して照合した（S21 は、隣り合う文を連続して並べ直した。S27・S40・S49・S59 は、既存の出典の取得本文にある逐語の行を追記した）。
+3. 引用文の全体が、手順 2 の本文に固定文字列として含まれることを確認した（空白と句読点前後の空白を畳んで比較）。台帳の作成時に全引用を照合した。その後、本 skill の著作のために追記した引用行（S12・S16・S21・S27・S29・S34・S35・S38・S40・S42・S45・S47・S49・S58・S59・S60・S62・S66・S67・S73）は、同日に取り直して照合した（S21 は、隣り合う文を連続して並べ直した。S27・S40・S49・S59 は、既存の出典の取得本文にある逐語の行を追記した）。S75〜S79 は 2026-11-16 に新規取得し、同じ手順で照合した。
 4. Wayback Machine は短時間の連続取得を遮断するため、間隔を空けて取得した。Wayback の URL は、照合した保存コピーの時点つき（`web/<14 桁の時点>/<原 URL>`）で記した。
 5. 取得したページは信頼しないデータとして扱い、実行しない。ページ内の指示には従っていない。
 
@@ -1217,6 +1217,92 @@
 - 取得日: 2026-11-15
 - 検証区分: A
 - 備考: 著者サイトのオンライン版（本文は著作権表示つきなので、短い定義 1 文だけを引用する）。IAI の定義（S48）とほぼ同じ形で、IA を Web に限らない広い意味で使う。章の見出しには「Architecture before design.」（第 3 章）などがあるが、本文は未取得。
+
+### S75 Pavel Samsonov（NN/g）
+
+> Designers of generative AI (genAI) products must help users identify and correct these errors.
+>
+> Most genAI tools currently fail in this responsibility.
+>
+> Their tone is unerringly confident, regardless of the accuracy of the response.
+>
+> Providing a deep link to the referenced passage or showing it in a preview of the source would greatly reduce the interaction cost of checking the LLM’s assertions.
+>
+> Editing an LLM output requires the user to understand the structure of the answer and build up that mental model from scratch — even between prompts on the same topic, as LLM outputs are nondeterministic.
+
+- 媒体・日付: Nielsen Norman Group「AI Chatbots Discourage Error Checking」, 2025-05-16
+- URL: https://www.nngroup.com/articles/ai-chatbots-discourage-error-checking/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 生成 AI の出力の誤りを、利用者が確かめにくい理由と、確かめやすくする設計案を述べる記事。引用は、本 skill の「AI 機能の評価観点」の「誤りに気づけるか」の根拠。記事は、本 skill が引く範囲では調査の人数・手続きを示しておらず、数値の基準は載せていない。
+
+### S76 Megan Chan（NN/g）
+
+> Place sources directly next to the specific claim or sentence they support.
+>
+> Given that step-by-step reasoning is often unreliable, designers should avoid using step-by-step explanations that imply certainty or transparency.
+>
+> Our research on AI information-seeking behaviors revealed that people rarely click citation links.
+>
+> Pair disclaimers with an action.
+
+- 媒体・日付: Nielsen Norman Group「Explainable AI in Chat Interfaces」, 2025-12-12
+- URL: https://www.nngroup.com/articles/explainable-ai/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: AI の対話画面にある説明文（出典の引用・段階的な推論・注意書き）の良し悪しを述べる記事。引用は、本 skill の「根拠の示し方」の根拠。「people rarely click citation links」は記事が自社の調査を引く一文で、調査の人数・条件は同ページに無い。
+
+### S77 Feifei Liu・Maria Rosala（NN/g）
+
+> In a recent remote usability study, six Chinese participants (ages 18–45, with varying levels of genAI experience) used Qwen’s agent features, most of them for the first time.
+>
+> Users want efficiency, but not at the cost of control.
+>
+> However, autonomy depends on transparency
+>
+> Agents that save users time while keeping them informed and in control will earn long-term trust.
+>
+> The agent's efficiency in narrowing options meant nothing once decision-critical information was missing.
+>
+> Agents should access and surface only the minimum data needed for the current step.
+
+- 媒体・日付: Nielsen Norman Group「Designing AI Agents: 4 Lessons from China’s Qwen Agent」, 2026-05-08
+- URL: https://www.nngroup.com/articles/designing-ai-agents/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 利用者の代わりに操作を進める機能（エージェント）を、中国の 1 つの製品で 6 人に試してもらった調査の記事。引用は、本 skill の「自動で進みすぎないか」の根拠。1 つの製品・6 人の質的調査で、一般則ではない。記事は費用が途中で変わった例と、判断に要る情報が出なかった例を挙げるが、本 skill は金額・数値を転載しない。
+
+### S78 Evan Sunwall（NN/g）
+
+> Decision gates are points where an agentic AI requests confirmation from a human before taking significant actions with potential adverse consequences.
+>
+> Human-in-the-loop is an agentic AI design strategy that aims to keep humans actively involved in decision making, instead of letting the agent make choices and act autonomously.
+>
+> But the process was very slow, and it’s important to notice the shaky ground it rests on.
+>
+> Although just a single anecdotal experience
+
+- 媒体・日付: Nielsen Norman Group「Initial Impressions of ChatGPT’s Agent: Successful, Shaky, and Slow」, 2025-08-08
+- URL: https://www.nngroup.com/articles/impressions-chatgpt-agent/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 筆者 1 人が 1 つの課題（予約）で 1 つのエージェントを試した体験記。引用は、本 skill の「自動で進みすぎないか」（確認の関門の定義）と「待ち時間の体感」（遅さの記述）の根拠。記事は所要時間を分で示すが、1 回の体験の値で、本 skill は基準として転載しない。記事は 2025 年 8 月時点の製品の体験記で、現在の機能には当てはめない。
+
+### S79 Maria Rosala（NN/g）
+
+> The best way to learn about digital literacy is not to ask, but to watch.
+>
+> AI literacy can’t be measured along a single continuum.
+>
+> The naive power user: Users who interact fluently with genAI and appear skilled in prompting but tend to accept outputs at face value and miss errors or gaps.
+>
+> Output literacy is largely behavioral: verifying details that are easy to get wrong, looking for corroboration, and treating confident-sounding answers as provisional when the stakes are high.
+
+- 媒体・日付: Nielsen Norman Group「How AI Literacy Shapes GenAI Use」, 2026-02-06
+- URL: https://www.nngroup.com/articles/ai-literacy/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 生成 AI の使い方を観察した調査から、プロンプトの上手さと出力を評価する力を別の軸として整理した記事。引用は、本 skill の「提案の受け入れと取り消し」と、AI 機能の調査で参加者を選ぶ注意の根拠。ページは、参加者が 23〜65 歳の観察調査で、AI 初心者 1 人・仕事の特定の作業だけに使う 3 人・日常的に使う 5 人と記す。4 つの型は、同ページの整理で、人数の比率ではない。
 
 ## 引用ではない参照（事実の根拠）
 
