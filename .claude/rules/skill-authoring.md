@@ -105,9 +105,9 @@ description の書き方の詳細は `./description-style.md` を参照する。
   - 良い例: `description: "変更をコミット # 詳細は create-commit"`
 - `:` の後にスペース+テキストが続く場合も語順変更で回避する（詳細は `./description-style.md`）
 
-### reference 型スキルの書式
+### 付属ファイルの書式
 
-`reference/`・`references/` 配下のページと README 索引の書式は `./reference-template.md` を参照する。
+付属ファイル（`references/`・`examples/`・`sample/` など）の書式は `./reference-template.md` を参照する。
 
 ### SKILL.md 公式仕様の一次情報
 
@@ -213,4 +213,4 @@ SKILL.md を作成・編集した後、以下を確認する（詳細は `./secu
 | `./security.md` | セキュリティ self-check の詳細基準 |
 | `./conventional-commits.md` | コミット・PR 生成スキルの記述規約 |
 | `./japanese-style.md` | 日本語出力スタイルガイド |
-| `./reference-template.md` | reference 型スキルの書式規約 |
+| `./reference-template.md` | 付属ファイル（references / examples / sample 等）の書式規約 |
