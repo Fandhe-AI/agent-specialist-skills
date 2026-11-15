@@ -13,7 +13,8 @@
 
 - HIG の Motion には、UI アニメーションの所要時間（秒・ミリ秒）の推奨値が無い（S56）。WWDC23 のスプリングの解説にも duration の具体値は無い（S67）。したがって、この例の秒数は全て、本 skill の目安（出典なし）である
 - 出典のある値は、スプリングの bounce の範囲と目安（S67）、damping の開始値 100% と 80% の例（S68）に限られる
-- 動きの定義（damping・response の物理量への写し方）は、Apple の定義そのものではなく、本 skill の実装例である
+- コード例は、ネイティブの `<dialog>` と CSS の遷移で書く。スプリングの計算は載せず、bounce・damping の値は設計の狙いとして仕様に残し、CSS では弾みなしの遷移で近似する（本 skill の整理）
+- `<dialog>` の標準動作（フォーカスの循環・Escape・背景の操作不可）と、CSS の `@starting-style`・`allow-discrete` の振る舞いは、台帳に原文が無い。本 skill の実装の目安で、使う前に各ブラウザの最新の対応状況を確認する（2026-11-15 時点）
 
 ## 目的の一文
 
@@ -42,17 +43,18 @@
 | 読み込み | 何かを先に表示。待つときだけ細い進捗 | 待っていることの表示（S64） |
 | 一覧の項目・見出し・装飾 | 動かさない | 目的が無い |
 
-シートの動きの設計。
+シートの動きの設計（設計の狙い。コード例は CSS の遷移で近似する）。
 
 ```text
-タップで開く     y: 400 → 0    damping 100%（弾まない）  response 0.35s
-下へ払って閉じる y: 離した時の速度から → 400   damping 80%（少し弾む）   response 0.35s
-途中で向きを変える: 現在の位置と速度を引き継いで、新しい目標へ向かう
-動きを減らす設定: 移動をやめ、0.15s のフェードに置き換える
+タップで開く     下から 0.35s・弾まない（damping 100% 相当）
+下へ払って閉じる 離した位置と速度から投影して、閉じるか元に戻すかを決める
+途中で向きを変える: 現在の位置から新しい目標へ向かう（CSS の遷移は速度を引き継がない）
+動きを減らす設定: 移動をやめ、0.15s のフェードに置き換える（CSS のメディアクエリだけで切り替わる）
 ```
 
-- 開く動きはタップに勢いが無いので弾ませず、払って閉じる動きは勢いがあるので少しだけ弾ませる。これは Apple の Music の例の 100% と 80% に倣う（S68）
+- 開く動きはタップに勢いが無いので弾ませず、払って閉じる動きは勢いがあるので少しだけ弾ませる。これは Apple の Music の例の 100% と 80% に倣う（S68）。ただしコード例は CSS の遷移で、弾みは付けない。弾みと速度の引き継ぎが要るなら、スプリングの計算を自前で書くか、プラットフォームのスプリングを使う
 - 閉じる手段は、払うジェスチャーのほかに閉じるボタンを必ず置く（S25、S55）
+- シートは `<dialog>` で作る。フォーカスの循環・Escape で閉じる・背景の操作不可は、ブラウザの標準動作に任せ、手書きの開閉状態やタイマーを持たない
 
 ## 仕様
 
@@ -63,25 +65,26 @@
 | bounce の目安 | 約 0.15 で控えめ、約 0.3 で明確な弾み、約 0.4 を超えると UI には誇張 | S67 |
 | bounce の範囲 | -1.0 から 1.0 | S67 |
 | damping の開始値 | 100%（弾まない） | S68。勢いのあるジェスチャーのときだけ 80% 程度を報いとして足す（Music の例） |
-| 開く動き | damping 100%・response 0.35 s | 100% は S68。0.35 s は本 skill の目安（出典なし） |
-| 払って閉じる動き | damping 80%・response 0.35 s・離した時の速度を引き継ぐ | 80% は S68。0.35 s は本 skill の目安（出典なし） |
+| 開く動き | 弾まない（damping 100% 相当）・0.35 s・ease-out（CSS の遷移） | 100% は S68。0.35 s・ease-out は本 skill の目安（出典なし）。CSS の曲線は初速度を引き継げない（S67） |
+| 払って閉じる動き | 離した位置と速度で投影して閉じるか戻すかを決め、現在位置から 0.35 s の遷移で動く。80% の弾みと速度の引き継ぎは、コード例では実装しない | 80% は S68（Music の例）。0.35 s は本 skill の目安（出典なし）。速度を引き継ぐのはスプリング（S67） |
 | 投影位置 | 離した時の位置 + 速度 x 0.2 s で開閉を決める | 考え方は S68（速度から到達位置を投影）。0.2 s は本 skill の目安（出典なし） |
 | ボタンの押下 | 色の変化 0.1 s | 本 skill の目安（出典なし）。即座に応答する（S68） |
-| 中断 | 動作中でも次の操作を受け付ける。速度を引き継ぐ | S56、S67、S68 |
-| 完了待ち | 設定した長さが終わるのを待たない | S67（減衰が収まるのを待たない） |
-| 開閉時の扱い | 開いたらフォーカスを閉じるボタンへ移し、背景を操作対象から外す。Escape で閉じ、閉じたら開いたボタンへ戻す。`role="dialog"` と `aria-modal` を付ける | 本 skill の実装の目安（出典なし。台帳に根拠となる原文は無い） |
+| 中断 | 動作中でも次の操作を受け付ける。遷移は現在位置から新しい目標へ向かう（速度は引き継がない） | S56、S68（絶えず向きを変えられること）。速度の引き継ぎはスプリングの性質で、CSS の遷移では得られない（S67） |
+| 完了待ち | 閉じる遷移の完了を待たずに、次の操作（再び開く）を受け付ける | S67（減衰が収まるのを待たない）、S56 |
+| 開閉時の扱い | `<dialog>` と `showModal()` を使う。フォーカスの循環（Tab・Shift+Tab がシートの外へ抜けない）・Escape で閉じる・背景の操作不可は標準動作に任せる。閉じたら開いたボタンへフォーカスを戻す（標準動作で戻らない場合だけコードで補う） | 本 skill の実装の目安（出典なし。標準動作は HTML の仕様に基づき、台帳に原文は無い） |
+| 設定が途中で変わったとき | CSS のメディアクエリが自然に追従する（JS のタイマーと change ハンドラーは使わない）。ドラッグ中に有効になったら、次の pointermove でドラッグを中断し、開いた状態を維持する（投影位置では決めない） | 本 skill の実装の目安（出典なし）。考え方は S55、判定の API は S73 |
 | 中断された操作 | ポインターの操作が中断（pointercancel）されたら、離したときと同じ扱いで位置を決める | 本 skill の実装の目安（出典なし） |
-| 設定が途中で変わったとき | 動きを減らす設定が、移動中・ドラッグ中に有効になったら、実行中のフレームを止め、ドラッグを中断してキャプチャを解放し、現在の開閉状態の最終位置へ切り替える（ドラッグ中でも投影位置では決めず、現在の状態を維持）。閉じている状態は、フェードで消えてから位置を戻す | S55（移動をフェードに置き換える）。設定の変更を受け取る実装は本 skill の目安（出典なし）。判定の API は S73 |
-| ポインターの入力 | 最初のポインターと主ボタンだけを受け付ける。2 本目の指・別のポインターの move と up は無視する。Escape や閉じるボタンが押されたらドラッグを中断する | 本 skill の実装の目安（出典なし） |
+| ポインターの入力 | 最初のポインターと主ボタンだけを受け付ける。別のポインターの move と up は無視する。Escape などで閉じたら、ドラッグも中断する | 本 skill の実装の目安（出典なし） |
 | つまみの面 | 24 px 以上。閉じるボタン（44 px 以上）を別経路として置く | 24 x 24 CSS px は S72（2.5.8）、44 は S57。ジェスチャーに別経路を置く考え方は S25、S55 |
-| 動きを減らす設定での閉じ方 | フェードで消えてから位置を戻す。0.15 s。ドラッグによる移動は止め、つまみは操作対象にしない（閉じるボタンが別経路） | S55（移動をフェードに置き換える）。0.15 s は本 skill の目安（出典なし） |
+| 動きを減らす設定での開閉 | 移動なしの 0.15 s のフェード（CSS だけ）。ドラッグによる移動は止め、つまみは操作対象にしない（閉じるボタンが別経路） | S55（移動をフェードに置き換える）。0.15 s は本 skill の目安（出典なし） |
 | 離す前の静止 | 最後の移動から 80 ms を超えて静止してから離したら、速度を 0 として開閉を決める | 本 skill の目安（出典なし）。古い速度で閉じる誤りを防ぐ |
+| 非対応のブラウザ | `@starting-style` や `allow-discrete` が効かない場合は、アニメーションなしで開閉する（壊れない） | 時点情報（2026-11-15）。対応状況は台帳に出典が無い |
 | 直線的な動き | 回転する読み込み指標のような場面だけ | 直線の動きは特殊な道具で、移動には慎重に（S67） |
 | 動きを減らす設定 | 移動・拡大縮小・周辺の動きを減らし、フェードに置き換え、弾みを抑える | S55。Web の判定は `prefers-reduced-motion`（S73） |
 | 自動の動き | 5 秒を超えて自動で始まる動きには停止手段 | S72（2.2.2）。秒数はそこで定義された値 |
 | 点滅 | 1 秒に 3 回を超える点滅を作らない | S72（2.3.1） |
 
-CSS の cubic-bezier による遷移は、初速度を表せない（ease in/out と同じ理由。S67 の考え方に基づく本 skill の整理）。ジェスチャーの終わりから動きへ引き継ぎたい場面は、スプリング相当の計算を自前で書くか、プラットフォームのスプリングを使う。
+CSS の cubic-bezier や ease-out の遷移は、初速度を表せない（ease in/out と同じ理由。S67 の考え方に基づく本 skill の整理）。ジェスチャーの終わりの速度を動きへ引き継ぎたい場面は、スプリング相当の計算を自前で書くか、プラットフォームのスプリングを使う。このコード例は、離した速度を「閉じるか戻すかの判定」にだけ使う。
 
 コントラスト比（WCAG の相対輝度式で計算。基準 4.5:1、非文字 3:1。S72）:
 
@@ -110,10 +113,10 @@ CSS の cubic-bezier による遷移は、初速度を表せない（ease in/out
 
 ## コード断片
 
-ボトムシートの試作（一覧画面 + 開閉するシート）。外部のライブラリ・フォント・計測は使わない。計算は自前で書く。動きを減らす設定では移動をやめ、短いフェードに置き換える。
+ボトムシートの試作（一覧画面 + 開閉するシート）。シートはネイティブの `<dialog>` で作り、開閉のアニメーションは CSS の遷移に寄せる。JS は、ドラッグで閉じる操作だけに使う。外部のライブラリ・フォント・計測は使わない。
 
 ```html
-<main id="page" class="page">
+<main class="page">
   <h1>ミズヤリ</h1>
   <ul class="plants">
     <li>モンステラ <span>次の水やり日 6 月 9 日</span></li>
@@ -121,84 +124,53 @@ CSS の cubic-bezier による遷移は、初速度を表せない（ease in/out
   </ul>
   <button id="open" class="btn" type="button">詳細を開く</button>
 </main>
-<section id="sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" inert>
+<dialog id="sheet" class="sheet" aria-labelledby="sheet-title">
   <div id="grab" class="grab" aria-hidden="true"></div>
   <h2 id="sheet-title">モンステラ</h2>
   <p>次の水やり日は 6 月 9 日です。</p>
-  <button id="close" class="btn" type="button">閉じる</button>
-</section>
+  <form method="dialog"><button class="btn" type="submit" autofocus>閉じる</button></form>
+</dialog>
 <script>
-const page = document.getElementById('page');
 const sheet = document.getElementById('sheet');
 const openBtn = document.getElementById('open');
-const closeBtn = document.getElementById('close');
 const grab = document.getElementById('grab');
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-const CLOSED = 400;                       // シートを画面外に置く位置（px）
+const H = 360;                            // シートの高さ（px）。ドラッグで動かせる最大量
 const STILL = 80;                         // ms。これ以上静止してから離したら速度を 0 にする。本 skill の目安（出典なし）
-let y = CLOSED, v = 0, target = CLOSED, last = 0, raf = 0, fade = 0;
-let k = 0, c = 0, isOpen = false, drag = null;
-function tune(zeta, response) {           // 本 skill の実装例。response = 固有周期（s）として扱う
-  const w = (2 * Math.PI) / response; k = w * w; c = 2 * zeta * w;
-}
-function draw() { sheet.style.transform = 'translateY(' + y + 'px)'; }
-function step(t) {
-  const dt = Math.min((t - last) / 1000, 1 / 30); last = t;
-  v += (-k * (y - target) - c * v) * dt;  // 向きを変えても y と v をそのまま引き継ぐ
-  y += v * dt; draw();
-  if (Math.abs(y - target) < 0.5 && Math.abs(v) < 5) { y = target; v = 0; draw(); raf = 0; return; }
-  raf = requestAnimationFrame(step);
-}
-function setOpen(open) {                  // 背景の操作を止め、フォーカスを移す
-  if (open === isOpen) return;
-  isOpen = open; sheet.inert = !open; page.inert = open;
-  (open ? closeBtn : openBtn).focus({ preventScroll: true });
-}
-function endDrag() {                      // ドラッグを中断し、ポインターキャプチャを解放する
+let drag = null, v = 0;
+
+openBtn.addEventListener('click', () => { if (!sheet.open) sheet.showModal(); });   // 閉じるのは form の method="dialog"
+sheet.addEventListener('close', () => {
+  stopDrag();                             // Escape などで閉じたとき、ドラッグを残さない
+  if (document.activeElement === document.body) openBtn.focus({ preventScroll: true });   // 標準動作で戻らない場合だけ補う
+});
+function stopDrag() {                     // ドラッグを終え、移動の指定を CSS に戻す
   if (!drag) return;
   try { grab.releasePointerCapture(drag.id); } catch (err) { /* 既に解放されている */ }
-  drag = null;
+  drag = null; sheet.classList.remove('dragging'); sheet.style.transform = '';
 }
-function go(to, zeta) {
-  const open = (to === 0);
-  endDrag(); clearTimeout(fade);          // Escape や閉じるボタンがドラッグ中に押されても、ドラッグを残さない
-  setOpen(open); sheet.classList.toggle('shown', open);
-  target = to; tune(zeta, 0.35);
-  if (reduce.matches) {                   // 移動の代わりにフェード（CSS 側）。閉じるときは消えてから位置を戻す
-    cancelAnimationFrame(raf); raf = 0; v = 0;
-    if (open) { y = 0; draw(); } else { fade = setTimeout(() => { y = CLOSED; draw(); }, 150); }
-    return;
-  }
-  last = performance.now(); if (!raf) raf = requestAnimationFrame(step);
-}
-function settle() {                       // 移動中・ドラッグ中に「動きを減らす」が有効になったとき
-  cancelAnimationFrame(raf); raf = 0; v = 0;
-  endDrag(); clearTimeout(fade);          // ドラッグ中だった場合、開閉は投影位置で決めず、現在の状態（isOpen）を維持する
-  sheet.classList.toggle('shown', isOpen);
-  if (isOpen) { y = 0; draw(); }          // 開いている状態の最終位置へ（移動は伴わない）
-  else { fade = setTimeout(() => { y = CLOSED; draw(); }, 150); }   // 閉じている状態は、フェードで消えてから位置を戻す
-}
-reduce.addEventListener('change', () => { if (reduce.matches) settle(); });
-openBtn.addEventListener('click', () => go(0, 1));      // 弾まない
-closeBtn.addEventListener('click', () => go(CLOSED, 1));
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen) go(CLOSED, 1); });
-
 grab.addEventListener('pointerdown', (e) => {
   // 動きを減らす設定・二重の pointerdown（2 本目の指）・主ボタン以外は無視する（閉じるボタンが別経路）
   if (reduce.matches || drag || !e.isPrimary || e.button !== 0) return;
   grab.setPointerCapture(e.pointerId);
-  drag = { id: e.pointerId, dy: e.clientY - y, py: e.clientY, pt: e.timeStamp };
-  v = 0; cancelAnimationFrame(raf); raf = 0; });
-grab.addEventListener('pointermove', (e) => { if (!drag || e.pointerId !== drag.id) return;
-  y = Math.min(Math.max(e.clientY - drag.dy, 0), CLOSED); draw();
+  drag = { id: e.pointerId, y0: e.clientY, dy: 0, py: e.clientY, pt: e.timeStamp };
+  v = 0; sheet.classList.add('dragging'); });
+grab.addEventListener('pointermove', (e) => {
+  if (!drag || e.pointerId !== drag.id) return;
+  if (reduce.matches) { stopDrag(); return; }   // ドラッグ中に「動きを減らす」が有効になったら中断し、開いた状態を維持する（投影位置では決めない）
+  drag.dy = Math.min(Math.max(e.clientY - drag.y0, 0), H);
+  sheet.style.transform = 'translateY(' + drag.dy + 'px)';
   v = (e.clientY - drag.py) / Math.max((e.timeStamp - drag.pt) / 1000, 0.001);
   drag.py = e.clientY; drag.pt = e.timeStamp; });
-function release(e) { if (!drag || e.pointerId !== drag.id) return;
-  if (e.timeStamp - drag.pt > STILL) v = 0;            // 止まってから離したら、古い速度を使わない
-  endDrag();
-  go(y + v * 0.2 > CLOSED / 2 ? CLOSED : 0, 0.8); }   // 離した速度から投影し、少し弾ませる
+function release(e) {
+  if (!drag || e.pointerId !== drag.id) return;
+  if (e.timeStamp - drag.pt > STILL) v = 0;     // 止まってから離したら、古い速度を使わない
+  const closing = drag.dy + v * 0.2 > H / 2;    // 離した位置 + 速度 x 0.2 s で投影する（0.2 s は本 skill の目安）
+  stopDrag();                                   // 以降の動きは CSS の遷移（現在位置から）に任せる
+  if (closing) sheet.close();
+}
 grab.addEventListener('pointerup', release);
-grab.addEventListener('pointercancel', release);      // 中断された場合も、離したときと同じ扱い（投影位置で開閉を決める）
+grab.addEventListener('pointercancel', release);   // 中断された場合も、離したときと同じ扱い
 </script>
 ```
 
@@ -237,10 +209,21 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 16px; }  
   background: var(--accent); color: var(--on-accent); font-size: 17px; font-weight: 600;
   transition: filter 0.1s; }                       /* 押下は色の変化のみ。0.1s は本 skill の目安 */
 .btn:active { filter: brightness(0.9); }
-.sheet { position: fixed; left: 0; right: 0; bottom: 0; height: 360px; box-sizing: border-box;
-  max-width: 480px; margin: 0 auto; padding: 0 20px 12px;
-  background: var(--surface); color: var(--text); border-top: 1px solid var(--line);
-  border-radius: 20px 20px 0 0; transform: translateY(400px); }
+
+/* シート。[open] が無い状態が「閉じた状態」で、下に隠れる。[open] との差を遷移で動かす */
+.sheet { position: fixed; inset: auto 0 0 0; box-sizing: border-box; width: 100%; max-width: 480px;
+  height: 360px; max-height: none; margin: 0 auto; padding: 0 20px 12px;
+  border: 0; border-top: 1px solid var(--line); border-radius: 20px 20px 0 0;
+  background: var(--surface); color: var(--text);
+  transform: translateY(100%);
+  transition: transform 0.35s ease-out, display 0.35s allow-discrete, overlay 0.35s allow-discrete; }   /* 0.35 s・ease-out は本 skill の目安 */
+.sheet[open] { transform: translateY(0); }
+@starting-style { .sheet[open] { transform: translateY(100%); } }   /* 開く直前の状態。ここから下からの移動が始まる */
+.sheet.dragging { transition: none; }                               /* ドラッグ中は指に追従させる */
+.sheet::backdrop { background: rgb(0 0 0 / 0);
+  transition: background 0.35s, display 0.35s allow-discrete, overlay 0.35s allow-discrete; }
+.sheet[open]::backdrop { background: rgb(0 0 0 / 0.4); }
+@starting-style { .sheet[open]::backdrop { background: rgb(0 0 0 / 0); } }
 .sheet h2 { font-size: 22px; line-height: 28px; font-weight: 700; margin: 0 0 8px; }   /* Title 2 の 22 / 28 pt・Bold を px に読み替え（S51） */
 .sheet p { margin: 0 0 24px; }
 /* つまみは補助。閉じるボタンという別経路があるので、つまみの面は WCAG 2.5.8 の最低線 24 px に合わせる */
@@ -249,11 +232,15 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 16px; }  
   border-radius: 3px; background: var(--line); }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
+/* 動きを減らす設定: 移動をやめ、短いフェードだけにする。CSS のメディアクエリなので、設定の途中変更にも追従する */
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
-  .sheet { opacity: 0; transition: opacity 0.15s; }    /* 移動の代わりにフェード */
-  .grab { pointer-events: none; cursor: default; }     /* ドラッグで動かさない。つまみは操作対象にしない */
-  .sheet.shown { opacity: 1; }
+  .sheet { transform: none; opacity: 0;
+    transition: opacity 0.15s, display 0.15s allow-discrete, overlay 0.15s allow-discrete; }   /* 0.15 s は本 skill の目安 */
+  .sheet[open] { transform: none; opacity: 1; }
+  @starting-style { .sheet[open] { transform: none; opacity: 0; } }
+  .sheet::backdrop { transition: background 0.15s, display 0.15s allow-discrete, overlay 0.15s allow-discrete; }
+  .grab { pointer-events: none; cursor: default; }   /* ドラッグで動かさない。つまみは操作対象にしない */
 }
 ```
 
@@ -269,11 +256,11 @@ h1 { font-size: 34px; line-height: 41px; font-weight: 700; margin: 0 0 16px; }  
 
 ## 点検
 
-- アクセシビリティ: 動きを減らす設定で移動が消え、開くときも閉じるときもフェードだけになる。閉じる手段がジェスチャーだけでない。動きを減らす設定ではつまみで動かせない。開いたシートへフォーカスが移り、Escape で閉じ、閉じたら元のボタンへ戻る。シートが閉じている間と、開いている間の背景は操作の対象外にする。1 秒に 3 回を超える点滅が無い（S55、S72）
-- 可読性: 4 通りの配色で上の比率を満たす。動いている最中も文字が読める
-- やり直し: 開く途中・閉じる途中のどちらでも、次の操作で向きを変えられ、位置が飛ばない。素早く動かしたあと止めてから離したときは、古い速度で閉じない。押しっぱなしで画面が固まらない（S68）
-- 失敗パターン: 全てに弾みを付けていないか（約 0.4 超は誇張。S67）。待たせる動きが無いか。動きが落ちたフレームを隠していないか。遅い読み込みや落ちたフレームは、理由を言えなくても体験を悪くする（S70）
-- 推測の明示: 0.35 s・0.2 s・0.1 s・0.15 s は本 skill の目安で、実機の手触りで調整する。端末の性能・ブラウザの実装で結果が変わる
+- アクセシビリティ: 動きを減らす設定で移動が消え、開くときも閉じるときもフェードだけになる（CSS だけで切り替わり、設定の途中変更にも追従する）。閉じる手段がジェスチャーだけでない。動きを減らす設定ではつまみで動かせない。開くとフォーカスがシートの中へ移り、Tab・Shift+Tab がシートの外へ抜けず（標準のモーダル）、Escape で閉じて、元のボタンへ戻る。1 秒に 3 回を超える点滅が無い（S55、S72）
+- 可読性: 4 通りの配色で上の比率を満たす。動いている最中も文字が読める。背景は半透明の暗い幕で覆うが、幕の下は操作できない状態なので、読めなくてよい
+- やり直し: 開く途中・閉じる途中のどちらでも、次の操作で向きを変えられ、現在位置から動く（速度は引き継がない）。素早く動かしたあと止めてから離したときは、古い速度で閉じない。押しっぱなしで画面が固まらない（S68）
+- 失敗パターン: 全てに弾みを付けていないか（約 0.4 超は誇張。S67）。待たせる動きが無いか。動きが落ちたフレームを隠していないか。遅い読み込みや落ちたフレームは、理由を言えなくても体験を悪くする（S70）。手書きのシート（独自の開閉状態・タイマー・手動の inert）は、設定の途中変更やフォーカスの取りこぼしを起こしやすい。標準の `<dialog>` に寄せる（本 skill の整理）
+- 推測の明示: 0.35 s・0.2 s・0.1 s・0.15 s・80 ms は本 skill の目安で、実機の手触りで調整する。端末の性能・ブラウザの実装で結果が変わる。`@starting-style` と `allow-discrete` の対応状況は、台帳に出典が無い（2026-11-15 時点）。非対応のブラウザでは、アニメーションなしで開閉する
 
 ## この例の出典
 
