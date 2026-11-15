@@ -114,6 +114,10 @@ fun YomikuraTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
 
 ```kotlin
 // BookBrowser.kt: 窓の大きさで 1 ペインと 2 ペインを切り替える
+// WindowSizeClass は window-core 側の型。material3 側（androidx.compose.material3.windowsizeclass）の同名の型と取り違えない。
+// パッケージ名は未照合（未コンパイル）。実装前に import 補完か公式の文書で確かめる
+import androidx.window.core.layout.WindowSizeClass
+
 data class Book(val id: Int, val title: String, val author: String, val shelf: String)
 
 @Composable
