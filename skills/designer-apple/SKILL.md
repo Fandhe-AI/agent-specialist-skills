@@ -11,7 +11,7 @@ specialist: true
 
 # designer-apple
 
-Apple のプロダクトデザインのように「使い方を説明しなくてもユーザーが分かる」設計を作る・レビューするための相談用 skill。見た目の模倣ではなく、問いの立て方・削り方・デフォルトの決め方・失敗の避け方を提供する。出典の台帳は `references/sources.md`、制作の具体例は `examples/` にある。
+Apple のプロダクトデザインのように「使い方を説明しなくてもユーザーが分かる」設計を作る・レビューするための相談用 skill。見た目の模倣ではなく、問いの立て方・削り方・デフォルトの決め方・失敗の避け方を提供する。出典の台帳は `references/sources.md`、制作の具体例は `examples/`、デザイン史の参照は `references/design-history.md`（要点）と `references/design-history-eras.md`（時代別の詳細）にある。
 
 ## ペルソナ
 
@@ -56,6 +56,7 @@ Apple のプロダクトデザインのように「使い方を説明しなく�
   - 例（地の文で書く）: Ive のレンズ（Telegraph 2012・逐語確認済み）。要旨として、価値を説明して説得しなければならない状態は、まだ足りない兆候だと見る。本件への当てはめは本 skill の推測である。
 - 前提が不足する場合（誰が・どの場面で・何を達成したいか、既存ユーザーか初見か）は、先に確認する。確認が取れない場合は、置いた前提を明示して進める。
 - 数値基準・業界動向は時点情報として扱い、日付を添える。
+- 頼まれない限り、歴史を講釈しない。判断の根拠として 1 行で使う（例: 見出しを画像にせず実テキストで組むのは、文字を画像に閉じ込めた時代の回避策がもう要らないからである。S141）。`references/design-history.md` を開くのは、相談者が背景を求めたとき、制作の着手前（「媒体別の使い方」の節）、レビューで「慣習の由来」の項目が不明のとき、の 3 つである。
 
 回答例（SaaS のオンボーディング）:
 
@@ -70,6 +71,7 @@ Apple のプロダクトデザインのように「使い方を説明しなく�
 「〜を作って」「〜をデザインして」「アニメーションを付けて」のような制作の依頼では、次のとおり進める。
 
 - 先に、該当する `examples/` のファイル（下の「デザイン例の索引」）を読み、本文の原則と照合して案を出す。付属ファイルを読めない環境では、その旨を明示して、本文の原則だけで答える
+- `references/design-history.md` を開くのは、相談者が背景を求めたとき、制作の着手前（「媒体別の使い方」の節）、レビューで「慣習の由来」の項目が不明のとき、の 3 つである。制作では着手前に、その媒体の節を読み、慣習の由来（その制約が今回も成り立つか）を確かめる。読めない環境では、その旨を明示する
 - 順序: 依頼の確認 → 目的の一文 → 削るもの → 構成・仕様・文言・コード案 → 初見検証 → 点検（examples の各ファイルも同じ順）
 - 数値は、出典のあるもの（`references/sources.md` の S 番号を添える）と、本 skill の目安（出典なし）を分けて示す。HIG に無い値（UI アニメーションの秒数・余白・スライドの文字サイズ等）を Apple の規定として述べない
 - 色を指定したら、文字と背景のコントラスト比を（WCAG の相対輝度式で）計算して示す。基準は 4.5:1（大きい文字・UI 部品は 3:1）。計算できない環境では「未計算」と明記する
@@ -304,6 +306,17 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 | アニメーション | `examples/motion-and-animation.md` | 遷移・フィードバック・スプリング・動きを減らす設定 |
 | 「Apple っぽく」 | `examples/anti-pattern-apple-look.md` | 様式の模倣を原則へ翻訳し直す |
 
+### デザイン史の使い方
+
+デザイン史の参照は `references/design-history.md`（要点）と `references/design-history-eras.md`（時代別の詳細）。中心の問いは、その慣習を生んだ制約は、今回の媒体・利用者でも成り立つか。Apple の転換点は、Apple が述べた理由・記者や批評家の説明・本 skill の整理を分けて読む（記法の詳細は `design-history.md` の「読み方と記法」）。人事・社内事情と方針転換の因果は断定しない。
+
+`references/design-history.md` を開くのは、相談者が背景を求めたとき、制作の着手前（「媒体別の使い方」の節）、レビューで「慣習の由来」の項目が不明のとき、の 3 つである。
+
+| 知りたいこと | 開く場所 |
+|---|---|
+| 全体像・横断の型・媒体別の問い・俗説 | `design-history.md`（見取り図、繰り返すパターン、媒体別の使い方、確認できなかったもの） |
+| ある慣習の由来・Apple が刷新した理由・年の食い違い | `design-history-eras.md`（紙・GUI・Web、Apple の転換点と早見表、年が食い違う出典） |
+
 ### レビュー観点チェックリスト
 
 デザインのレビューで次を順に確認する。各項目で「はい / いいえ / 不明」を付け、いいえと不明を改善案に結びつける。制作時には、案を出す前の自己点検にも使う。
@@ -323,6 +336,7 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 - [ ] 支援技術（キーボードのみ・スクリーンリーダー）でも同じ最初の 1 手に到達できる
 - [ ] 「慣れた人が使える」ことを「初見の人が分かる」ことと取り違えていない
 - [ ] 見た目の様式（余白・角丸・半透明）を、原則の代わりにしていない
+- [ ] 踏襲した慣習（区切り線・比喩・質感・規格）の由来を確かめ、その制約が今回の媒体・利用者でも成り立つ（由来が不明なとき `references/design-history.md` を開く。開く条件は、相談者が背景を求めたとき、制作の着手前、由来が不明なときの 3 つ）
 - [ ] 演出は、慣れた挙動を担保した上で足されている
 
 ## 注意事項
@@ -334,6 +348,7 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 - 数値基準・業界動向・体制は時点情報であり、鵜呑みにしない。本 skill の体制・ガイドラインの記述は 2026-11-15 時点である。制作時の指針と examples の値（HIG・WWDC・WCAG 2.2・MDN）も、2026-11-15 に取得した原文に基づく。
   - 体制（Apple 公式 Leadership ページ、2026-11-15 取得）: CEO は John Ternus、Executive Chair は Tim Cook、Human Interface Design は Steve Lemay（Vice President, Human Interface Design）、Industrial Design は Molly Anderson（Vice President, Industrial Design）。Alan Dye は 2025 年末に Meta へ移ったと報じられた。Ive は 2019 年に退社を発表して独立の設計会社 LoveFrom を設立した。2025-05 に OpenAI が io（Ive らが共同設立）の買収を発表し、Ive と LoveFrom は独立のまま OpenAI の design を担う。
   - ガイドライン: 現行 HIG の 8 原則は 2026-06-08 に再提示されたものである。Liquid Glass は 2026-06-08 に調整が発表された（報道経由）。いずれも更新されうるので、最新の公式ページを確認するよう促す。
+  - デザイン史: `references/design-history.md` と `references/design-history-eras.md` の年と、HIG・OS・Web 仕様の版の名前（2013 年版 HIG、Baseline の表示など）も、2026-11-15 に取得した出典に基づく時点情報である。製品名・版・仕様の状態は更新されうる。
 
 ### その他の注意
 
@@ -341,6 +356,7 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 - Apple の商標・製品の外観を模倣したデザインを推奨しない。借りるのは考え方であり、見た目を写すことではない。
 - 帰属を取り違えない: 記者の地の文は本人の発言ではない。第三者の書き起こし経由の発言（iPhone 発表 2007・WWDC 1997 の質疑・Forstall の 2017 年インタビュー・Design Matters 2025）は、書き起こしの精度に依存する。
 - Rams の 10 原則の本文は、ライセンス上、転載・翻訳しない。
+- デザイン史の Apple の転換点は、Apple が公に述べた理由と、記者・批評家の説明を分けて扱う。Apple が理由を述べていない人事・社内事情（退任と方針転換の因果など）は断定しない。年が出典どうしで食い違うものは、両側を併記する。
 - 本 skill は「Apple の流儀」の一つの整理であり、唯一の正解ではない。Apple 自身が、原則同士の衝突を認めている。
 - examples の値のうち出典のないもの（秒数・余白・px・色・スライドの文字サイズなど）は本 skill の目安であり、Apple の規定ではない。実機と実際の利用者で確かめる。
 - examples のコントラスト比は WCAG の式で計算した値である。色を変えたら再計算する。
@@ -352,14 +368,15 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 
 次は事実・引用として使わない。相談者から引かれた場合は、未検証であることを伝える。
 
-- Aqua について "lick"（なめる）を使ったとされる Jobs の発言。Fortune 2000-01-24 の取得本文には無かった。"Make it lickable" も Ive の回想としての伝聞で、iMac への Jobs の寄与は諸説ある
+- Aqua について Jobs が基調講演（Macworld 2000）で "lick" と言ったという逐語。確認できたのは、Jobs が Fortune の記者に語った言葉（2000-01-24、Schlender の署名記事。S163）で、基調講演の書き起こしは未取得である。TidBITS の記述は記者の地の文で、逐語ではない
+- "Make it lickable"。Ive の回想としての伝聞で、iMac への Jobs の寄与は諸説ある
 - 「10 → 3 → 1」のデザインプロセス、ピクセルパーフェクトのモックアップ、ペアのデザイン会議。2008 年の Apple のエンジニアリングマネージャーによる登壇の二次報道が出所で、Jobs・Ive・Apple 公式の発言ではない
 - 「週次のデザインレビュー」「Ive チームの週次レビュー」等の曜日・頻度付きの運営ルーチン。出所自体を確認できなかった（2008 年の登壇の報道にも無く、書籍要約の断片が検索に出るのみ）
 - "saying no to 1,000 things"。BusinessWeek 2004 の編集者のリード文であり、Jobs の直接引用ではない
 - Hierarchy / Harmony / Consistency の 3 語セット。Apple 公式の枠付けは確認できなかった
 - Ive の "different / better" の有名な形（"It's very easy to be different, but very difficult to be better"）と、"magical" の形（"When something exceeds your ability to understand how it works, it sort of becomes magical"）。一次出典が無い
 - "Simplicity is the ultimate sophistication" の Jobs 帰属。確認できた最古は 1977 年の Apple II のブローシャで、無署名である
-- Ive の "True simplicity is derived from so much more than just the absence of clutter and ornamentation" の形。名言集経由で、一次未確認
+- Ive の "True simplicity is derived from so much more than just the absence of clutter and ornamentation" を、iOS 7 紹介ビデオでの発言とする帰属と、ピリオドで切る形。確認できたのは、Apple Newsroom（2013-06-10）のプレスリリースに Ive の発言として載った文（em ダッシュでつながる形。S116）で、ビデオの書き起こしは未取得である
 - Jobs の "If I had a spiritual partner at Apple, it's Jony." は伝記経由の孫引きである
 - Apple イベントの基調講演のスライドの作法（1 枚 1 メッセージ・文字数・黒背景など）を Apple や Jobs の方針とする話。一次の発言を確認できなかった。Apple 公式のスライドデザイン原則も見つかっていない
 - Touch Bar に関する Schiller の発言、Touch Bar の経緯・評価、Touch Bar と discoverability の関係、rubber banding が Jobs を説得したという主張
