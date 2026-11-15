@@ -14,7 +14,7 @@ downstream リポジトリでは **1 agent 1 skill** の原則で、導入した
 回答させ、main 自身のトークン消費を抑える。この sub-agent 生成・委譲設定の初期セットアップを
 担うのが本リポジトリの中核スキル `init-claude-specialist` である。
 
-このリポジトリが配布する実スペシャリスト skill は 1 件（`designer-apple`）。箱
+このリポジトリが配布する実スペシャリスト skill は 2 件（`designer-apple`・`designer-typography`）。箱
 （`init-claude-specialist` と著作規約）を整備したうえで、スペシャリスト skill は今後も追加していく。
 
 ## Repository Structure
@@ -34,6 +34,12 @@ skills/                               -- スキル本体（各ディレクトリ
       design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
       design-history-eras.md          -- デザイン史の時代別の詳細（紙・GUI・Web・Apple の転換点と理由）
     examples/                         -- 制作例（LP・スライド・アプリ画面・ダッシュボード・ハードウェア UI・アニメーション・アンチ例。9 件）
+  designer-typography/                -- タイポグラファー・エディトリアルデザイナー（文字組・紙面設計。スペシャリスト skill）
+    SKILL.md
+    references/
+      sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
+      design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
+    examples/                         -- 制作例（技術スライド・A4 報告書・イベントポスター・長文記事・二言語マニュアル。5 件）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
@@ -73,6 +79,7 @@ skills/                               -- スキル本体（各ディレクトリ
   skills/
     init-claude-specialist            -- ../../skills/init-claude-specialist への symlink
     designer-apple                    -- ../../skills/designer-apple への symlink（スペシャリスト skill）
+    designer-typography               -- ../../skills/designer-typography への symlink（スペシャリスト skill）
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
     create-agent/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に Agent 雛形・配布対象外）
     create-skill/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に SKILL 雛形・配布対象外）
@@ -171,7 +178,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `out-of-scope-tracking.md` | implement-issue / implement-issue-tree / implement-review / implement-review-pr / create-pr、実装・修正・レビューを行う全 Agent | 実装対象外の追跡規約（スコープ外事項を見つけたら Issue で追跡し、現在の PR に混入させない） |
 | `tool-neutral-skills.md` | `skills/` のスペシャリスト skill（`init-claude-specialist` は適用外） | 配布スペシャリスト skill を Claude Code / Codex / OpenCode のどれで読まれても同じ内容で使える書き方（ツール固有名・置換変数・固有表記を本文に書かない） |
 
-## Current Skills (2)
+## Current Skills (3)
 
 ### セットアップ (1)
 
@@ -179,11 +186,12 @@ downstream リポジトリの CLAUDE.md に記載される）。
 |--------|------|
 | init-claude-specialist | 導入済みスペシャリスト skill を検出し、1 agent 1 skill で専用 sub-agent・委譲 rule を生成する |
 
-### スペシャリスト (1)
+### スペシャリスト (2)
 
 | スキル | 説明 |
 |--------|------|
 | designer-apple | Apple 流プロダクトデザイン相談役。説明不要の UI・HIG・Liquid Glass・Jony Ive 等の考え方でデザインをレビュー・サイト/スライド等を制作 |
+| designer-typography | タイポグラファー・エディトリアルデザイナー。和文組版（JLREQ・約物・禁則）・グリッド・行長行送り・Web の本文組版・資料/ポスター/マニュアルの文字組を相談 |
 
 今後も追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
