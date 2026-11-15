@@ -144,7 +144,7 @@ def wilson(k, n, z=1.96):
     d = 1 + z * z / n
     c = (k / n + z * z / (2 * n)) / d
     h = z * sqrt(k / n * (1 - k / n) / n + z * z / (4 * n * n)) / d
-    return c - h, c + h
+    return max(0.0, c - h), min(1.0, c + h)  # 0 人・全員のとき 0〜1 を超えないようにする
 
 for t in sorted(correct):
     rs = [r for r in rows if r[0] == t]
