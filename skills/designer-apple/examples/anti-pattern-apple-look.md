@@ -142,7 +142,8 @@ body { margin: 0; background: var(--bg); color: var(--text);
 h1 { font-size: clamp(1.75rem, 6vw, 3rem); line-height: 1.25; font-weight: 700; margin: 0 0 1rem;
      text-wrap: balance; word-break: auto-phrase; }   /* 太字・左揃え。折り返しは目安の指定 */
 .nb { white-space: nowrap; }                       /* 金額と単位を分けない */
-.lead { font-size: 1.0625rem; line-height: 1.7; font-weight: 400; color: var(--text-2); margin: 0 0 2rem; }
+.lead { font-size: 1.0625rem; line-height: 1.7; font-weight: 400; color: var(--text-2); margin: 0 0 2rem;
+        word-break: auto-phrase; }   /* 狭い幅で「ます。」だけの行を作らない。lang="ja" の文書で効く目安の指定 */
 
 .card { padding: var(--pad); border-radius: var(--r); border: 2px solid var(--text-2); }
 .card .inner { border-radius: calc(var(--r) - var(--pad)); }       /* 入れ子: 外側 − 余白 = 内側 */

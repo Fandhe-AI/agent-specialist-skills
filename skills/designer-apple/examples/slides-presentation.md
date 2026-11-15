@@ -55,7 +55,7 @@
 
 ## 仕様
 
-寸法は 960 x 540 px を基準にした値（1920 x 1080 の半分）。コードでは、枠の幅に対する比率（cqw）で表す（48 px は 5cqw、28 px は 2.92cqw、20 px は 2.08cqw、余白 58 px は 6cqw）。
+寸法は 960 x 540 px を基準にした値（1920 x 1080 の半分）。コードでは、枠の幅に対する比率（cqw）で表す（48 px は 5cqw、28 px は 2.92cqw、注記 20 px 以上は 2.1cqw（20.16 px）、余白 58 px は 6cqw）。
 
 | 項目 | 値 | 根拠 |
 |---|---|---|
@@ -70,6 +70,7 @@
 | 棒グラフ | ゼロ起点。主観語を使わず実数値で書く | S59 |
 | 切替 | アニメーションなし | 本 skill の目安。必要ならフェードのみ（移動をフェードに置き換える考え方は S55） |
 | 周囲の余白 | 画面幅の 6% 以上 | 本 skill の目安（出典なし） |
+| 印刷・PDF | 用紙 960 x 540 px（16:9）・用紙の余白 0・1 枚 = 1 ページ。枚の周囲の余白は画面と同じく 6% | 本 skill の目安（出典なし）。用紙の指定が無いと、既定の用紙（Letter 縦など）の上部にだけ載る |
 | 見た目の一貫 | 同じ役割の要素は同じ位置・同じ見た目 | 同じ見た目は同じ挙動（S27 の転用） |
 
 発表で見せる姿と、読み返される姿は分ける。売り場向けの見せ方と実使用の場を分けるという Tog の見方（S35）に沿い、配布版には付録へ補足を足す。発表版は削ったまま保つ。
@@ -166,9 +167,16 @@ body { margin: 0; padding: 24px 12px; background: var(--surface); color: var(--t
 .bar-now { width: 100%; background: var(--line); }      /* 120 分 = 100%。ゼロ起点 */
 .bar-new { width: 25%; background: var(--accent); }     /* 30 分 = 25% */
 .num { font-weight: 700; }
-.slide .note { font-size: 2.08cqw; color: var(--text-2); margin-top: 3cqw; }          /* 注記 20 px 相当 */
+.slide .note { font-size: 2.1cqw; color: var(--text-2); margin-top: 3cqw; }           /* 注記 20 px 以上（960 px 幅で 20.16 px） */
 
-@media print { .frame { break-after: page; } }
+/* 印刷・PDF 配布: 用紙を 960 x 540 px（16:9）にし、1 枚 = 1 ページにする。用紙の既定（Letter 縦など）に任せない */
+@page { size: 960px 540px; margin: 0; }
+@media print {
+  body { padding: 0; background: var(--bg); }
+  .deck { gap: 0; }
+  .frame { break-after: page; }
+  .slide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }   /* 背景色を印刷に含める */
+}
 ```
 
 ## 初見検証
