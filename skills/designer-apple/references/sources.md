@@ -752,7 +752,7 @@
 > consider starting the label with a verb to help convey the button’s action
 
 - 本体掲載: いいえ（要旨・数値として使用）
-- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/motion-and-animation.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
+- 使用箇所: `examples/anti-pattern-apple-look.md`、`examples/app-empty-and-error-states.md`、`examples/app-onboarding.md`、`examples/app-settings.md`、`examples/web-landing-page.md`、SKILL.md（制作時の指針）
 - 媒体・日付: Apple Human Interface Guidelines「Buttons」
 - URL: https://developer.apple.com/design/human-interface-guidelines/buttons
 - 取得日: 2026-11-15
