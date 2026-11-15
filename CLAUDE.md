@@ -14,7 +14,7 @@ downstream リポジトリでは **1 agent 1 skill** の原則で、導入した
 回答させ、main 自身のトークン消費を抑える。この sub-agent 生成・委譲設定の初期セットアップを
 担うのが本リポジトリの中核スキル `init-claude-specialist` である。
 
-このリポジトリが配布する実スペシャリスト skill は 6 件（`designer-apple`・`designer-typography`・`designer-brand`・`designer-ux-research`・`designer-industrial`・`designer-material`）。箱
+このリポジトリが配布する実スペシャリスト skill は 7 件（`designer-apple`・`designer-typography`・`designer-brand`・`designer-ux-research`・`designer-industrial`・`designer-material`・`designer-dataviz`）。箱
 （`init-claude-specialist` と著作規約）を整備したうえで、スペシャリスト skill は今後も追加していく。
 
 ## Repository Structure
@@ -64,6 +64,12 @@ skills/                               -- スキル本体（各ディレクトリ
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
       design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
     examples/                         -- 制作例（Android の list-detail 画面・Button の仕様書・ダークテーマ方針・移行計画・デザイントークン。5 件）
+  designer-dataviz/                   -- データビジュアライゼーションデザイナー（統計グラフ・図表・ダッシュボードの図。スペシャリスト skill）
+    SKILL.md
+    references/
+      sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
+      design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
+    examples/                         -- 制作例（需要予測の不確実性帯・sparkline の一覧表・率のコロプレス・二軸の指数化・構成比の棒。5 件）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
@@ -108,6 +114,7 @@ skills/                               -- スキル本体（各ディレクトリ
     designer-ux-research              -- ../../skills/designer-ux-research への symlink（スペシャリスト skill）
     designer-industrial               -- ../../skills/designer-industrial への symlink（スペシャリスト skill）
     designer-material                 -- ../../skills/designer-material への symlink（スペシャリスト skill）
+    designer-dataviz                  -- ../../skills/designer-dataviz への symlink（スペシャリスト skill）
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
     create-agent/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に Agent 雛形・配布対象外）
     create-skill/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に SKILL 雛形・配布対象外）
@@ -206,7 +213,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `out-of-scope-tracking.md` | implement-issue / implement-issue-tree / implement-review / implement-review-pr / create-pr、実装・修正・レビューを行う全 Agent | 実装対象外の追跡規約（スコープ外事項を見つけたら Issue で追跡し、現在の PR に混入させない） |
 | `tool-neutral-skills.md` | `skills/` のスペシャリスト skill（`init-claude-specialist` は適用外） | 配布スペシャリスト skill を Claude Code / Codex / OpenCode のどれで読まれても同じ内容で使える書き方（ツール固有名・置換変数・固有表記を本文に書かない） |
 
-## Current Skills (7)
+## Current Skills (8)
 
 ### セットアップ (1)
 
@@ -214,7 +221,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 |--------|------|
 | init-claude-specialist | 導入済みスペシャリスト skill を検出し、1 agent 1 skill で専用 sub-agent・委譲 rule を生成する |
 
-### スペシャリスト (6)
+### スペシャリスト (7)
 
 | スキル | 説明 |
 |--------|------|
@@ -224,6 +231,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | designer-ux-research | UX リサーチャー（ユーザビリティ検証・情報設計）。ユーザビリティテスト・ヒューリスティック評価・インタビュー・カードソート・ツリーテスト・SUS を相談 |
 | designer-industrial | インダストリアルデザイナー（物理製品）。形・CMF（色・素材・仕上げ）・射出成形の抜き勾配・人間工学・使用誤り・修理しやすさを相談 |
 | designer-material | デザインシステム設計者（Material Design）。Material 3・Android/Compose・デザイントークン（DTCG）・コンポーネント仕様・ガバナンスを相談 |
+| designer-dataviz | データビジュアライゼーションデザイナー（統計グラフ・図表）。グラフの種類選定・軸と色・二軸・0 起点・色覚多様性・不確実性・sparkline・コロプレスを相談 |
 
 今後も追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
