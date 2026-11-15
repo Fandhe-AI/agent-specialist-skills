@@ -52,7 +52,7 @@
 | 部品 | 頻度 | 伝える変化 | 入り | 出 | 縮小版 | 根拠 |
 |---|---|---|---|---|---|---|
 | ボタンの押下 | 非常に高い（1 日数百回。本 skill の仮定） | 押下が受理された | `scale(0.97)`・100 ms・ease-out（short2） | 離すと 100 ms で戻る | 縮めない。明るさ（`filter`）の変化だけ（動きでなく色の変化で受理を伝える。S64） | 約 100 ms は S20、0.97 は S35（個人の経験則）。縮みを残す理由は下の「根拠の範囲」 |
-| ツールチップ | 中 | 補足が出た | 最初は 500 ms 待ってから、不透明度 150 ms（short3）。続きは遅延なし・動きなし | 不透明度 100 ms（short2） | 不透明度のみ（位置・拡大は元から無い） | 最初だけ遅延は S52。続きは動きなしが S37。500 ms は目安 |
+| ツールチップ | 中 | 補足が出た | 最初は 500 ms 待ってから、不透明度 150 ms（short3）。続きは遅延なし・動きなし | 不透明度 100 ms（short2） | 不透明度のみ（位置・拡大は元から無い）。WCAG 1.4.13 の 3 条件は下の表 | 最初だけ遅延は S52。続きは動きなしが S37。500 ms は目安。3 条件は S167 |
 | ドロップダウン（メニュー） | 中〜高 | 選択肢が、押したボタンの下から出た | 不透明度と 4 px の下方向の移動・150 ms（short3）・ease-out | 100 ms（short2） | 不透明度のみ。移動なし。キーボードで開いたときは動きなしの選択肢（下の「仕様の選択」） | 長さは S19・S21、出現が長いは S23、ボタンから広がるは S163（個人の主張）。4 px は目安 |
 | トースト | 低〜中 | 保存が済んだ | 不透明度と 8 px の上方向の移動・250 ms（medium1） | 200 ms（short4） | 不透明度のみ。移動なし | 入りが長いは S23（出現 300 ms・退場 200 または 250 ms の例）。長さは S19・S21。8 px は目安 |
 
@@ -61,6 +61,14 @@
 - イージングは ease-out を基本にする（S24）。値は `cubic-bezier(0, 0, 0, 1)`（Material Web の standard-decelerate。S29）。出（退場）も同じ曲線で、短くする。ease-in を退場に使うと反応が鈍く感じうる（S24）
 - 動かす性質は、不透明度と小さな移動に限る。拡大縮小は押下の 0.97 だけ（S36 は、出現をより高い初期の拡大率（0.9 以上）から始める、という個人の経験則）
 - 動きは中断できる。transition で書くと、途中でも最新の状態へ向かう（S43）。完了を待たせない（S68）
+- ツールチップは、WCAG 2.2 の SC 1.4.13 Content on Hover or Focus（レベル AA。S167）の 3 条件を満たす。ホバーかフォーカスで出る追加の内容に求められる条件で、この例の実装は次のとおり（動きを減らす設定でも同じ）:
+
+  | 条件（S167） | この例の実装 |
+  |---|---|
+  | 消せる（dismissible）: ポインタのホバーもキーボードのフォーカスも動かさずに消す手段 | Escape で、出ているツールチップを消す（`data-dismissed`）。いったん離れて、再びホバー・フォーカスしたら解く。ポインタもフォーカスも動かさない |
+  | ホバーできる（hoverable）: ポインタを追加の内容へ動かしても消えない | 出ている間はツールチップ自体もホバー対象（`.tip` の子）。ボタンとの 6 px の隙間は、透明の橋（`::before`）で埋める。見えない間は `visibility: hidden` で、背後を塞がない |
+  | 残る（persistent）: トリガーを外すか、利用者が消すまで残る | タイマーで消さない。ホバー・フォーカスを外すか Escape で消えるまで出ている |
+
 - 動きの完了前に次の操作を受け付ける（S68・S74）。閉じる遷移の間も、閉じた popover と `::backdrop` はポインタを受けない（`pointer-events: none`）。開閉ボタンやページを塞がない（本 skill の実装の防御。Chrome 156 では、この指定が無くても塞がなかった）
 - 動きを減らす設定では、位置・拡大縮小の動きを、不透明度の変化か即時の切り替えにする（必要性は S76・S79・S149。置き換えの表は本 skill の整理）
 
@@ -172,15 +180,19 @@ h1 { font-size: 24px; line-height: 32px; margin: 0 0 16px; }
 .btn-sub { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
 .btn:active { transform: scale(0.97); filter: brightness(0.92); }   /* 縮みと明るさ。動きを減らす設定では、明るさだけ残す */
 
-/* ツールチップ: 最初は 500 ms 待ち、不透明度 150 ms。続き（data-warm）は遅延も動きも無し */
+/* ツールチップ: 最初は 500 ms 待ち、不透明度 150 ms。続き（data-warm）は遅延も動きも無し。
+   WCAG 2.2 の 1.4.13（S167）の 3 条件: 出ている間はツールチップ自体もホバー対象（hoverable。ボタンとの 6 px の隙間は透明の橋で埋める）、
+   Escape で、フォーカスもポインタも動かさずに消せる（dismissible。data-dismissed）、トリガーを外すか消すまで残る（persistent。タイマーで消さない）*/
 .tip { position: relative; display: inline-block; }
 .tip-text { position: absolute; z-index: 1; top: calc(100% + 6px); left: 0; width: max-content; max-width: min(240px, calc(100vw - 32px));
   padding: 6px 10px; border-radius: 6px; background: var(--tip-bg); color: var(--tip-text); font-size: 14px;
-  opacity: 0; pointer-events: none;
-  transition: opacity var(--d-short2) var(--ease-out); }                 /* 出: 100 ms */
-.tip:is(:hover, :focus-within) .tip-text { opacity: 1;
-  transition: opacity var(--d-short3) var(--ease-out) 500ms; }           /* 入り: 150 ms・最初は 500 ms 待つ（目安） */
+  opacity: 0; visibility: hidden;                                        /* 見えない間は、ポインタを受けない（隠れた領域が背後を塞がない）*/
+  transition: opacity var(--d-short2) var(--ease-out), visibility 0s linear var(--d-short2); }   /* 出: 100 ms */
+.tip-text::before { content: ""; position: absolute; left: 0; right: 0; top: -6px; height: 6px; }   /* 隙間を渡る間も、ホバーのまま */
+.tip:is(:hover, :focus-within) .tip-text { opacity: 1; visibility: visible;
+  transition: opacity var(--d-short3) var(--ease-out) 500ms, visibility 0s linear 500ms; }   /* 入り: 150 ms・最初は 500 ms 待つ（目安） */
 .toolbar[data-warm] .tip:is(:hover, :focus-within) .tip-text { transition: none; }
+.tip[data-dismissed] .tip-text, .toolbar[data-warm] .tip[data-dismissed] .tip-text { opacity: 0; visibility: hidden; transition: none; }   /* Escape で消した間 */
 
 /* ドロップダウン（popover）: 入り 150 ms・出 100 ms。位置は JS が決める */
 .menu { position: fixed; margin: 0; inset: auto; padding: 4px; border: 1px solid var(--line); border-radius: 8px;
@@ -268,9 +280,14 @@ for (const tip of bar.querySelectorAll('.tip')) {
   };
   const on = () => { place(); clearTimeout(coolTimer); showTimer = setTimeout(() => { bar.dataset.warm = ''; }, 650); };   // 遅延 500 ms + 入り 150 ms が済んでから暖機する
   const off = () => { clearTimeout(showTimer); coolTimer = setTimeout(() => { delete bar.dataset.warm; }, 300); };
-  tip.addEventListener('mouseenter', on); tip.addEventListener('mouseleave', off);
-  tip.addEventListener('focusin', on); tip.addEventListener('focusout', off);
+  const rearm = () => { if (!tip.matches(':hover, :focus-within')) delete tip.dataset.dismissed; };   // いったん離れたら、消した状態を解く
+  tip.addEventListener('mouseenter', on); tip.addEventListener('mouseleave', () => { off(); rearm(); });
+  tip.addEventListener('focusin', on); tip.addEventListener('focusout', () => { off(); setTimeout(rearm, 0); });
 }
+document.addEventListener('keydown', (e) => {                 // Escape: ポインタもフォーカスも動かさずに、出ているツールチップを消す（S167）
+  if (e.key !== 'Escape') return;
+  for (const tip of bar.querySelectorAll('.tip')) if (tip.matches(':hover, :focus-within')) tip.dataset.dismissed = '';
+});
 
 /* トースト: 6 秒で自動で消える（目安）。閉じるボタンで即座に消せる */
 function showToast(text) {
@@ -304,7 +321,7 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 | 問い | 期待する答え | 確認する場所 |
 |---|---|---|
 | 何に注意するか | 押したボタンが一瞬縮み、受理されたことが分かる。保存すると下からトーストが出る | ボタンの押下、トーストの出現 |
-| 何を操作できるか | 在庫の追加・保存・並べ替え・同期・書き出し（ボタンの名前が動詞で何をするかを言う） | ツールバーのボタン（補足はツールチップ） |
+| 何を操作できるか | 在庫の追加・保存・並べ替え・同期・書き出し（ボタンの名前が動詞で何をするかを言う）。補足のツールチップは、ポインタを乗せたまま読め、Escape で消せる | ツールバーのボタン（補足はツールチップ） |
 | どう操作するか | ボタンを押す。並べ替えはメニューから選ぶ。トーストは「閉じる」で消せる | 44 px 以上のボタン |
 
 動きの検証は、動きを減らす設定をオンにしても同じ 3 問に答えられることを確かめる。縮小版でも、状態は文言（「変更を保存しました」）で伝わる（S64）。
@@ -314,6 +331,7 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 - 目的: 各部品の動きに「伝える変化」を言えるか。言えない動きが残っていないか
 - 頻度: 押下は 100 ms で 0.97 まで。メニューをキーボードで開いたときは動きなし（採用する場合）。頻度の高い部品に、位置の大きな移動を付けていない（S25・S67）
 - 長さ: 入りが出より長い（S23）。すべて 500 ms 未満（S22）。値は Material Web の段階に揃っている（S27・S28。段階は生成ファイルの値）
+- ツールチップ（S167）: ボタンからツールチップへポインタを移しても消えない（6 px の隙間を渡っても）。Escape で、ポインタもフォーカスも動かさずに消え、離れて戻ると再び出る。フォーカスでも同じ。動きを減らす設定でも同じ
 - 閉じる遷移中: メニューとトーストが閉じつつある間（100 ms・200 ms）に、背後のボタンやページを押せる。閉じた popover と `::backdrop` の `pointer-events` が `none` である
 - 中断: メニューを開閉している最中に、再度押しても止まらず、向きが変わる。トーストの表示中に再保存しても、タイマーが更新される
 - 縮小版: 動きを減らす設定で、押下の縮みとメニュー・トーストの移動が消え、押下は明るさ、出入りは不透明度だけになる（押下の反応が無くならない）。設定は CSS のメディアクエリで、途中で変えても追従する
@@ -321,9 +339,9 @@ document.getElementById('toast-close').addEventListener('click', hideToast);
 - キーボード: Tab でボタンに着き、Enter・Space で押せ、メニューは Escape で閉じる。ツールチップはフォーカスでも出る。フォーカスの輪が見える
 - フォーカス: メニューを閉じたら起点の「並べ替える」へ、トーストの「閉じる」を押したら、トーストを出す前にフォーカスがあった要素（「変更を保存」）へ戻る。トーストが自動で消えたときは、別の要素にあるフォーカスを動かさない。Popover API の有無で同じ
 - 失敗パターン: 全部に同じ長さを当てていないか。出と入りを同じにしていないか。トーストを自動で消すとき、時間制限に関する基準（本 skill の台帳に無く、未照合）に当たらないか、実装前に確認する
-- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 0 → 0.47 → 0.92 → 1 と中間値を取り（待ち時間の指定値で 540・600・680 ms の時点）、入りの 150 ms が省かれない。暖機は 650 ms 後（修正前は 500 ms で、入りが 1 フレームに跳んだ）。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。メニューの入りは 0.15 s、トーストの入りは 0.25 s・出は 0.2 s。キーボードで開いたメニューは 20 ms 後に不透明度 1。閉じたトーストの `display` は `none` で、閉じるボタンは Tab で着かない（修正前は `flex` のまま不可視で残る構造だった）。保存は、変更が無いとき「保存する変更はありません」、在庫を追加した後は「変更を保存しました」と出た。動きを減らす設定では、メニューとトーストの `translate` が `none`。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。390 px・320 px では、メニューが画面の端に収まり、トーストが画面の幅の内側に中央で出た。機能検出を偽にした版（`popover` の属性を外して検出を偽にした版と、`allow-discrete` を無効にした版）で、動きなしの開閉になり、前者は Escape・メニューの外のクリック・項目の選択でも閉じた。閉じる遷移の間（メニューの閉じ始めから 40 ms 後・トーストの閉じ始めから 40 ms 後）は、閉じた popover の `pointer-events` が `none` で（指定の無い版は `auto`）、背後の「在庫を追加」の位置のヒットテストは「在庫を追加」だった。ただし、指定の無い版でも Chrome 156 では閉じつつある popover はクリックを塞がず、メニューを閉じた 30 ms 後に「在庫を追加」を押すと行が 3 から 4 に増えた（塞がる挙動は再現しなかった。この指定は、他のエンジンへの防御である）。Popover 非対応版（`popover` の属性を外した版）で、メニュー項目にフォーカスを置いて Escape・項目の選択・Enter のいずれで閉じても、フォーカスは「並べ替える」に戻った（修正前は body に落ちた）。トーストの「閉じる」は、ボタンでも Enter でも、非対応版でも対応版でも、「変更を保存」へ戻った（修正前は body に落ちた）。トーストが自動で消えたとき、フォーカスが別の要素（「在庫を追加」）にあれば、そのまま残った。実機・他のブラウザーは未検証
-- 推測の明示: ツールチップは Esc で消えない（ホバーで出た内容を消す手段の基準は、本 skill の台帳に無く、未照合）。500 ms（ツールチップの遅延）・300 ms（暖機の解除）・6 秒（トーストの表示）・4 px・8 px・長さの段階の選択は、本 skill の目安である。スクリーンリーダーの読み上げ（`role="tooltip"`・`role="status"`）は、実機で確かめていない。`@starting-style` と `popover` は、取得した記述の範囲（S91・S92）で時点情報である
+- 実測（Chrome 156、2026-11-15、1440・390・320 px、ライト・ダーク、動きを減らす設定で描画）: 押下は `transform: matrix(0.97, 0, 0, 0.97, 0, 0)`・`filter: brightness(0.92)`・`transition-duration: 0.1s`。動きを減らす設定では `transform: none` のまま `filter: brightness(0.92)` が残り、押下の反応は消えない。ツールチップは、最初のボタンで不透明度が 0 → 0.47 → 0.92 → 1 と中間値を取り（待ち時間の指定値で 540・600・680 ms の時点）、入りの 150 ms が省かれない。暖機は 650 ms 後（修正前は 500 ms で、入りが 1 フレームに跳んだ）。続きのボタンは `transition-duration: 0s`・`transition-delay: 0s` で 40 ms 後に 1。メニューの入りは 0.15 s、トーストの入りは 0.25 s・出は 0.2 s。キーボードで開いたメニューは 20 ms 後に不透明度 1。閉じたトーストの `display` は `none` で、閉じるボタンは Tab で着かない（修正前は `flex` のまま不可視で残る構造だった）。保存は、変更が無いとき「保存する変更はありません」、在庫を追加した後は「変更を保存しました」と出た。動きを減らす設定では、メニューとトーストの `translate` が `none`。幅 3 種（1440・390・320 px）× ライト・ダーク × 動きを減らす設定の有無の 12 通りすべてで描画し、横はみ出し（`scrollWidth` が `innerWidth` を超えること）は無かった。390 px・320 px では、メニューが画面の端に収まり、トーストが画面の幅の内側に中央で出た。機能検出を偽にした版（`popover` の属性を外して検出を偽にした版と、`allow-discrete` を無効にした版）で、動きなしの開閉になり、前者は Escape・メニューの外のクリック・項目の選択でも閉じた。閉じる遷移の間（メニューの閉じ始めから 40 ms 後・トーストの閉じ始めから 40 ms 後）は、閉じた popover の `pointer-events` が `none` で（指定の無い版は `auto`）、背後の「在庫を追加」の位置のヒットテストは「在庫を追加」だった。ただし、指定の無い版でも Chrome 156 では閉じつつある popover はクリックを塞がず、メニューを閉じた 30 ms 後に「在庫を追加」を押すと行が 3 から 4 に増えた（塞がる挙動は再現しなかった。この指定は、他のエンジンへの防御である）。Popover 非対応版（`popover` の属性を外した版）で、メニュー項目にフォーカスを置いて Escape・項目の選択・Enter のいずれで閉じても、フォーカスは「並べ替える」に戻った（修正前は body に落ちた）。トーストの「閉じる」は、ボタンでも Enter でも、非対応版でも対応版でも、「変更を保存」へ戻った（修正前は body に落ちた）。トーストが自動で消えたとき、フォーカスが別の要素（「在庫を追加」）にあれば、そのまま残った。ツールチップの 1.4.13 を、修正前（6bfd363 の版）と修正後で比べた。ポインタを最初のボタンに乗せて 800 ms 後に出た状態から、(1) 6 px の隙間へ動かして 350 ms 後、修正前は不透明度 0（消えた）、修正後は 1。ツールチップの文字の上へ動かしても修正後は 1。離れると 0・`visibility: hidden`。(2) Escape を押すと、修正後は 60 ms 後に不透明度 0・`visibility: hidden` になり、ホバーは `:hover` のまま・`activeElement` も変わらず、800 ms 後も消えたまま。離れて戻ると再び出た（修正前は Escape で消えなかった）。(3) フォーカスでも同じで、Escape で消えて、`focus-within` とフォーカスは動かず、いったん blur して再びフォーカスすると出た。動きを減らす設定・390 px・320 px でも同じ値だった。実機・他のブラウザーは未検証
+- 推測の明示: ツールチップが 1.4.13 の 3 条件を満たすかの判断（適合の宣言）はしない（S167 の条件を実装した例である）。ブラウザーが描く `title` のツールチップは例外とされる（S167 の備考）が、この例は自前の要素である。500 ms（ツールチップの遅延）・300 ms（暖機の解除）・6 秒（トーストの表示）・4 px・8 px・長さの段階の選択は、本 skill の目安である。スクリーンリーダーの読み上げ（`role="tooltip"`・`role="status"`）は、実機で確かめていない。`@starting-style` と `popover` は、取得した記述の範囲（S91・S92）で時点情報である
 
 ## この例の出典
 
-S19、S20、S21、S22、S23、S24、S25、S27、S28、S29、S33、S35、S36、S37、S43、S47、S52、S63、S64、S66、S67、S68、S74、S76、S79、S91、S92、S149、S163。台帳は `../references/sources.md`。
+S19、S20、S21、S22、S23、S24、S25、S27、S28、S29、S33、S35、S36、S37、S43、S47、S52、S63、S64、S66、S67、S68、S74、S76、S79、S91、S92、S149、S163、S167。台帳は `../references/sources.md`。

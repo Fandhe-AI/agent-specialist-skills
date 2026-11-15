@@ -1,6 +1,6 @@
 # designer-interaction 出典台帳
 
-`SKILL.md`・`examples/`・`design-history.md` が根拠とした出典の台帳。引用原文（原語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S149 は動き・応答時間・状態・キーボード・AI の応答・動きを減らす設定・Web 標準・デザイン史の根拠、S150 以降は作り方の進め方（方向性の決め方・絞り方・批評・引き渡し）の根拠である。番号は振り直さない。本文からは番号で参照する。時代ごとの背景は `design-history.md`、制作の具体例は `examples/` にある。
+`SKILL.md`・`examples/`・`design-history.md` が根拠とした出典の台帳。引用原文（原語・逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S149 は動き・応答時間・状態・キーボード・AI の応答・動きを減らす設定・Web 標準・デザイン史の根拠、S150 以降は作り方の進め方（方向性の決め方・絞り方・批評・引き渡し）の根拠である（S167 だけは、後から足した WCAG 1.4.13 の項目）。番号は振り直さない。本文からは番号で参照する。時代ごとの背景は `design-history.md`、制作の具体例は `examples/` にある。
 
 ## 凡例
 
@@ -26,7 +26,7 @@
 - Emil Kowalski・Rauno Freiberg・Jakub Krehel の記事は、個人の経験則・観察である。Rauno は自分の記事を「指針集ではない」と書く。数値（0.97・0.9 以上・300 ms）は経験則で、実験で検証された値ではない。記事のデモ部品の文言（"Great design is invisible…" など）は著者の主張ではないので引用しない。Emil の "You should never animate them"（キーボード起点の操作）は強い個人の主張で、Apple の HIG（頻繁な操作の動きを避ける）より強い。両者を混ぜない
 - Material のトークン（S27・S28・S29・S147）は Material Web の生成ファイル（v0.192・Platform: Web）で、Material 3 の仕様書の本文ではない。m3.material.io の本文は取得できていない
 - Apple の HIG の Motion のページには、所要時間（秒・ms）の推奨値が無い。Apple の動きの数値を HIG の値として書かない（designer-apple の台帳も同じ限界を記す）
-- 「prefers-reduced-motion」の規格（Media Queries Level 5）は Working Draft の版の記載（2026-02-19）で、MDN は全ブラウザーの対応を 2020 年 1 月からとする。WCAG 2.2 は 2024-12-12 の W3C 勧告。2.2.2 はレベル A、2.3.1 はレベル A、2.3.3 はレベル AAA、2.1.1 はレベル A、2.5.8 と 4.1.3 はレベル AA。WCAG のコントラスト基準（4.5:1・3:1）の原文は本台帳に無い（未照合）
+- 「prefers-reduced-motion」の規格（Media Queries Level 5）は Working Draft の版の記載（2026-02-19）で、MDN は全ブラウザーの対応を 2020 年 1 月からとする。WCAG 2.2 は 2024-12-12 の W3C 勧告。2.2.2 はレベル A、2.3.1 はレベル A、2.3.3 はレベル AAA、2.1.1 はレベル A、2.5.8・4.1.3・1.4.13（S167）はレベル AA。WCAG のコントラスト基準（4.5:1・3:1）の原文は本台帳に無い（未照合）
 - 区分 R の NN/g の記述（Saffer の書籍の刊行年）は、書籍の本文の照合ではない。Saffer の書籍の要旨は「引用ではない参照」に書籍・未照合として置いた
 - Lasseter（1987）は 3D コンピューターアニメーション、Chang & Ungar（1993）は Self という研究用の UI での試みである。ディズニーの 12 原則を UI に「転用した」のは、後者の著者の記述であって、業界の標準を示すものではない。12 原則という数の根拠は、取得した本文で確認していない（未検証・伝聞）
 - freee のガイドラインは CC BY 4.0、デジタル庁デザインシステムはサイトの利用条件による（引用は 1〜2 文）。Laws of UX は © Jon Yablonski で、ライセンスの全文は確認していない（引用は 1 文）
@@ -1722,6 +1722,19 @@
 - 検証区分: C
 - 備考: Norman が前稿の結論を変えた理由。型をなぞるだけの作業（問わない・想像しない）は設計の思考ではないという指摘。手順の遵守と思考を分ける根拠
 
+### S167 W3C（WCAG 2.2 Understanding）
+
+> Understanding SC 1.4.13 Content on Hover or Focus (Level AA)
+> A mechanism is available to dismiss the additional content without moving pointer hover or keyboard focus, unless the additional content communicates an input error or does not obscure or replace other content;
+> If pointer hover can trigger the additional content, then the pointer can be moved over the additional content without the additional content disappearing;
+> The additional content remains visible until the hover or focus trigger is removed, the user dismisses it, or its information is no longer valid.
+
+- 媒体・日付: W3C WAI「Understanding SC 1.4.13 Content on Hover or Focus (Level AA)」（WCAG 2.2 は 2024-12-12 の W3C 勧告）
+- URL: https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html
+- 取得日: 2026-11-15
+- 検証区分: A
+- 備考: 1.4.13（レベル AA）。ホバーかフォーカスで出る追加の内容（ツールチップなど）の 3 条件。消せる（dismissible）・ポインタを追加の内容へ動かしても消えない（hoverable）・トリガーを外すか利用者が消すまで残る（persistent）。ブラウザーが描く `title` 属性のツールチップは、作者が見た目を変えなければ例外（取得した本文の Note）。S94〜S100 と同じ WCAG の Understanding で、後から台帳に足した（既存の番号は振り直していない）
+
 ## 引用ではない参照（事実の根拠）
 
 書籍・有料論文など、Web に原文が無い、または取得できなかったもの。逐語の引用はしない。要旨は本 skill の言葉で、書誌情報は取得できた範囲だけ書く（取得できなかった項目は空欄でなく「未確認」と書く）。区分は「書籍・未照合」。
@@ -1768,4 +1781,4 @@
 - 区分 A のうち、PDF の走査（IBM・Lasseter）は OCR の崩れを含み、引用は読める範囲に限った。HIG と Material のトークンは本文データ・生成ファイルであって、サイトの見た目の本文ではない
 - 区分 A の出典は、取得時点の本文である。Web ページ・規格・対応状況は随時変わる（特に NN/g の記事の「最終確認」、MDN の Baseline、W3C の版）
 - 照合の再実行: 2026-11-15 に S01 から S149 の区分 A の全 140 件を新規に再取得して再照合し、140 件すべて一致した。あわせて、台帳の引用文を空白をすべて除いた形にして、取得したテキストの空白を除いた形に含まれることを全件で確認した（打ち直しによる誤りの検出）。S150 以降は、別に取得・照合した
-- 引用ブロックに後から足した行（S12・S23・S24・S29・S91・S92・S94〜S100 の SC 番号とレベルの行・S107・S109・S110・S116・S133・S139・S147・S148）: 本文から切り出した逐語の文で、足した後に、各 URL を `curl` で新規に取得し、正規化したテキストから空白を除いた形に、空白を除いた引用が含まれることを確かめた（2026-11-15。S110 は Wayback の保存コピー、S133 は PDF のテキスト）。足した理由は、本文で使う事実・数値が、備考にしか無かったため
+- 引用ブロックに後から足した行（S12・S23・S24・S29・S91・S92・S94〜S100 の SC 番号とレベルの行・S107・S109・S110・S116・S133・S139・S147・S148。S167 は新規の項目で、本文から切り出した逐語の 4 行）: 本文から切り出した逐語の文で、足した後に、各 URL を `curl` で新規に取得し、正規化したテキストから空白を除いた形に、空白を除いた引用が含まれることを確かめた（2026-11-15。S110 は Wayback の保存コピー、S133 は PDF のテキスト）。足した理由は、本文で使う事実・数値が、備考にしか無かったため
