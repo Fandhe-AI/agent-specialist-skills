@@ -39,6 +39,7 @@ Claude Code の Claude Skills として使用するスキルは、原則とし�
 |--------|------|
 | **designer-apple** | Apple 流プロダクトデザイン相談役。説明不要の UI・HIG・Liquid Glass・Jony Ive 等の考え方でデザインをレビュー・サイト/スライド等を制作 |
 | **designer-typography** | タイポグラファー・エディトリアルデザイナー。和文組版（JLREQ・約物・禁則）・グリッド・行長行送り・Web の本文組版・資料/ポスター/マニュアルの文字組を相談 |
+| **designer-brand** | ブランドデザイナー・アートディレクター。ロゴ・CI 刷新・ブランドガイドライン・小サイズ単色対応・ブランドの見た目統一を相談 |
 
 今後も追加予定です。新規スペシャリスト skill の著作は `.claude/rules/specialist-authoring.md` の規約と `skills/init-claude-specialist/sample/specialist-skill-example.md`（見本）を参照してください。
 
