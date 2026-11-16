@@ -1,11 +1,11 @@
 # designer-web 出典台帳
 
-`SKILL.md`・`design-history.md`・`trends.md`・`examples/` が根拠とする出典の台帳。引用原文（原語のまま逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S111 までの 111 件で、番号は振り直さない。区分別の件数は、A が 88 件、B が 2 件、C が 14 件、R が 7 件である。S01 から S35 は、アートディレクションの考え方・Web という素材・レイアウトの実験・画像の切り抜き・方向性の合意の道具・制作側の記録・賞の方式と批判、S36 から S53 は、傾向の報告・OS の素材とその批判・様式の周期・均質化の研究、S54 から S60 は、AI の提供元の文書・AI 製の見た目への批判・写真の視線計測、S61 から S67 は日本語圏の実務、S68 から S70 は歴史、S71 から S87 は色・基準・性能・追補、S88 から S109 は進め方（デザインの型・批評・合意・品質）の出典、S110・S111 は CSS の色域と機能判定の追補である。
+`SKILL.md`・`design-history.md`・`trends.md`・`examples/` が根拠とする出典の台帳。引用原文（原語のまま逐語）・発言者・媒体・日付・URL・取得日・検証区分を記す。S01 から S124 までの 124 件で、番号は振り直さない。区分別の件数は、A が 101 件、B が 2 件、C が 14 件、R が 7 件である。S01 から S35 は、アートディレクションの考え方・Web という素材・レイアウトの実験・画像の切り抜き・方向性の合意の道具・制作側の記録・賞の方式と批判、S36 から S53 は、傾向の報告・OS の素材とその批判・様式の周期・均質化の研究、S54 から S60 は、AI の提供元の文書・AI 製の見た目への批判・写真の視線計測、S61 から S67 は日本語圏の実務、S68 から S70 は歴史、S71 から S87 は色・基準・性能・追補、S88 から S109 は進め方（デザインの型・批評・合意・品質）の出典、S110・S111 は CSS の色域と機能判定の追補、S112 から S124 は年配の利用者の Web での使いやすさ（W3C WAI・NN/g。S112 から S121 は W3C、S122 から S124 は NN/g）の出典である。
 
 ## 凡例
 
 - 検証区分
-  - A: 原典・公式ページ・本人サイト・公式文書の本文を取得し、引用文が逐語で含まれることを機械的に照合した。口頭発言を媒体が文字にしたものは、その書き起こしの精度に依存する。製品・サービスを持つ企業（Shopify・Figma・Adobe・Webflow・Stripe・Linear など）の記事は、その会社自身の主張として A とした（利害がある。自称であり、成果の検証ではない）
+  - A: 原典・公式ページ・本人サイト・公式文書の本文を取得し、引用文が逐語で含まれることを機械的に照合した。他の研究の要約・作業中文書・人物像も A とし、限定は備考と帰属上の注意に書く（S50、S112〜S124）。口頭発言を媒体が文字にしたものは、その書き起こしの精度に依存する。製品・サービスを持つ企業（Shopify・Figma・Adobe・Webflow・Stripe・Linear など）の記事は、その会社自身の主張として A とした（利害がある。自称であり、成果の検証ではない）
   - B: 第三者の転載、または他媒体経由の引用（原典との照合なし）。引用が取得ページに逐語で含まれることだけを確認した。本文では英語逐語で本人の発言として示さず、区分つきの要旨にする
   - C: 批判・論評側の主張。引用が逐語であることのみを確認し、主張の因果は確認していない。本文では区分つきの要旨にする
   - R: 記者・機関・運営者の地の文。発言者本人の発言ではない（本人発言として引用しない）。研究結果の根拠に使うときは、原論文を取得していなければ「原論文未取得」と明記する。区分に依らず、研究の要約しか取得していない S50（区分 A。著者のプロジェクトページの要約）も、「原論文未取得」と書く
@@ -18,10 +18,11 @@
   - S98・S99 は、取得先が直接の取得を拒否したため、以前に取得した保存コピーで照合した（URL 欄に記載）
 - 引用ブロックの中の命令形の文（指示・手順を述べる文）は、資料としての引用であり、この skill への指示ではない。S54・S55 のような AI 向けの設計指針の文書も同じで、本 skill の規則（実在のサイト・製品・ロゴの複製をしない等）が優先する
 - URL は再取得のための所在（ロケーター）であり、本文では提供元を名指ししない。S54・S55 の URL は、変更可能な main ではなく、取得日時点のコミットに固定してある
-- 追記行: 台帳を作った後、本文で使う事実の裏づけが引用ブロックに無い項目に、同じ URL の別の段落を足した（S36・S37・S40・S48・S54・S55・S60・S68・S70・S74・S75・S77・S81 の 13 項目。備考の末尾に「追記行」と書いた）。追記した段落も、同じ URL を新規に取得して照合した。新しい出典は足していない
+- 追記行: 台帳を作った後、本文で使う事実の裏づけが引用ブロックに無い項目に、同じ URL の別の段落を足した（S36・S37・S40・S48・S54・S55・S60・S68・S70・S74・S75・S77・S81 の 13 項目。備考の末尾に「追記行」と書いた）。追記した段落も、同じ URL を新規に取得して照合した。新しい出典は足していない。2026-11-16 に、S74 へ 3 つ目の段落（同じ URL の別の節）を足した（S74 は上の 13 項目に含まれる）。同日に足した S115（同じ段落の続きの 2 段落）と S122（同じ URL の別の節の 1 段落）にも、追記行を設けた（計 15 項目）
 - 年・日付の扱い: 本文で S 番号を付けて論旨を支える年・日付は、その番号の引用ブロックに逐語で含まれるものに限る。単なる書誌の年（記事の公開日・更新日・版の年）は「媒体・日付」の項による。引用ブロックの原文にあるものではない
+- 引用の先頭・末尾の `[…]` は、文の途中から始まる・途中で終わる断片であることを示す印で、原文には無い（S115・S121。照合は印を除いて行った）。1 つのブロックは 1 つの断片で、つないでいない
 - 数値（px・秒・割合・人数・点数・年）は、原文で確認できたものだけを「出典あり」とする。それ以外は本 skill の目安（出典なし）と分けて書く
-- 取得日は、出典ごとに最後に本文を確認した日（S54・S55・S60・S110・S111 は 2026-11-16、ほかは 2026-11-15）。流行・傾向・AI の見た目に関する記述は、すべてこの日付の時点情報である
+- 取得日は、出典ごとに最後に本文を確認した日（S54・S55・S60・S110・S111・S112〜S124 は 2026-11-16、ほかは 2026-11-15。S74 の 3 つ目の引用の追記は 2026-11-16）。流行・傾向・AI の見た目に関する記述は、すべてこの日付の時点情報である
 
 ## 帰属上の注意
 
@@ -37,6 +38,7 @@
 - S35（2016）と S34（2026-07-25。署名は Ray と Benjamin Scott）は、賞の評価が見栄えに偏るという批判。S34 の Awwwards 点数は二次情報で、本 skill は事実として使わない
 - S87 の年間賞・得票は取得しておらず、台帳に載せていない
 - S88 から S109 は、デザイン会社・デザイン組織・実務者が自分たちの進め方を自分で述べた文が大半（自称）で、進め方の有効性を第三者が確かめたものではない。S108（Natasha Jen）・S109（Don Norman）はデザイン思考への批判（C）で、批判の対象は概念・売り方・教育への導入と別れる。まとめて「デザイン思考は無効」とは書かない。S98・S99 は 2005 年の随筆で、実務者の自己批判と効用の両方を述べる
+- S112 から S124 は、W3C WAI・NN/g が自ら公開したページで、区分は A（原文照合済み）。ただし限定がある。S115 は作業中の文書で、他の研究（Redish & Chisnell・Hudson et al. など）の要約。S114・S116 も文献に基づく要約で、元の論文は未確認（本文では「原論文未取得」と添える）。S121 は W3C が作った人物像（調査データではない）。S123 は 2013 年の記事で、発行元が考え方が古くなったと注記する。S113 は 2018 年時点・WCAG 2.0 前提。S118・S119・S120 の年配の利用者との結び付きは S112 の一文だけ。年配の利用者に結び付いた、操作対象の大きさ・間隔・行間の数値は、これらの出典に無い。本文の文字の大きさは、S123 の 12 ポイント（2013 年。年配の利用者を対象にしたサイトの既定。CSS の px との対応は無く、一般の基準にしない）だけが例外である
 - 区分 R の機関の地の文は、年号の根拠に使い、本人の発言として引用しない
 
 ## 引用の台帳
@@ -909,11 +911,13 @@
 
 > Understanding SC 1.4.3 Contrast (Minimum) (Level AA)
 
+> The 4.5:1 ratio is used in this success criterion to account for the loss in contrast that results from moderately low visual acuity, congenital or acquired color deficiencies, or the loss of contrast sensitivity that typically accompanies aging.
+
 - 媒体・日付: W3C WAI（WCAG 2.2 の解説）, 取得時点
 - URL: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
-- 取得日: 2026-11-15
+- 取得日: 2026-11-15（3 つ目の引用の追記は 2026-11-16）
 - 検証区分: A
-- 備考: 文字のコントラスト比の基準（通常 4.5:1、大きい文字 3:1）。レベル AA。画像の上の文字・半透明の面での可読性の判断に使う。数値は WCAG の定義で、見た目の好みの問題ではない。追記行: 適合レベル（AA）の表記の逐語（2 つ目）
+- 備考: 文字のコントラスト比の基準（通常 4.5:1、大きい文字 3:1）。レベル AA。画像の上の文字・半透明の面での可読性の判断に使う。数値は WCAG の定義で、見た目の好みの問題ではない。追記行: 適合レベル（AA）の表記の逐語（2 つ目）と、4.5:1 の根拠に加齢によるコントラスト感度の低下が含まれるという「根拠の節」の逐語（3 つ目。同じ URL の別の節）。3 つ目は 2026-11-16 に同じ URL を新規に取得して照合した
 
 ### S75 W3C「Understanding SC 2.2.2: Pause, Stop, Hide」
 
@@ -1303,6 +1307,256 @@
 - 検証区分: A
 - 備考: 機能（構文・プロパティ・値）に対する UA の対応を判定する、という定義の根拠。表示装置の性質（色域・動き・コントラスト・ポインタ）の判定は、`@media` の役割（S110、S76）。本 skill は、`@supports` を構文の対応の分岐にだけ使い、環境の判定と取り違えない
 
+### S112 W3C WAI「Older Users and Web Accessibility」
+
+> Many older people have age-related impairments that can affect how they use the web, such as declining:
+
+> vision — including reduced contrast sensitivity, color perception, and near-focus, making it difficult to read web pages
+
+> physical ability — including reduced dexterity and fine motor control, making it difficult to use a mouse and click small targets
+
+> cognitive ability — including reduced short-term memory, difficulty concentrating, and being easily distracted, making it difficult to follow navigation and complete online tasks
+
+> These issues overlap with the accessibility needs of people with disabilities. Thus, websites, applications, and tools that are accessible to people with disabilities are more accessible to older users as well.
+
+> The results of the research and subsequent work determined that existing international accessibility standards from the W3C Web Accessibility Initiative (WAI) address most older user needs.
+
+> These videos include older users: Customizable Text, Colors with Good Contrast, Notifications and Feedback, Understandable Content, and Large Links, Buttons, and Controls.
+
+- 媒体・日付: W3C WAI「Older Users and Web Accessibility: Meeting the Needs of Ageing Web Users」, Updated: 20 November 2025（First published 2010）
+- URL: https://www.w3.org/WAI/older-users/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 年配の利用者に起こりやすい低下（視覚・手の細かい動き・短期記憶と集中）、障害のある人への配慮との重なり、既存の W3C の基準でほとんど足りること、年配の利用者に関わる動画の話題の列挙。引用の 1 つ目が導入文、2〜4 つ目が箇条書きの項目（聴覚の項目は本 skill の観点外のため引用に入れていない）。最後の引用で挙がる 5 つの動画のうち、本文で年配の利用者に触れるのは S117 のみ。S118・S119・S120 の年配の利用者との結び付きは、最後の引用の一文だけが根拠になる
+
+### S113 W3C WAI「Developing Websites for Older People: How WCAG 2.0 Applies」
+
+> Many older people require large text due to declining vision, including text in form fields and other controls.
+
+> 1.4.4 - Resize text (AA) says “text can be resized without assistive technology up to 200 percent without loss of content or functionality”
+
+> Most older people’s color perception changes, and they lose contrast sensitivity.
+
+> Many older people need links to be particularly clear and identifiable due to declining vision and cognition.
+
+> Many older people need navigation to be particularly clear due to declining cognitive abilities.
+
+> G65: Providing a breadcrumb trail
+
+> G128: Indicating current location within navigation bars
+
+> Some older people are particularly distracted by any movement and sound on web pages.
+
+> 2.2.2 - Pause, Stop, Hide (A) says “a mechanism for the user to pause, stop, or hide” moving or blinking content
+
+> It takes some older people longer to read text and complete transactions due to declining vision, dexterity, or cognition.
+
+> 2.2.1 - Timing Adjustment (A) says that users can turn off, adjust, or extend any time limits
+
+> For people who are new to the web, and older people with some types of cognitive decline, consistent navigation and presentation is particularly important.
+
+> Some older people experiencing cognitive decline can be confused or distracted by pop-ups, new windows, or new tabs.
+
+> Some older people with declining vision or cognition can miss content that automatically updates or refreshes in a page.
+
+> It is difficult for some older people to understand the requirements of forms and transactions.
+
+> G89: Providing expected data format and example
+
+> It is difficult for some older people to use forms and complete transactions due to declining cognitive abilities.
+
+> G98: Providing the ability for the user to review and correct answers before submitting
+
+> This page has been reviewed and is current as of 1 January 2018.
+
+- 媒体・日付: W3C WAI「Developing Websites for Older People: How Web Content Accessibility Guidelines (WCAG) 2.0 Applies」（Editors: Andrew Arch, Shadi Abou-Zahra）。2018-01-01 時点（ページの記載。最後の引用）
+- URL: https://www.w3.org/WAI/older-users/developing/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 年配の利用者に関わる記述を、WCAG 2.0 の達成基準（1.4.4・2.2.1・2.2.2 など）と技法に結び付けて並べたページ。最後の引用のとおり 2018 年時点の内容で、WCAG 2.0 を前提にする。WCAG 2.2 で加わった達成基準（操作対象の最小サイズなど）は載っていない。2.2.1 の 2 つ目の引用は WCAG の逐語ではなくページによる言い換えで、WCAG の達成基準の名称は Timing Adjustable（ページは Timing Adjustment と書く）。ページに 'future link' と付く技法案（検討中の技法）は引用に入れていない
+
+### S114 W3C WAI「Overview of Web Accessibility for Older Users: A Literature Review」
+
+> In particular, older people with physical impairments may have difficulty clicking small links, selecting radio buttons, and using many fly-out or pull-down menus.
+
+> Short term memory limitations (which may result in a person forgetting the purpose of a website visit if they lose orientation on the site)
+
+> Distraction from movement or irrelevant material
+
+> Difficulty coping with information overload
+
+> The Literature Review was conducted in 2008. We do not currently plan to update it. Most of the information is still relevant.
+
+- 媒体・日付: W3C WAI「Overview of "Web Accessibility for Older Users: A Literature Review"」, Updated: 22 February 2018（First published 2008。Editors: Shawn Lawton Henry, Andrew Arch）
+- URL: https://www.w3.org/WAI/older-users/literature/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 文献調査の要約ページで、他の研究の要約である。最後の引用のとおり、調査は更新の予定が無い（W3C は大半が今も有効としている）。2 つ目の引用の最初の項目は、原文が箇条書きの 1 項目（原文の表示では 2 行に分かれる）
+
+### S115 W3C「Web Accessibility for Older Users: A Literature Review」（Working Draft）
+
+> Many authors observed that not all older adults are the same, and that attitude and aptitude can vary significantly across the elderly age group […]
+
+> Another aspect of the elderly that their study reinforced is that older adults are not a homogenous group […]
+
+> In other words, we should not stereotype all older adults as technophobes.
+
+> Design convention such as underlined links should be followed
+
+> Understanding, and accessing, what is clickable can be problematic for some elderly users
+
+> Breadth vs. depth - shallow information hierarchies seemed to work better for older users
+
+> Contrary to the assertion that older adults are more prone to disorientation in the WWW, there was no age effect on total pages or repeat pages visited.
+
+> Hudson et al. (2008) [Hudson 2008] conducted two studies of young (mean age 20 & 23 years) and older (mean age 61 & 63 years) users use of Web site navigation tools.
+
+> Hudson et al. did find that the older users took more time to find the information they were seeking.
+
+- 媒体・日付: W3C Working Draft 14 May 2008（Author: Andrew Arch）
+- URL: https://www.w3.org/TR/wai-age-literature/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 作業中の文書で、文書の Status の欄が、作業中の文書としてのみ引くよう求めている。各記述は Redish & Chisnell（2004）・Hudson et al.（2008）など他の研究の要約で、W3C 自身の結論ではない（元の論文は未確認）。結論としてでなく、他の研究の要約として引く。S114 と同じ題の文書。「リンクの下線」の引用の元は Redish & Chisnell の要約で、同じ文書の別の節には本文の文字の下線が読みにくいという推奨もあり、リンクの下線と本文の文字の下線は分けて扱う。「浅い階層」の引用は 'seemed to' の留保つき。「迷いやすい」への反証の引用は Hudson et al. の引用で、同じ段落の続きの 2 つの引用（末尾の 2 段落）に、比較した年配群の平均年齢（61 歳と 63 歳）と、年配の利用者の方が情報を見つけるのに時間がかかったという記述がある。追記行: 末尾の 2 つの引用（同じ URL の同じ段落。2026-11-16 に同じ URL を取得した HTML で照合した）`[…]` は、文が途中で終わる断片であることを示す印（凡例のとおり）
+
+### S116 W3C WAI「Older Users Online」
+
+> Information overload was one of the most common problems identified for older users.
+
+> advertisements and movement distracting the users from their goals
+
+> Many aspects of good usability for all were included in the recommendations in the literature; that is, the recommendations do not apply exclusively to older users, but are general usability principles for all users.
+
+- 媒体・日付: W3C WAI「Older Users Online: WAI Guidelines Address Older Users Web Experience」（User Experience Magazine, Volume 8, Issue 1, 2009 の正しい版。Document Information: "Version: December 2008"。By Andrew Arch, Shadi Abou-Zahra, and Shawn Lawton Henry）
+- URL: https://www.w3.org/WAI/posts/2009/older-users-online
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 情報過多と動きの問題、および文献の推奨の多くが全員向けの使いやすさの原則であることの根拠。2 つ目の引用は、原文で 'Particularly problematic is:' に続く箇条書きの 1 項目
+
+### S117 W3C WAI「Web Accessibility Perspectives: Colors with Good Contrast」
+
+> People with low contrast sensitivity, which is common in older people.
+
+> Good design means sufficient contrast between foreground background and colors. That's not just text and images but links, icons, and buttons.
+
+> While some people need high contrast, some people are sensitive to brightness and need to change the colors.
+
+- 媒体・日付: W3C WAI「Web Accessibility Perspectives: Colors with Good Contrast」, Updated: 15 July 2024
+- URL: https://www.w3.org/WAI/perspective-videos/contrast/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: コントラスト感度の低下は年配の人に多いこと、文字と画像だけでなくリンク・アイコン・ボタンにも十分なコントラストが要ること、高いコントラストが合わない人もいること。1 つ目の引用は 'Who depends on this feature?' の項目、2 つ目は動画の書き起こし（'foreground background' は原文の表記のまま）。年配の利用者に本文で触れる Perspectives のページは、このページだけ
+
+### S118 W3C WAI「Web Accessibility Perspectives: Large Links, Buttons, and Controls」
+
+> Small controls, and controls that are placed too close to each other, are difficult for many people to use.
+
+> Design large controls or activation areas around the controls. (Increasing the font size of the control sometimes isn’t enough.) Provide adequate separation between selectable controls.
+
+- 媒体・日付: W3C WAI「Web Accessibility Perspectives: Large Links, Buttons, and Controls」, Updated: 23 January 2019
+- URL: https://www.w3.org/WAI/perspective-videos/controls/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 操作対象は大きく（または周りの押せる範囲を広く）し、互いの間隔を空ける。ページ本文は年配の利用者に触れない（'Who depends' の項目は、手の器用さが低下した身体障害のある人）。年配の利用者との結び付きは S112 の一文だけ。数値の基準は書かれていない
+
+### S119 W3C WAI「Web Accessibility Perspectives: Customizable Text」
+
+> When users change these properties, no information or functionality should be lost, and the text should re-flow so users don’t have to scroll horizontally to read sentences.
+
+> This includes using relative rather than absolute units for the size of fonts, controls, and other objects.
+
+- 媒体・日付: W3C WAI「Web Accessibility Perspectives: Customizable Text」, Updated: 23 January 2019
+- URL: https://www.w3.org/WAI/perspective-videos/customizable/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 文字の大きさや間隔を変えても情報と機能が失われず、折り返すこと。文字・操作部品の大きさに相対単位を使うこと。ページ本文は年配の利用者に触れない（'Who depends' の項目は、ロービジョンと一部のディスレクシア）。年配の利用者との結び付きは S112 の一文だけ
+
+### S120 W3C WAI「Web Accessibility Perspectives: Notifications and Feedback」
+
+> For example, users need confirmation messages when actions are completed, such as when forms are submitted. Also, error messages must provide clear directions rather than confuse users.
+
+- 媒体・日付: W3C WAI「Web Accessibility Perspectives: Notifications and Feedback」, Updated: 23 January 2019
+- URL: https://www.w3.org/WAI/perspective-videos/notifications/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 操作の完了の確認と、直し方を示すエラー文言。ページ本文は年配の利用者に触れない（'Who depends' の項目は、一部の認知・学習障害と、部分的な視覚障害・全盲）。年配の利用者との結び付きは S112 の一文だけ
+
+### S121 W3C WAI「Stories of Web Users: Elias」
+
+> […] using technology can be difficult when he can’t use the adjustments he needs, like when sites and apps don’t allow increased text size, require clicking small areas of the page, and make him type information with each visit rather than store it.
+
+> […] the best instance is when the text resizes and reflows properly.
+
+> Works well: “A breadcrumb at the top of each page that shows my path through the site keeps me on track, plus it helps me get back to the home page really quickly.”
+
+- 媒体・日付: W3C WAI「Elias, retiree with low vision, hand tremor, and mild short-term memory loss」（Stories of Web Users）, Updated: 25 June 2024
+- URL: https://www.w3.org/WAI/people-use-web/user-stories/story-nine/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: W3C が作った人物像の例で、調査データではない（実在の利用者の統計や、年配の利用者全体の傾向の根拠にはしない）。1 つ目の引用の直前は 'However,'、2 つ目の直前は 'While this is easier than managing the large pages of a print newspaper,'。`[…]` は、文の途中から始まる断片であることを示す印（凡例のとおり）
+
+### S122 NN/g「Usability for Older Adults: Challenges and Changes」（2019 年）
+
+> Interactive elements such as buttons, dropdowns, and links are often displayed at a small size that is difficult for older users to click on or tap.
+
+> Interface text on mobile apps was often too small and lightly colored for older adults to read comfortably.
+
+> Many sites and apps accepted user inputs in only one form and participants were frustrated by this narrow range of interaction.
+
+> Older users make more mistakes than younger users do.
+
+> When older users encounter error handling, simplicity is even more important than usual. Focus on the error, explain it clearly, and make it as easy as possible to fix.
+
+> Of course, this age range is a simplification. It’s not as if people change all their behaviors on their 65th birthday.
+
+> Although technical proficiency among all users is fairly limited, digital literacy among older adults is rising.
+
+> We use a simple definition: older adults are users aged 65 years or older.
+
+- 媒体・日付: Nielsen Norman Group, Lexie Kane, 2019-09-08（ページの datePublished。dateModified 2024-12-05）
+- URL: https://www.nngroup.com/articles/usability-for-senior-citizens/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: NN/g の自社調査の報告（65 歳以上の計 123 人、2001・2013・2018〜19 年の 3 回の調査）。年齢の線引きは、末尾の引用のとおり 65 歳以上（追記行: 同じ URL の別の節。2026-11-16 に同じ URL を取得した HTML で照合した）。この URL の slug は `usability-for-senior-citizens` だが、現在ここにあるのは 2019 年の Kane の記事で、2013 年の Nielsen の記事は S123 の URL にある。2013 年の記事（S123）に代わる新しい版として NN/g が案内する
+
+### S123 NN/g「Usability for Senior Citizens: Improved, But Still Lacking」（2013 年）
+
+> Note: This article was written in 2013, and our understanding of inclusive language and ideas has changed since then.
+
+> Sites that target seniors should use at least 12-point fonts as the default. And all sites, whether or not they specifically target seniors, should let users increase text size as desired — especially if the site’s default is a small font size.
+
+> Also, you should avoid tightly clustered links; using white space to separate links decreases erroneous clicks and increases the speed at which users hit the correct link.
+
+> Pull-down menus, hierarchically walking menus, and other moving interface elements are problematic for seniors who are not always steady with the mouse. Better to use static user interface widgets and designs that don’t require pixel-perfect pointing.
+
+> When websites violate the guideline to use different colors to clearly distinguish between visited and unvisited links, seniors easily lose track of where they’ve been.
+
+> Half of the seniors in our study said they keep a list of steps and instructions about how to use websites they need or often visit.
+
+> But it’s worth trying to maintain consistency in key task steps for as long as possible.
+
+> Other seniors, however, were web virtuosos and confidently used advanced features like ctrl-F to jump to keywords within the current page.
+
+- 媒体・日付: Nielsen Norman Group, Jakob Nielsen, 2013-05-28（ページの datePublished。dateModified 2024-12-05）
+- URL: https://www.nngroup.com/articles/usability-seniors-improvements/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: 古い記事。1 つ目の引用のとおり、発行元が、記事の後で言葉づかいや考え方が変わったと注記している（注記は言葉づかいと考え方についてで、12 ポイントなどの指針を取り消す記述ではない）。この記事のどの引用を使うときも、2013 年の記事であることを添える。12 ポイントは、年配の利用者を対象にしたサイトの既定の文字の大きさで、Web の CSS の pt・px との対応は記事に書かれていない（一般の基準として使わない）。リンクの間隔の数値も書かれていない。リンクの引用（3 つ目）の段落には、ボタンなどの操作対象にも当てはまるとある
+
+### S124 NN/g「Usability Testing With Older Adults」（2023 年）
+
+> While it is necessary to be aware of the impairments associated with older ages, be mindful of any stereotypes. Aging affects everyone differently.
+
+> Prepare for a participant group with a range of abilities.
+
+> In our study with older adults, it was common for participants to forget a task midway through completing it.
+
+- 媒体・日付: Nielsen Norman Group, Megan Chan, 2023-07-23（ページの datePublished。dateModified 2024-11-04）
+- URL: https://www.nngroup.com/articles/usability-testing-older-adults/
+- 取得日: 2026-11-16
+- 検証区分: A
+- 備考: ユーザビリティテストの進め方（参加者の募集・課題の作り方）の記事で、画面の設計の指針ではない。最初の引用の見出しは 'Do Not Make Assumptions'。3 つ目の引用は、テストの課題についての記述で、画面の手順の数を減らす根拠には使わない
+
 ## 引用ではない参照（事実の根拠）
 
 引用としては使わず、存在や経緯の確認にだけ使う参照。本文に逐語の引用を載せない。
@@ -1356,6 +1610,7 @@
 - 画像・写真・質感の扱いのうち、レスポンシブ画像・LCP・可変フォント・OKLCH・WCAG の基準は MDN・web.dev・W3C で確認した。グレインなどの質感表現の技法と、新しい CSS 機能のブラウザ対応状況は、出典を持たない（本 skill の目安、または未照合の時点情報）
 - 『見た目の方向性が成果（コンバージョン・信頼）にどれだけ効くか』の一次の実験は確認できていない（NN/g の写真の視線計測 S60 が最も近い）
 - 進め方の出典（S88〜S109）は、デザイン思考・製品開発の文脈が多い。Web の見た目の方向性に特化した進め方の一次資料は、S03・S04・S13・S15・S16・S17・S19〜S22・S61・S62 など前半の出典に限る
+- 年配の利用者の Web での使いやすさ（S112〜S124）: 「ナビを隠さない」「手順の数を減らす」を年配の利用者について直接述べた文は見つからなかった。年配の利用者に結び付いた操作対象の大きさ・間隔の数値も見つからなかった（本文の文字の大きさは、S123 の 12 ポイントだけ）。WCAG 2.2 の Understanding の複数のページ（目標の大きさ・文字の拡大・時間の調整・エラーの提案など）を確認したが、年配の利用者に触れるのは S74 の根拠の節だけだった。NN/g の有料の報告書の本文と、W3C・NN/g の記事が引く元の研究（Redish & Chisnell・Hudson et al.・Bjørneby など）は取得していない
 - 引用の英語・日本語は原文のまま。日本語の要旨・訳は本 skill の言葉
 
 ## 再照合の結果
@@ -1364,4 +1619,5 @@
   - S65（2 段落）: 記事の本文が、通常の表示用の HTML ではなくページ内の構造化データに入っているため、表示用の本文には無い。構造化データを復号した取得物に対しては、2 段落とも一致した
   - S98・S99（各 1 段落）: 取得先が直接の取得を拒否したため、この回は再取得できなかった。以前に取得した保存コピーのテキストに対しては、2 段落とも一致した（再取得による照合ではない）
 - 追記行（S36・S37・S40・S48・S54・S55・S60・S68・S70・S74・S75・S77・S81 の計 24 段落）は、上の再取得の照合に含まれ、すべて一致した。S54・S55 は、固定したコミットの URL で取得して照合した
+- 2026-11-16（S112〜S124 と S74 の 3 つ目）: 引用ブロック 74 段落を照合した。出典の取得テキストから作業用にまとめた引用集とは、行単位の完全一致で 71 段落が一致した。残る 3 段落は、引用集に無い追記行（S115 の Hudson et al. の続きの 2 段落と、S122 の年齢の定義の 1 段落）で、取得した HTML だけで照合した。取得した HTML（インライン要素のタグを空文字にし、空白を 1 つに畳む正規化）には、74 段落すべてが一致した。台帳の作成時とは別の日の再取得ではない
 - ページの本文は更新されうる。後日の再照合で不一致になった場合は、取得日の版との差を疑う
