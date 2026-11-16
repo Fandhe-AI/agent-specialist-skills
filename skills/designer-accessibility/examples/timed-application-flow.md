@@ -96,6 +96,9 @@
 ### 入力
 
 - 領収書の宛名は、「氏名と同じにする」で選べる（3.3.7。S028）
+  - チェック中は、氏名の入力（`input`）に合わせて宛名を更新する。氏名より先にチェックしても、あとで入れた氏名が宛名に入る。氏名を直せば宛名も直る
+  - チェック中の宛名欄は、読み取り専用にする（`readonly`）。理由: 無効（`disabled`）にすると、焦点の順路から外れ、値も送られない。読み取り専用なら、順路に残り、値が読まれ、送られる。書き換えたいときは、チェックを外す（本 skill の整理）
+  - チェックを外したら、値は消さず、編集できるようにする。入れ直させないため（3.3.7 の考え方。S028）。外したあとは、氏名を直しても宛名は変わらない
 - メールアドレスは貼り付けできる。認証の手順は無い（3.3.8 は該当なし。S029）
 - 入力欄にはラベルを付け、ヒントは `aria-describedby` で結ぶ（3.3.2。S027）
 
@@ -257,9 +260,15 @@ body{ margin:0; font:1rem/1.7 system-ui,"Hiragino Sans","Noto Sans JP",sans-seri
     state = 'running'; expired.hidden = true; live.textContent = ''; arm();
     document.getElementById('tm-name').focus();
   });
-  document.getElementById('tm-same').addEventListener('change', function (e) {
-    document.getElementById('tm-recipient').value = e.target.checked ? document.getElementById('tm-name').value : '';
-  });
+  var same = document.getElementById('tm-same');
+  var nameInput = document.getElementById('tm-name');
+  var recipient = document.getElementById('tm-recipient');
+  function syncRecipient() { // チェック中は、宛名を氏名に合わせる。読み取り専用でも焦点の順路に残り、値は送られる
+    recipient.readOnly = same.checked;
+    if (same.checked) recipient.value = nameInput.value;
+  }
+  same.addEventListener('change', syncRecipient); // 外したら値は残し、編集できるようにする
+  nameInput.addEventListener('input', syncRecipient);
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (state === 'paused') { // 中断中は送信しない。止めたことを文で伝え、焦点を「再開する」へ移す
@@ -310,7 +319,7 @@ body{ margin:0; font:1rem/1.7 system-ui,"Hiragino Sans","Noto Sans JP",sans-seri
 | 「中断する」 | 同じパネルが出て、焦点は「再開する」。入力は残る。送信はできない。「再開する」で氏名の欄へ焦点が戻り、状態は実行中へ戻る（前の送信の失敗の文は消える）。再開したあとは、送信できる |
 | 出願 | 焦点は見出し「出願を受け付けました」。受付番号 Q-24681 は画面に残る。「出願を保存しました。」は 6 秒後に消えるが、受付番号は残る |
 | 完了後 | 時間切れのパネルは隠れたまま。タイマーは再び動かず、7.5 秒待っても（6 秒の制限を超えても）警告も時間切れのパネルも出ない（状態は完了のまま） |
-| 領収書の宛名 | 「氏名と同じにする」で氏名が入る |
+| 領収書の宛名 | チェック → 氏名を入力: 宛名に氏名が入る（チェック中は読み取り専用）。氏名を入力 → チェック → 氏名を直す: 宛名も直った値になる。チェックを外す: 値は残り、編集できる。外したあと、宛名を書き換えて氏名を直しても、宛名は変わらない。チェックの次の Tab は宛名欄（読み取り専用でも順路に残る）。ツリーでは、宛名欄は値つきのテキスト欄 |
 | 幅 320・390 px | ダイアログを開いた状態・中断中・完了のいずれも、ページ全体ははみ出さない（`scrollWidth` が幅と等しい）。ダイアログは 320 px の幅に収まる |
 | 文字だけ 200%（作成者の CSS・文字サイズ設定 32） | 1280 px と 320 px の両方で、ダイアログを開いた状態・中断中・完了のいずれも、ページ全体ははみ出さない。320 px では、ダイアログは高さ 798 px（画面 800 px）いっぱいになり、内側でスクロールする（内容 906 px、枠 794 px）。「中断する」へ Tab すると、画面の中（709〜797 px）へスクロールされる |
 | 色の比 | 入力欄の枠 5.70:1。他は仕様の表 |
