@@ -176,7 +176,7 @@ button:disabled { color: var(--text-2); border-style: dashed; cursor: default; }
 .viewline { margin: 0.375rem 0; color: var(--text-2); }
 .filters { margin: 0.25rem 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
 .filters summary { padding: 0.375rem 0.625rem; cursor: pointer; font-weight: 600; }
-.fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.5rem 1rem; padding: 0.25rem 0.625rem 0.625rem; align-items: end; }
+.fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 0.5rem 1rem; padding: 0.25rem 0.625rem 0.625rem; align-items: end; }
 .fgrid label { display: grid; gap: 0.125rem; min-width: 0; }
 .fgrid select { width: 100%; }
 .fgrid .chk { display: flex; align-items: center; gap: 0.375rem; min-height: 2rem; }
@@ -192,6 +192,7 @@ button:disabled { color: var(--text-2); border-style: dashed; cursor: default; }
 .danger { border: 2px solid var(--over); background: var(--over-bg); color: var(--over); font-weight: 700; }
 .result { margin: 0.5rem 0; padding: 0.5rem 0.75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
 .result p { margin: 0 0 0.25rem; } .result ul { margin: 0.25rem 0; padding-left: 1.25rem; }
+.tw { position: relative; overflow-x: auto; }   /* 200% など表が収まらないときだけ、表の中で横に動く。焦点が入るのでキーボードで動かせる */
 table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); }
 caption { padding: 0.375rem 0.5rem; text-align: left; font-weight: 700; }
 th, td { padding: 0.375rem 0.625rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
@@ -212,7 +213,7 @@ th[scope="row"] { font-weight: 400; }
 .st-done { color: var(--done); background: var(--done-bg); } .st-hold { color: var(--hold); background: var(--hold-bg); }
 tbody tr.is-selected > * { background: var(--sel); }
 .empty { padding: 1rem 0.75rem; background: var(--surface); border-bottom: 1px solid var(--rule); } .empty p { margin: 0 0 0.5rem; }
-.pager { display: flex; gap: 0.5rem; align-items: center; margin: 0.5rem 0; }
+.pager { display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; align-items: center; margin: 0.5rem 0; }
 dialog { max-width: min(30rem, calc(100vw - 2rem)); padding: 1rem; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 8px; }
 dialog::backdrop { background: rgb(0 0 0 / 0.5); } dialog h2 { margin: 0 0 0.5rem; font-size: 1rem; }
 dialog input[type=text] { width: 100%; min-height: 2rem; padding: 0.25rem 0.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
@@ -256,6 +257,7 @@ dialog .acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0
     </div>
   </div>
   <div class="result" id="result" role="status" hidden></div>
+  <div class="tw" role="region" aria-labelledby="cap" tabindex="0">
   <table id="t">
     <caption id="cap" tabindex="-1"></caption>
     <thead><tr>
@@ -265,6 +267,7 @@ dialog .acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0
     </tr></thead>
     <tbody id="rows"></tbody>
   </table>
+  </div>
   <div class="empty" id="empty" hidden></div>
   <nav class="pager" id="pager" aria-label="ページ送り">
     <button type="button" id="prev">前のページ</button><span id="pageno"></span><button type="button" id="next">次のページ</button>
@@ -372,7 +375,7 @@ function row(r) {
   cb.addEventListener('change', () => { if (allMatch) { sel = new Set(ids()); allMatch = false; } cb.checked ? sel.add(r.no) : sel.delete(r.no); syncSel(); });
   sc.append(cb);
   const th = el('th', 'c-case'); th.scope = 'row'; const box = el('div', 'case');
-  box.append(el('span', 'case-no', r.no), el('span', 'cust', r.customer), el('div', 'title', r.title)); th.append(box);
+  box.append(el('span', 'case-no', r.no), el('span', 'cust', r.customer), Object.assign(el('div', 'title', r.title), { title: r.title })); th.append(box);
   const st = el('td'), b = el('span', 'st st-' + r.st); b.append(el('span', null, ST[r.st][0]), el('span', null, ST[r.st][1])); b.firstChild.setAttribute('aria-hidden', 'true'); st.append(b);
   const due = el('td', 'date');
   if (r.due) { const t = el('time', null, ymd(r.due)); t.dateTime = r.due; due.append(t, el('span', 'rel', r.diff < 0 ? (-r.diff) + ' 日超過' : r.diff === 0 ? '今日' : 'あと ' + r.diff + ' 日')); }
@@ -458,7 +461,7 @@ render();
 ```
 
 - 表は `table`・`caption`・`th scope` で組み、一括操作と焦点の移動は上の仕様のとおり。選択は、行を作り直さずに状態だけを更新するので、チェックボックスの焦点が残る
-- 新しい機能と、非対応のときの姿（対応状況は本 skill で照合していない）: `dialog` と `showModal`（非対応なら確認が出ず、削除が動かない。古いブラウザーでは使えない）、`line-clamp`（非対応なら全文）、`accent-color`、`clip-path`、`replaceAll`・`replaceChildren`。`oklch()` などの新しい色の指定は使わない
+- 新しい機能と、非対応のときの姿（対応状況は本 skill で照合していない）: `dialog` と `showModal`（非対応なら確認が出ず、削除が動かない。古いブラウザーでは使えない）、`line-clamp`（非対応なら全文）、`accent-color`、`clip-path`、`minmax(min(100%, 11rem), 1fr)`（古いブラウザーでは 1 列）、`replaceAll`・`replaceChildren`。`oklch()` などの新しい色の指定は使わない
 - 動きは使わない（`prefers-reduced-motion` の分岐は要らない）。取り消しの表示を消すタイマーも持たない。UI ライブラリの表の部品を使う場合は、先に `../references/library-defaults.md` の「既定値の台帳」の 10（並べ替え・支援技術）ほか、選択と一括操作に関わる項目を確かめる。見た目やコードは写さない
 
 ## 初見検証
@@ -491,6 +494,7 @@ render();
   - 絞り込みとビュー: 既定は今日対応 6 件（1 ページ目は 2610-097・2611-018・2610-061・2611-009・2611-021）。ビューの件数は 6・3・5・1・2。チップを外したあとの焦点は、中を外すと次のチップ、最後を外すと直前のチップ、唯一を外すと絞り込みの見出し（「条件をすべて解除」には移らない）。条件を変えると「保存」が押せ、ダイアログの焦点は名前の欄、Esc で保存のボタンに戻り、保存すると新しいビューに焦点が移った。条件に合う案件が 0 件でも、チップと表の見出しは残った
   - 選択と削除: 見出しのチェックで「このページの 5 件を選択中」、「条件に合う 6 件すべてを選ぶ」で全件になり次のページでも保たれ、1 行を外すと「5 件を選択中」。全選択でないときのページ送りと Esc で解除された。削除は、入金のある 2611-021 を除く 1 件で確認が開き、焦点は「やめる」。Esc で閉じると「削除」のボタン、実行すると表の見出しに焦点が移った。削除ボタンの色は 6.62・7.55（文字）と 6.48・7.26（枠）で、ダイアログ内の枠 / 面は 7.78・8.33
   - 一部失敗と取り消し: 全 12 件で担当を割り当てると 11 件が成功し、2608-134 が理由つきで失敗。失敗だけの表示で 1 件になった。期限を 7 日延ばすと、表示中は 6 件から 0 件になる旨が出て、「元に戻す」で 6 件に戻った
+  - 文字 200%（`html` の `font-size` を 200% にして近似。メディアクエリの `rem` は変わらない）・320 px: ライトとダークで、`scrollWidth` が 320（変更前は 445）。表は `role="region"`・`tabindex="0"`・`aria-labelledby` を持つ容器の中で動く。工事名の全文は `title` 属性にも置いた（補助）
 - 未検証・未実施:
   - スクリーンリーダーでの読み上げ（`aria-pressed`・`indeterminate`・`role="status"`・チップの「を外す」）。Chrome 以外のブラウザー・他の OS・実機のスマートフォン
   - ダークと 390・320 px での操作（描画と横はみ出しだけ測った）。Shift+Tab での逆順・Tab の順序の通し

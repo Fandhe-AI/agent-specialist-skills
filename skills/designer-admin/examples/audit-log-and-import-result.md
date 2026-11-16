@@ -115,6 +115,8 @@
 | 判定の印 | ✓ ▲ ＝。色と印と文字の 3 つ | S048、S061 |
 | 失敗の表 | 行番号（ファイルの行）・案件番号・項目・ファイルの値・直し方。ファイルの値が空なら、読み上げは「未設定」 | 本 skill の整理 |
 | 焦点 | 手順が変わったら、新しい見出しへ。取り込み直すときは確認の見出しへ。やめたときは「取り込みをやめた」の見出しへ | 本 skill の整理。キーボードの流れは S318 |
+| 受付日の検査 | 書式（`2026/11/02`）のあとに、年月日が実在するかを見る。`Date.UTC` で組み直し、年・月・日が一致するかで判る。`2026/02/30`・`2026/99/99`・うるう年でない年の 2 月 29 日は失敗、`2028/02/29` は通る | 本 skill の整理 |
+| 見積金額の検査 | カンマ無しの整数か、3 桁区切りの整数（`1,200,000`）だけを通す。カンマを外した整数が 1 円以上 1 億円未満かを見る。`,`・`1,2`・`0` は失敗 | 書式は本 skill の整理。上限の 1 億円未満は本 skill の目安（置いた前提）。実際の業務の上限に置き換える |
 | 式注入の対策 | 取り込みは、顧客・工事名・担当が `=` `+` `-` `@`・タブ・CR で始まれば失敗。書き出しは、文字列のセルのその先頭に `'` | 本 skill の整理 |
 
 ### 配色の追加（WCAG の相対輝度式による計算）
@@ -142,7 +144,7 @@
 | 実行の前 | （無し） | 直す 5 行は取り込まない。実行すると前の画面へは戻れない。 | S120 |
 | 結果の件数 | 完了 | 成功 6 件・失敗 5 件・スキップ 1 件 | 合計が行数 |
 | スキップ | （無し） | スキップ: 行 10（2610-088）。登録済みで内容が同じ。 | 失敗にしない |
-| 失敗の理由 | エラー | 見積金額: 数字だけで書く。単位の「円」は付けない | 項目と直し方を言う |
+| 失敗の理由 | エラー | 見積金額: 数字だけで書く。区切るなら 3 桁ごとのカンマ（1,200,000）。単位の「円」は付けない | 項目と直し方を言う |
 | 導線 | （無し） | 直した CSV で取り込み直す／処理できなかった 5 行を CSV で保存 | 直して再び取り込む |
 | やめた後 | （無し） | 取り込みをやめた。案件は何も変わっていない。／ファイルを選び直す | やり直しの入口を残す |
 | 権限（画面） | （空の画面） | この画面を見る権限がない。操作の記録を見られるのは管理者だけ。必要なときは、管理者（柳瀬 結衣）に頼む。 | 理由と頼む相手 |
@@ -183,7 +185,8 @@ button, select { font: inherit; color: inherit; min-height: 2rem; padding: 0.25r
 button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
 button[aria-disabled="true"] { background: var(--head); color: var(--text-2); border-style: dashed; cursor: not-allowed; }
 :focus-visible, [tabindex="-1"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.role { display: flex; gap: 0.5rem; align-items: center; color: var(--text-2); margin-bottom: 0.5rem; }
+.role { display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; align-items: center; color: var(--text-2); margin-bottom: 0.5rem; }
+.role select { min-width: 0; max-width: 100%; }
 .sub { color: var(--text-2); }
 .notice { padding: 0.5rem 0.75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
 .steps { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin: 0 0 0.5rem; padding: 0; list-style: none; }
@@ -193,6 +196,7 @@ button[aria-disabled="true"] { background: var(--head); color: var(--text-2); bo
 .tiles div { min-width: 7rem; padding: 0.375rem 0.75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
 .tiles dt { color: var(--text-2); font-size: 0.8125rem; } .tiles dd { margin: 0; font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .mk-ok { color: var(--done); } .mk-ng { color: var(--over); } .mk-skip { color: var(--hold); }
+.tw { position: relative; overflow-x: auto; }   /* 200% など表が収まらないときだけ、表の中で横に動く。焦点が入るのでキーボードで動かせる */
 table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); }
 caption { padding: 0.375rem 0.5rem; text-align: left; font-weight: 700; }
 th, td { padding: 0.375rem 0.625rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
@@ -211,6 +215,7 @@ th[scope="row"] { font-weight: 400; }
   .log tr { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--rule); padding: 0.25rem 0; }
   .log td { display: block; border: 0; padding: 0.125rem 0.5rem; }
   .log td.k, .log td.w, .log td[data-l] { grid-column: 1 / -1; }
+  .log td.k { white-space: normal; }
   .log td.k { order: 1; } .log td.w { order: 2; font-weight: 700; } .log td.p { order: 3; } .log td.q { order: 4; } .log td[data-l="前"] { order: 5; } .log td[data-l="後"] { order: 6; }
   .log td[data-l]::before { content: attr(data-l) "　"; color: var(--text-2); }
   .imp .h-cu, .imp .h-ti, .imp .h-ki, .imp .h-ow, .imp .h-re, .imp .h-am { display: none; }
@@ -276,11 +281,12 @@ function renderLog() {
     const b = val(el('td'), r[4]), a = val(el('td'), r[5]); b.dataset.l = '前'; a.dataset.l = '後';
     tr.append(at, who, no, act, b, a); tb.append(tr);
   });
-  t.append(tb); box.append(t);
+  t.append(tb); box.append(tw(t, '操作の記録'));
 }
 
 // 取り込み: [行, 案件番号, 顧客, 工事名, 工種, 担当, 受付日, 見積金額（ファイルの文字）]
 const EXIST = { '2611-018': ['松尾 恵子 様', 'キッチンの入れ替え（壁付けから対面へ）', '水まわり', '柳瀬 結衣', '2026/11/02', '1284000'], '2610-088': ['森下 義雄 様', '洗面台の交換', '水まわり', '久保田 誠', '2026/10/20', '98000'] };
+const AMOUNT_MAX = 100000000;   // 本 skill の目安（置いた前提）: 見積金額は 1 億円未満
 const FIELDS = ['顧客', '工事名', '工種', '担当', '受付日', '見積金額'];
 const FILE1 = [
   [2, '2611-031', '近藤 典子 様', '勝手口ドアの交換', '建具', '三好 彩', '2026/11/16', '218,000'],
@@ -312,7 +318,11 @@ function check(r) {   // 判定。失敗は {item, why}
   if (pre) return { s: 'ng', item: pre[0], why: '先頭の \' を外してください。\' の次の記号も外して書く' };
   if (!KINDS.includes(ki)) return { s: 'ng', item: '工種', why: '水まわり・外装・内装・建具のどれかで書く' };
   if (!/^\d{4}\/\d{2}\/\d{2}$/.test(re)) return { s: 'ng', item: '受付日', why: '2026/11/02 の形で書く。和暦とハイフン区切りは受け付けない' };
-  if (!/^[\d,]+$/.test(am)) return { s: 'ng', item: '見積金額', why: '数字だけで書く。単位の「円」は付けない' };
+  const [yy, mm, dd] = re.split('/').map(Number), dt = new Date(Date.UTC(yy, mm - 1, dd));   // 組み直して一致を見る。うるう年も判る
+  if (dt.getUTCFullYear() !== yy || dt.getUTCMonth() !== mm - 1 || dt.getUTCDate() !== dd) return { s: 'ng', item: '受付日', why: '実在しない日付。年月日を確かめて、2026/11/02 の形で書く' };
+  if (!/^(\d+|\d{1,3}(,\d{3})+)$/.test(am)) return { s: 'ng', item: '見積金額', why: '数字だけで書く。区切るなら 3 桁ごとのカンマ（1,200,000）。単位の「円」は付けない' };
+  const yenN = Number(am.replaceAll(',', ''));   // 正規化した整数
+  if (yenN < 1 || yenN >= AMOUNT_MAX) return { s: 'ng', item: '見積金額', why: '1 円以上 1 億円未満で書く。桁を確かめる' };
   if (ex) {
     const now = [cu, ti, ki, ow, re, am.replaceAll(',', '')], i = now.findIndex((v, k) => v !== ex[k]);
     return i < 0 ? { s: 'skip', why: '登録済みで内容が同じ' } : { s: 'ng', item: '案件番号', why: '登録済みで、' + FIELDS[i] + 'が違う（登録済み ' + (i === 5 ? yen(ex[i]) : ex[i]) + '、ファイル ' + (i === 5 ? yen(now[i]) : now[i]) + '）。CSV では上書きしない' };
@@ -328,6 +338,7 @@ function setStep(n) {
   ['s1', 's2', 's3'].forEach((id, i) => { const li = $(id); i + 1 === n ? li.setAttribute('aria-current', 'step') : li.removeAttribute('aria-current'); });
   $('s1').textContent = n > 1 ? '1 ファイルを選ぶ（済）' : '1 ファイルを選ぶ';
 }
+function tw(t, label) { const w = el('div', 'tw'); w.setAttribute('role', 'region'); w.setAttribute('aria-label', label); w.tabIndex = 0; w.append(t); return w; }   // 表の容器。収まらないときだけ中で横に動く
 const heading = (t) => { const h = el('h3', null, t); h.tabIndex = -1; return h; };
 
 function renderConfirm() {
@@ -344,7 +355,7 @@ function renderConfirm() {
     const cells = r.slice(1, 7).map((v, i) => { const td = el('td', 'h-' + ['no', 'cu', 'ti', 'ki', 'ow', 're'][i]); v === '' ? td.append(el('span', 'sr', '未設定')) : td.append(v); return td; });
     const am = el('td', 'h-am num', r[7]); tr.append(ln, ...cells, am, j); tb.append(tr);
   });
-  t.append(tb); box.append(t);
+  t.append(tb); box.append(tw(t, '取り込み後の状態'));
   const acts = el('div', 'acts'), go = el('button', 'primary', n('ok') + ' 件を取り込む'); go.type = 'button';
   const stop = el('button', null, 'やめる'); stop.type = 'button';
   const why = el('p', 'sub'); why.id = 'why';
@@ -378,7 +389,7 @@ function renderResult() {
     const hr = el('tr'); [['行', 'num'], ['案件番号', ''], ['項目', ''], ['ファイルの値', ''], ['直し方', '']].forEach(([x, c]) => { const th = el('th', c, x); th.scope = 'col'; hr.append(th); });
     const thd = el('thead'); thd.append(hr); t.append(thd); const tb = el('tbody');
     ng.forEach(({ r, c }) => { const tr = el('tr'), idx = { '案件番号': 1, '顧客': 2, '工事名': 3, '工種': 4, '担当': 5, '受付日': 6, '見積金額': 7 }[c.item], v = r[idx]; const tv = el('td'); v ? tv.append(v) : tv.append(el('span', 'sr', '未設定')); tr.append(el('td', 'num', String(r[0])), el('td', 'nb', r[1]), el('td', null, c.item), tv, el('td', null, c.why)); tb.append(tr); });
-    t.append(tb); box.append(t);
+    t.append(tb); box.append(tw(t, '処理できなかった行'));
   } else box.append(el('p', null, '処理できなかった行は無い。'));
   const acts = el('div', 'acts');
   if (ng.length) {
@@ -443,6 +454,7 @@ renderLog(); renderConfirm();
   - 操作の記録: 10 行で、曜日は月・日・土・金・金・木・火・火・月・月（日付から計算した値と一致）。`datetime` は `2026-11-16T08:10:00+09:00` の形。最後の操作は「（55 分前）」で、取り込みを実行した直後は「（今）」になり、記録が 11 行に増えた。確認の件数は取り込める 6・直す 5・既存と同じ 1。実行すると成功 6・失敗 5・スキップ 1 で、失敗は行 4・5・6・7・8
   - やめる・取り込み直し: 「やめる」を押すと、焦点は「取り込みをやめた」の見出しに移り、手順の表示は「1 ファイルを選ぶ」だけが現在になる。「ファイルを選び直す」で確認に戻り、焦点は確認の見出し。結果から取り込み直すと、取り込める 4 件、結果は成功 4・失敗 0。担当の権限では、記録は理由の文（頼む相手は柳瀬 結衣）に置き換わり、取り込みのボタンは `aria-disabled` で焦点を受け、押しても手順は変わらなかった
   - 失敗の CSV: Blob の中身を読み、先頭が BOM（`ef bb bf`）、見出しと失敗の 5 行と末尾の理由の列を持つことを確かめた。`=1+1`・`+SUM(A1)`・`-2+3`・`@cmd`・タブ・CR で始まる値は先頭に `'` が付き、`abc`・`2611-031`・先頭が空白の値は変わらない。`=HYPERLINK(...)` の顧客名を入れた行は、取り込みで「顧客」の失敗になり、書き出しでも `'` が付いた
+  - 文字 200%（`html` の `font-size` を 200% にして近似。メディアクエリの `rem` は変わらない）・320 px: ライトとダークで、既定・権限・結果の 3 状態とも `scrollWidth` が 320（変更前は 510・470）。3 つの表は `role="region"`・`tabindex="0"`・`aria-label` を持つ容器の中で動く
 - 未検証・未実施:
   - スクリーンリーダーでの読み上げ（`aria-current`・`aria-disabled`・2 段の並びの表の構造・`未設定`・`なし`）。Chrome 以外のブラウザー・他の OS・実機のスマートフォン
   - 全角の `＝` `＋` `－` `＠` で始まる値が、日本語の表計算ソフトで式として扱われるか（検査の対象外で、未検証）

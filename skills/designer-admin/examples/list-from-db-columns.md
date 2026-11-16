@@ -103,8 +103,8 @@ DB の案件テーブルの列を定義順にそのまま並べた一覧を、�
 - 隠す列は、選択（チェック）・担当・経過・見積金額・未入金。選択を隠すのは、一括操作を広い画面の作業と置くため（本 skill の整理）。担当の値は案件の列の 2 行目に出る。経過・見積金額・未入金は、案件番号のボタンから要約パネルで見られる
 - 境目は 60rem（本 skill の目安）。960 px で「案件」列が 265 px 確保でき、7 列が横スクロールなしで収まるため（点検の実測）。959 px 以下で 3 列にする
 - 表の容器の中の横スクロールは使わない。表を縮めて文字を潰さない（S257。要旨）。320 px でも、ページは横にはみ出さない（点検の実測）
-- 日付・バッジ・案件番号は、通常は折り返さない（320 px で日付やバッジが 2 行に割れると読みにくいため）。文字を大きくして画面が 19rem 以下になったときだけ、折り返せるようにする（本 skill の目安。ブラウザーの文字サイズの設定で動くかは未確認）
-- CSS は、コード断片の 2 つの `@media`（59.99rem 未満・19rem 以下）のとおり
+- 日付・バッジ・案件番号は、狭い幅（60rem 未満）で折り返せるようにする。表の幅に収まるうちは、自動の表の幅の計算で割れない（320 px・通常の文字で割れないことは点検の実測）。文字を大きくして収まらなくなったときだけ割れる（本 skill の目安）。表を `overflow-x: auto` の容器に入れる案は、見出し行の `position: sticky` が画面に固定されなくなるため採らない
+- CSS は、コード断片の `@media`（59.99rem 未満の 2 つ）のとおり
 
 ## 仕様
 
@@ -246,9 +246,8 @@ h1 small { margin-left: 0.5rem; color: var(--text-2); font-weight: 400; font-siz
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 0.25rem; }
-.views { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-.views button, .reset { padding: 0.375rem 0.75rem; min-height: 2rem; background: var(--surface); border: 0; cursor: pointer; }
-.views button + button { border-left: 1px solid var(--line); }
+.views { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; }
+.views button, .reset { padding: 0.375rem 0.75rem; min-height: 2rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
 .views button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 700; }
 .reset { border: 1px solid var(--line); border-radius: 6px; }
 .picked { margin: 0; color: var(--text-2); }
@@ -299,8 +298,8 @@ tbody tr.is-current td.c-sel { box-shadow: inset 4px 0 0 var(--accent); }
   .case-no { min-height: 2rem; }
   .detail dl { grid-template-columns: 1fr; gap: 0; } .detail dd { margin-bottom: 0.375rem; }
 }
-/* 文字を大きくして画面が 19rem 以下になったときだけ、折り返せなくしている指定を外す */
-@media (max-width: 19rem) { .date, .st, .case-no { white-space: normal; overflow-wrap: anywhere; } }
+/* 狭い幅では、日付・バッジ・案件番号の折り返せない指定を外す。表の幅に収まるうちは、自動の表の幅の計算で割れない。文字を大きくして収まらなくなったときだけ割れる */
+@media (max-width: 59.99rem) { .date, .st, .case-no { white-space: normal; overflow-wrap: anywhere; } }
 </style>
 </head>
 <body>
@@ -555,7 +554,7 @@ render();
 - 実測（Chrome 157.0.8103.79・macOS・1 環境、2026-11-16。ヘッドレスの Chrome を Playwright 経由の DevTools Protocol で操作し、幅を固定した。コード断片を md から抜き出した HTML を測った）:
   - 描画: 幅 1440・1024・961・960・959・800・640・390・320 px、ライトとダークの 18 通りで、`document.documentElement.scrollWidth` が画面幅と同じ（はみ出し 0）。`#rows=0`・`#rows=1` も 1440・390・320 px の 12 通りで同じ。「案件」列は 960 px で 265 px。959 px 以下で担当の列が隠れ、担当が案件の列の 2 行目に 6 行とも出た。表のセルの数字・日付・括弧が行をまたいで割れた箇所は、18 通りで 0。1440×900 で、今日対応の 6 行も、すべての 12 行も、スクロールなしで見える（行の高さは 54 px、工事名が 2 行の行は 73 px）
   - 操作: 既定の並びは 2610-097、2611-018、2610-061、2611-009、2611-021、2611-030。見積金額・未入金の昇順・降順で、空値が末尾に来た。印は ↑↓ で、`aria-sort` は並べ替えた列にだけ付き、Enter で並べ替えてもフォーカスは見出しのボタンに残った。並びを初期に戻せた。選択 2 件で「2 件を選択中」、案件番号を押すと `aria-current` が付いて要約パネルが開き、表示を切り替えると選択が解除された。今日対応が 0 件の表示は、確認用に「今日対応」の判定を常に偽にした複製で描画し、文言とボタンの動作（フォーカスは「すべて」の切替へ移る）を確かめた。配布するコードでは確かめていない
-  - キーボードと固定・文字拡大: Tab を 22 回押すと、切替・並びを戻す・見出しの 7 つのボタン・各行のチェックと案件番号の順に、最後の案件番号へ着き、フォーカスの輪は 2 px の実線だった。高さ 400 px でスクロール 300 px のとき、見出し行の上端は 0 に留まった（`position: sticky`）。`html` の `font-size` だけを 200% にすると、メディアクエリの `rem` が変わらないので、390・320 px で 559 px、1440 px で 1538 px と、ページが横にはみ出す。ブラウザーの文字サイズの設定は未確認。19rem 以下の折り返しの指定は、文字拡大なしの 300・280・240 px で、はみ出し 0（文字を大きくした状態の代わりで、同じではない）
+  - キーボードと固定・文字拡大: Tab を 22 回押すと、切替・並びを戻す・見出しの 7 つのボタン・各行のチェックと案件番号の順に、最後の案件番号へ着き、フォーカスの輪は 2 px の実線だった。高さ 400 px でスクロール 300 px のとき、見出し行の上端は 0 に留まった（`position: sticky`）。`html` の `font-size` だけを 200% にすると（メディアクエリの `rem` は変わらない）、1440 px で 1538 px と、ページが横にはみ出す（広い幅の 7 列。未対応）。390・320 px では、折り返しを許す指定により 390・320 px（はみ出し 0。変更前は 559 px）。ブラウザーの文字サイズの設定は未確認。狭い幅の折り返しを許す指定にしたあと、`html` の `font-size` を 200% にした 320 px で、`scrollWidth` が 320（変更前は 559）。1440 px の表の位置は変更前と同じ
 - 未検証・未実施: スクリーンリーダーでの読み上げ（`未設定`・`なし`・`aria-sort`・`aria-current`）。Chrome 以外のブラウザー・他の OS・実機のスマートフォン。ダークの灰色にした描画。Shift+Tab での逆順・並べ替え後のフォーカスの通し。作った本人とは別の目での見直し。担当者への初見検証の実施（上の表は設計で、結果ではない）。実在の業務データでの見え方（約 60 件・数百件、権限による列の出し分け）
 - 推測の明示: 毎朝 10 分・約 60 件・8 時 45 分・10 秒・2 日以内・60rem・寸法・色・サンプルの値は、本 skill の目安で、出典は無い。記事の手順の対比は、記事の見解である（S293）。熟練者が密度を好むかは見解にとどまる（S301、S302。C）。業務の優先度の定義は、相談者の業務で決まる
 

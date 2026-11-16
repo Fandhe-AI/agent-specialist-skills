@@ -277,7 +277,7 @@ section > h2 { margin-bottom: 0.5rem; padding-bottom: 0.25rem; border-bottom: 1p
 .kv { display: grid; grid-template-columns: minmax(4.5rem, max-content) minmax(0, 1fr); gap: 0.375rem 1rem; }
 .kv dd { overflow-wrap: anywhere; }
 .kv .num { text-align: right; font-variant-numeric: tabular-nums; }
-.docs { list-style: none; padding: 0; } .docs li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.25rem 0; border-bottom: 1px solid var(--rule); }
+.docs { list-style: none; padding: 0; } .docs li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.125rem 1rem; padding: 0.25rem 0; border-bottom: 1px solid var(--rule); }
 .docs .at { color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tl { list-style: none; padding: 0; } .tl li { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 0 0.75rem; word-break: auto-phrase; padding: 0.25rem 0; border-bottom: 1px solid var(--rule); }
 .nw { white-space: nowrap; }

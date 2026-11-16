@@ -94,7 +94,7 @@
 
 - 案件の表は、`list-from-db-columns.md` と同じく「列を減らす」を選ぶ（案件・対応状況・次の期限の 3 列）。最終更新・見積金額・未入金は 60rem 未満で隠す。棒は列と一緒に隠れる。棒の説明の行も隠す
 - 月次の表は 4 列のまま、320 px まで残す。見出しの折り返しを許し、前月比の 2 行目（差の円）は 30rem 以下で隠す。括弧の部分（`（金額）`・`（15 日まで）`）は割らない（`nw`）。30rem 以下で、ページの左右の余白と月次の表の左右の余白を詰める。読み上げの文は残す
-- 表を縮めて文字を潰さない。表の容器の中の横スクロールを使わない
+- 表を縮めて文字を潰さない。表は `overflow-x: auto` の容器（`role="region"`・`tabindex="0"`・見出しで名前を付ける）に入れる。通常の文字では横に動かない。文字を 200% にして収まらないときだけ、容器の中で横に動き、ページは横にはみ出さない（データの表を容器の中で動かすのは、リフローの例外として扱う。本 skill の整理）
 
 ## 仕様
 
@@ -215,7 +215,8 @@ body { margin: 0; background: var(--bg); color: var(--text);
 .page { max-width: 90rem; margin: 0 auto; padding: 0.75rem 1rem 2rem; }
 h1 { margin: 0 0 0.5rem; font-size: 1.125rem; }
 .note { margin: 0.375rem 0 0; color: var(--text-2); font-size: 0.8125rem; }
-table { width: 100%; margin-top: 1.25rem; border-collapse: separate; border-spacing: 0; background: var(--surface); }
+.tw { position: relative; margin-top: 1.25rem; overflow-x: auto; }   /* 200% など表が収まらないときだけ、表の中で横に動く。焦点が入るのでキーボードで動かせる */
+table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); }
 caption { padding: 0.375rem 0.5rem; text-align: left; font-weight: 700; }
 th, td { padding: 0.375rem 0.625rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
 thead th { background: var(--head); border-bottom: 1px solid var(--line); font-weight: 600; vertical-align: bottom; }
@@ -261,6 +262,7 @@ table.month thead th { white-space: normal; }
 <body>
 <div class="page">
   <h1>表の中の視覚化<small class="rel">こがね案件管理（架空）。今日は 2026/11/16、時刻は日本時間</small></h1>
+  <div class="tw" role="region" aria-labelledby="cap" tabindex="0">
   <table id="t">
     <caption id="cap"></caption>
     <thead>
@@ -275,11 +277,13 @@ table.month thead th { white-space: normal; }
     </thead>
     <tbody id="rows"></tbody>
   </table>
+  </div>
   <p class="note" id="empty" hidden>案件はまだ登録されていない。</p>
   <p class="note wide-only">未入金の棒は、0 から全件の最大（<span id="max"></span> 円）までの長さ。絞り込んでも尺度は変わらない。数値を必ず併記する。</p>
 
+  <div class="tw" role="region" aria-labelledby="mcap" tabindex="0">
   <table id="m" class="month">
-    <caption>月次の受注（2026/06 から 2026/11）</caption>
+    <caption id="mcap">月次の受注（2026/06 から 2026/11）</caption>
     <thead>
       <tr>
         <th scope="col">月</th>
@@ -290,6 +294,7 @@ table.month thead th { white-space: normal; }
     </thead>
     <tbody id="mrows"></tbody>
   </table>
+  </div>
   <p class="note">前月比は、暦月の通月どうしの受注金額で、（当月 − 前月）÷ 前月。2026/11 は 15 日までの途中なので、通月の 10 月とは比べない。</p>
   <p class="note" id="yoy"></p>
 </div>
@@ -344,7 +349,7 @@ const ROWS = (m ? ALL.slice(0, Number(m[1])) : ALL).sort((a, b) => (a.due === nu
 function row(r) {
   const tr = el('tr');
   const th = el('th', 'c-case'); th.scope = 'row';
-  const box = el('div'); box.append(el('span', 'no', r.no), el('span', 'cust', r.customer), el('div', 'title', r.title)); th.append(box);
+  const box = el('div'); box.append(el('span', 'no', r.no), el('span', 'cust', r.customer), Object.assign(el('div', 'title', r.title), { title: r.title })); th.append(box);
 
   const st = el('td'); const badge = el('span', 'st st-' + r.state[0]); const mark = el('span', null, r.state[1]); mark.setAttribute('aria-hidden', 'true');
   badge.append(mark, el('span', null, r.state[2])); st.append(badge);
@@ -454,6 +459,7 @@ renderMonths();
   - 棒の起点: 1440・1024・961・960 px で、棒のある 5 行の左端の x 座標が全行で一致した（それぞれ 1230・814・751・750 px）。数値の右端も 7 行で一致した。幅は 80.00・24.23・17.59・5.27・2.39 px（2611-021・2610-074・2610-097・2611-009・2610-061）。直す前は、`justify-content: flex-end` のため、数値の桁数で起点がずれていた（レビュー時の測定で 1257.3 px と 1270 px）。959・390・320 px では棒の列ごと隠れ、表示されている棒は 0
   - 描画: 1440 px で、案件の表は 12 行。既定の並びは 2610-097、2611-018、2610-061、2611-009、2611-021、2611-030、2611-003、2611-025、2610-088、2610-074、2609-201、2608-134。棒は 5 行、「0」が 2 行、「-」が 5 行。月次の表は 6 行で、前月比は +17.8%・−33.9%・+39.5%・+22.1%、前年同月は +15.6%・+15.0%（本文の表と一致）。読み上げ用の文（`sr`）が DOM に入っていることを読んだ（実際の読み上げは未検証）
   - 件数: `#rows=0` で案件の表は 0 行、「案件はまだ登録されていない。」が表示対象（`hidden` が偽）。`#rows=1` で 1 行。どちらも月次の表は 6 行
+  - 文字 200%（`html` の `font-size` を 200% にして近似。メディアクエリの `rem` は変わらない）・320 px: ライトとダークで、`scrollWidth` が 320（変更前は 608）。表は容器の中で動く。工事名の全文は `title` 属性にも置いた（補助。キーボードでは届かない）。1440 px の表の位置は変更前と同じ
 - 未検証・未実施:
   - スクリーンリーダーでの読み上げ（上の表は設計で、結果ではない）。Chrome 以外のブラウザー・他の OS・実機のスマートフォン。作った本人とは別の目での見直し。担当者への初見検証の実施
   - 実在の業務データでの見え方。数百件の件数。ダークでの灰色にした描画。棒の読み取りの正確さ（利用者での確認）
