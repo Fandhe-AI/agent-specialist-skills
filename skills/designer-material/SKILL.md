@@ -327,7 +327,7 @@ Expressive の効果は Google 自身の報告で、独立の追試は見つけ�
 | Apple のプラットフォームと HIG・Liquid Glass・説明不要の体験 | designer-apple |
 | 文字組・書体・読みやすさの詳細 | designer-typography |
 | チャート・データの見せ方 | designer-dataviz |
-| 管理画面・業務画面の一覧・詳細・絞り込み・一括操作の情報設計（部品を選ぶ前の、列・状態・詳細の定義） | designer-admin |
+| 管理画面・業務画面の一覧・詳細・絞り込み・一括操作の情報設計（部品を選ぶ前の、列・状態・詳細の定義） | designer-admin（本 skill は list-detail の窓の大きさに応じた切り替えと、部品の仕様・トークンを担当） |
 | ブランドの資産（色・書体・ロゴ）を、トークンへ落とす前の定義 | designer-brand（本 skill はトークン化以降を担当） |
 | 利用者調査・評価の設計 | designer-ux-research |
 | 物理製品・ハードウェアの形 | designer-industrial |
