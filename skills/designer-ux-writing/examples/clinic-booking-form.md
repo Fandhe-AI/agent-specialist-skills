@@ -99,10 +99,10 @@
 | 案内（フォームの上） | （なし） | 予約に保険証の登録は要りません。来院したとき、受付で保険証を出してください。 | しなくてよいことを先に言う（S142）。資格をエラーで伝えない（S035） |
 | 氏名（空） | 不正な値です | 氏名を入力してください。 | ラベルの語を使う（S034） |
 | 生年月日（今日より後） | 不正な値です | 生年月日が、今日より後の日付になっています。西暦の年を確認してください。 | 何が合っていないかと、直す箇所（S081） |
-| 生年月日（形式） | 不正な値です | 生年月日を、西暦の年・月・日の順で入力してください。例: 1985/4/7 | 形式と例（S080・S219 の考え方） |
-| 電話番号 | 不正な値です | 電話番号は、数字とハイフンで 10 桁か 11 桁になるように入力してください。例: 000-0000-0000 | 条件を具体的に（S219 の考え方） |
+| 生年月日（形式） | 不正な値です | 生年月日を、西暦の年・月・日の順に、「/」で区切って入力してください。例: 1985/4/7 | 形式と例（S080・S219 の考え方） |
+| 電話番号 | 不正な値です | 電話番号は、数字 10 桁か 11 桁で入力してください。ハイフンは付けても付けなくても構いません。例: 000-0000-0000 | 条件を具体的に（S219 の考え方） |
 | 希望日（休診日） | 不正な値です | 12 月 2 日（水）は休診日です。診察は、月・火・木・金・土曜（祝日を除く）です。別の日を選んでください。 | 利用者のデータを入れて具体的に（S219）。休診日は置いた前提 |
-| 希望日（形式） | 不正な値です | 希望日を、西暦の年・月・日の順で入力してください。（改行して）例: 2026/12/3 | 形式と例（S080） |
+| 希望日（形式） | 不正な値です | 希望日を、西暦の年・月・日の順に、「/」で区切って入力してください。（改行して）例: 2026/12/3 | 形式と例（S080） |
 | 希望日（過ぎた日） | 不正な値です | 12 月 1 日（火）は過ぎた日です。今日より後の日を選んでください。 | 利用者のデータを入れて具体的に（S219） |
 | エラー要約の題 | 入力内容に誤りがあります | 入力を確認してください（4 件） | 件数と、直す欄。入力エラーを通知バナーで出さない（S039） |
 | 症状（ラベルの下の説明） | プレースホルダーに入っていた書き方の説明 | いつから、どこが、どのように困っているかを、分かる範囲で書いてください。 | 常に見える場所に置く（S038・S079） |
@@ -118,10 +118,10 @@
   "summary.title": "入力を確認してください（{count} 件）",
   "name.empty": "氏名を入力してください。",
   "birth.future": "生年月日が、今日より後の日付になっています。西暦の年を確認してください。",
-  "birth.format": "生年月日を、西暦の年・月・日の順で入力してください。\n例: 1985/4/7",
-  "phone.format": "電話番号は、数字とハイフンで 10 桁か 11 桁になるように入力してください。\n例: 000-0000-0000",
+  "birth.format": "生年月日を、西暦の年・月・日の順に、「/」で区切って入力してください。\n例: 1985/4/7",
+  "phone.format": "電話番号は、数字 10 桁か 11 桁で入力してください。ハイフンは付けても付けなくても構いません。\n例: 000-0000-0000",
   "date.closed": "{date}は休診日です。診察は、月・火・木・金・土曜（祝日を除く）です。別の日を選んでください。",
-  "date.format": "希望日を、西暦の年・月・日の順で入力してください。\n例: 2026/12/3",
+  "date.format": "希望日を、西暦の年・月・日の順に、「/」で区切って入力してください。\n例: 2026/12/3",
   "date.past": "{date}は過ぎた日です。今日より後の日を選んでください。",
   "system.fail": "申し訳ありません。予約を送信できませんでした。入力した内容は残っています。もう一度送信してください。続く場合は、電話でお問い合わせください。"
 }
@@ -166,7 +166,7 @@ button { font:inherit; font-weight:700; min-height:2.75rem; padding:.5rem 1rem; 
 <div id="summary" hidden></div>
 <form id="f" novalidate>
   <div class="field"><label for="name">氏名</label><input id="name" name="name" autocomplete="name"><p class="err" id="name-err" hidden></p></div>
-  <div class="field"><label for="birth">生年月日</label><p class="hint" id="birth-hint">西暦で、年・月・日の順に入力します。例: 1985/4/7</p><input id="birth" name="birth" autocomplete="bday" value="2027/4/7" aria-describedby="birth-hint"><p class="err" id="birth-err" hidden></p></div>
+  <div class="field"><label for="birth">生年月日</label><p class="hint" id="birth-hint">西暦で、年・月・日の順に、「/」で区切って入力します。例: 1985/4/7</p><input id="birth" name="birth" autocomplete="bday" value="2027/4/7" aria-describedby="birth-hint"><p class="err" id="birth-err" hidden></p></div>
   <div class="field"><label for="phone">電話番号</label><p class="hint" id="phone-hint">当日の連絡に使います。例: <span class="k">000-0000-0000</span></p><input id="phone" name="phone" type="tel" autocomplete="tel" value="090-000" aria-describedby="phone-hint"><p class="err" id="phone-err" hidden></p></div>
   <div class="field"><label for="date">希望日</label><p class="hint" id="date-hint">月・火・木・金・土曜（祝日を除く）から選びます。例: 2026/12/3</p><input id="date" name="date" value="2026/12/2" aria-describedby="date-hint"><p class="err" id="date-err" hidden></p></div>
   <div class="field"><label for="memo">症状</label><p class="hint" id="memo-hint">いつから、どこが、どのように困っているかを、分かる範囲で書いてください。</p><textarea id="memo" name="memo" rows="3" aria-describedby="memo-hint"></textarea></div>
@@ -179,10 +179,10 @@ const S = {
   "summary.title": "入力を確認してください（{count} 件）",
   "name.empty": "氏名を入力してください。",
   "birth.future": "生年月日が、今日より後の日付になっています。西暦の年を確認してください。",
-  "birth.format": "生年月日を、西暦の年・月・日の順で入力してください。\n例: 1985/4/7",
-  "phone.format": "電話番号は、数字とハイフンで 10 桁か 11 桁になるように入力してください。\n例: 000-0000-0000",
+  "birth.format": "生年月日を、西暦の年・月・日の順に、「/」で区切って入力してください。\n例: 1985/4/7",
+  "phone.format": "電話番号は、数字 10 桁か 11 桁で入力してください。ハイフンは付けても付けなくても構いません。\n例: 000-0000-0000",
   "date.closed": "{date}は休診日です。診察は、月・火・木・金・土曜（祝日を除く）です。別の日を選んでください。",
-  "date.format": "希望日を、西暦の年・月・日の順で入力してください。\n例: 2026/12/3",
+  "date.format": "希望日を、西暦の年・月・日の順に、「/」で区切って入力してください。\n例: 2026/12/3",
   "date.past": "{date}は過ぎた日です。今日より後の日を選んでください。",
   "system.fail": "申し訳ありません。予約を送信できませんでした。入力した内容は残っています。もう一度送信してください。続く場合は、電話でお問い合わせください。"
 };
@@ -207,8 +207,8 @@ function check() {
   if (!$("name").value.trim()) out.push(["name", "name.empty", {}]);
   const b = parseDate($("birth").value);
   if (!b) out.push(["birth", "birth.format", {}]); else if (b.t > TODAY) out.push(["birth", "birth.future", {}]);
-  const digits = $("phone").value.replace(/\D/g, "").length;
-  if (!/^\d{2,4}-\d{2,4}-\d{3,4}$/.test($("phone").value.trim()) || digits < 10 || digits > 11) out.push(["phone", "phone.format", {}]);
+  const pv = $("phone").value.trim(), digits = pv.replace(/-/g, "");
+  if (!/^\d+(-\d+)*$/.test(pv) || !/^\d{10,11}$/.test(digits)) out.push(["phone", "phone.format", {}]);
   const r = parseDate($("date").value);
   if (!r) out.push(["date", "date.format", {}]);
   else {
@@ -277,7 +277,7 @@ if (location.hash === "#fail") addText($("status"), "▲ " + S["system.fail"]);
 
 - 塊の例は、「12 月 2 日」「10 桁」「000-0000-0000」。日付と曜日の間では折り返してよい規則に従う（SKILL.md）
 - アクセシビリティツリーで、欄の名前は「氏名」「生年月日」などで、説明にヒントと、隠した「エラー:」つきのエラー文が入る。名前に余分な空白は入らない。欄を直して送信し直すと、直した欄の説明はヒントだけに戻り、要約が「3 件」になり、焦点は要約の見出しにある
-- 検査の範囲: 電話番号は 12 桁の入力でエラー、希望日は空・不正な値・過ぎた日でエラーになる
+- 検査の範囲: 電話番号は、ハイフンを除いて 10 桁か 11 桁なら（ハイフンの有無・位置は問わない）通り、12 桁や 9 桁、数字とハイフン以外の文字でエラー（検査の式を、「09000000000」「03-1234-5678」「090-000」「090-0000-00000」「-0900000000」「090--0000-000」「abc」などで確かめた）。生年月日と希望日は、「/」区切り以外の形式でエラー文が「/」で区切るよう案内する、希望日は空・不正な値・過ぎた日でエラーになる
 - 開いた直後に、エラーが 4 件出て、要約の題が「4 件」になる。送信の失敗の文（`system.fail`）は、URL の末尾に `#fail` を付けると描画される
 - ライトとダークの比は、上の表（WCAG の相対輝度式で計算）
 
