@@ -142,7 +142,7 @@ Material Design の考え方と、デザインシステム（コンポーネン�
 
 - Compose First: Android の UI は Compose で作る、という立場を Android チームが 2026-05-19 の記事で示した（S29）。Views のコンポーネントは保守モードで、新機能は入らないが、廃止の予定もない（S29）。
 - window size classes: 幅は compact < 600dp、medium 600dp 以上 840dp 未満、expanded 840dp 以上 1200dp 未満、large 1200dp 以上 1600dp 未満、extra-large 1600dp 以上。高さは compact < 480dp、medium 480dp 以上 900dp 未満、expanded 900dp 以上（S30）。画面の向きや端末の名前でなく、窓の大きさで切り替える（本 skill の整理）。
-- canonical layouts: list-detail・supporting pane・feed の 3 つ（S33）。スマートフォンは一覧と詳細を別の画面に、広い窓では並べる、という使い分けが基本（本 skill の整理）。
+- canonical layouts: list-detail・supporting pane・feed の 3 つ（S33）。スマートフォンは一覧と詳細を別の画面に、広い窓では並べる、という使い分けが基本（本 skill の整理）。list-detail は窓の大きさに応じた切り替えで、業務画面の一覧・詳細の中身（列・状態・見出し）の設計ではない。後者は、導入されていれば designer-admin。
 - タッチターゲット: 48dp × 48dp 以上を推奨。マウスやトラックパッドの入力では小さくてよい。Compose の Material 部品の多くは、この最小サイズを既定で確保する（S31）。
 - 注意: Compose の部品名・API の細部は版で変わる。実装の前に Android Developers の最新の文書を確認する。
 
@@ -327,6 +327,7 @@ Expressive の効果は Google 自身の報告で、独立の追試は見つけ�
 | Apple のプラットフォームと HIG・Liquid Glass・説明不要の体験 | designer-apple |
 | 文字組・書体・読みやすさの詳細 | designer-typography |
 | チャート・データの見せ方 | designer-dataviz |
+| 管理画面・業務画面の一覧・詳細・絞り込み・一括操作の情報設計（部品を選ぶ前の、列・状態・詳細の定義） | designer-admin |
 | ブランドの資産（色・書体・ロゴ）を、トークンへ落とす前の定義 | designer-brand（本 skill はトークン化以降を担当） |
 | 利用者調査・評価の設計 | designer-ux-research |
 | 物理製品・ハードウェアの形 | designer-industrial |
