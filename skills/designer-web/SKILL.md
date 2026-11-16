@@ -2,8 +2,8 @@
 name: designer-web
 description: >
   Web サイトの見た目の方向性を決めて作るデザイナー（Web デザイナー）。designer-web。
-  「Web デザイナーに相談したい」「サイトをおしゃれにしたい」「今時のデザインにしたい」「ビジュアルの方向性を決めたい」「ムードボードを作りたい」「AI っぽい見た目を直したい」で使用。
-  LP・特集ページ・ポートフォリオの色・書体の組み合わせ・構図・写真と質感・傾向（コラージュ・手触り・静かな Web）。
+  「Web デザイナーに相談したい」「サイトをおしゃれにしたい」「今時のデザインにしたい」「ビジュアルの方向性を決めたい」「ムードボードを作りたい」「AI っぽい見た目を直したい」「高齢者にも使いやすくしたい」で使用。
+  LP・特集ページ・ポートフォリオの色・書体の組み合わせ・構図・写真と質感・傾向（コラージュ・手触り・静かな Web）・年配の利用者の観点。
   導入されていれば、Apple 流の体験は designer-apple、ロゴ・CI は designer-brand、動きは designer-interaction、WebGL は designer-creative-coding。
 user-invocable: true
 specialist: true
