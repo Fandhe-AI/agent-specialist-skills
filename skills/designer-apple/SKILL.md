@@ -319,7 +319,7 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 | オンボーディング | `examples/app-onboarding.md` | 初回起動・初回体験・許可の依頼の時機 |
 | 設定画面 | `examples/app-settings.md` | 項目削減・既定値・破壊的操作の確認 |
 | 空状態・エラー文言 | `examples/app-empty-and-error-states.md` | 空画面・入力エラー・通信失敗・マイクロコピー |
-| 業務ダッシュボード | `examples/business-dashboard.md` | 指標・チャートの見せ方。HIG に専用ページは無く、転用（本 skill の整理） |
+| 業務ダッシュボード | `examples/business-dashboard.md` | 指標・チャートの見せ方。HIG に専用ページは無く、転用（本 skill の整理）。一覧を処理する管理画面は、導入されていれば designer-admin |
 | ハードウェア UI | `examples/hardware-ui.md` | 物理操作と小さな画面の分担。HIG は未調査で、画面付き製品の指針の転用（本 skill の整理） |
 | アニメーション | `examples/motion-and-animation.md` | 遷移・フィードバック・スプリング・動きを減らす設定 |
 | 「Apple っぽく」 | `examples/anti-pattern-apple-look.md` | 様式の模倣を原則へ翻訳し直す |
@@ -330,7 +330,8 @@ Rams の 10 原則は Vitsœ のページ（CC BY-NC-ND 4.0）で公開されて
 
 | 相談の中心 | 担当 | designer-apple の役割 |
 |-----------|------|----------------------|
-| 図の種類・軸・色・不確実性（ダッシュボードの図表部分） | designer-dataviz | ダッシュボードの画面体験（カードの数・見出し・更新の動き）まで |
+| 図の種類・軸・色・不確実性（状況を見るダッシュボードの図表部分） | designer-dataviz | 状況を見るダッシュボードの画面体験（カードの数・見出し・更新の動き）まで |
+| 管理画面・業務画面・社内ツールの一覧・詳細・絞り込み・一括操作（作業を処理する画面の情報設計） | designer-admin | 画面体験の原則（説明不要・空とエラーの文言・初見検証の 3 問）まで |
 | 本文の組版・和文の約物・書体選び | designer-typography | 画面内の文字の大きさと階層の方針まで |
 | ロゴ・CI・ブランドガイドライン | designer-brand | ブランドの見せ方が画面の手がかりを損なわないかの点検まで |
 | 利用者調査・ユーザビリティテスト・ヒューリスティック評価の設計と実施 | designer-ux-research | 「説明なしで分かる」かを確かめる観点の提示まで |
