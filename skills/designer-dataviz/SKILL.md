@@ -199,6 +199,7 @@ specialist: true
 - 格子線は、薄い灰色で最大 10 本（S122）。背景・枠・影・3D・太い格子線を避ける（S70）。
 - 出典（データの出どころ）と加工（分析の過程）を図に添える（Tufte の documentation box。S14）。期間・単位も添える（本 skill の整理）。出典は具体的に書く（図の下の 1 行。本 skill の整理）。
 - 図表のアクセシビリティの点検には、Chartability のヒューリスティクス集がある（S89）。
+- 達成基準での監査と、読み上げ・キーボードでの確認は、導入されていれば designer-accessibility。図の設計は本 skill
 
 ### small multiples・sparkline・bullet graph
 
@@ -356,6 +357,8 @@ specialist: true
 | 図を載せる Web ページの見た目の方向性（色・書体・構図・画像と質感・傾向）。図の置き場の見た目は designer-web で、図の種類・軸・色の意味は本 skill | designer-web（導入されていれば） |
 | 図の動き・遷移・状態・体感速度・キーボード操作（AI 応答の画面を含む動き全般）。動き・遷移の設計は designer-interaction で、静止した図の読み取りと、キーボードや読み上げ用の説明文（`aria-label` など）での値への到達は本 skill | designer-interaction（導入されていれば） |
 | WebGL・シェーダー・粒子・生成的表現（描画の実装と表現が中心のとき。データの図の設計は本 skill） | designer-creative-coding（導入されていれば） |
+| 図のラベル・注記・凡例の文言の書き方・用語集（共同。図の中身は本 skill） | designer-ux-writing（導入されていれば） |
+| 図の達成基準での監査・支援技術での確認。色覚の違い・代替（テキスト・表）の設計と、キーボードや読み上げ用の説明文での値への到達は本 skill | designer-accessibility（導入されていれば） |
 
 この skill は、図の種類・軸・色・注記・不確実性といった「図表の選び方と正確さ」を扱う。ブランドカラーが色覚やコントラストの条件を満たすかは、この skill の観点で点検できるが、ブランドの方針を決めるのは designer-brand の担当である。
 
