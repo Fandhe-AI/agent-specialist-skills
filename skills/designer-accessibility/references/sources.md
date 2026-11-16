@@ -475,7 +475,7 @@
 >
 > Success Criterion 3.3.3 Error Suggestion
 >
-> Error Suggestion (Level AA) If an input error is automatically detected and suggestions for correction are known, then the suggestions are provided to the user
+> Error Suggestion (Level AA) If an input error is automatically detected and suggestions for correction are known, then the suggestions are provided to the user, unless it would jeopardize the security or purpose of the content.
 >
 > Success Criterion 3.3.4 Error Prevention (Legal, Financial, Data)
 >
@@ -493,7 +493,7 @@
 - URL: https://www.w3.org/TR/WCAG22/ / https://www.w3.org/TR/2024/REC-WCAG22-20241212/
 - 取得日: 2026-11-16
 - 検証区分: A
-- 備考: エラーは項目を特定して文字で説明。入力にはラベルか説明。プレースホルダーだけのラベルの是非は、この文からは直接言えない（Understanding・Techniques で確認）。 ライセンス: W3C Document License（TR の仕様。末尾の permissive document license の表記）。短い逐語引用
+- 備考: エラーは項目を特定して文字で説明。入力にはラベルか説明。プレースホルダーだけのラベルの是非は、この文からは直接言えない（Understanding・Techniques で確認）。 3.3.3 の末尾に、安全や目的を損なう場合の例外がある（原文は 2026-11-16 に WCAG 2.2 本体で逐語を確かめた）。 ライセンス: W3C Document License（TR の仕様。末尾の permissive document license の表記）。短い逐語引用
 
 ### S028 W3C WCAG 2.2（3.3.7 Redundant Entry, Level A, 2.2 で追加）
 
