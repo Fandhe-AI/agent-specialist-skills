@@ -334,6 +334,8 @@ Expressive の効果は Google 自身の報告で、独立の追試は見つけ�
 | Web の見た目の方向性・傾向・画像と質感・構図 | designer-web |
 | 動き・遷移・状態・体感速度・キーボード・AI 応答の画面 | designer-interaction |
 | WebGL・シェーダー・粒子・生成的表現 | designer-creative-coding |
+| 文言の書き方・用語集・ボイスとトーン・敬語 | designer-ux-writing |
+| 達成基準での監査・支援技術での確認（部品の仕様書の書き方とトークンは本 skill） | designer-accessibility |
 
 ### デザイン例の索引
 
