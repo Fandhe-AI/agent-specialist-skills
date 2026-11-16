@@ -257,7 +257,7 @@ dialog .acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0
     </div>
   </div>
   <div class="result" id="result" role="status" hidden></div>
-  <div class="tw" role="region" aria-labelledby="cap" tabindex="0">
+  <div class="tw" id="tw" role="region" aria-labelledby="cap" tabindex="0">
   <table id="t">
     <caption id="cap" tabindex="-1"></caption>
     <thead><tr>
@@ -359,7 +359,7 @@ function render(fi) {
   if (chips.length) { const all = el('button', 'link', '条件をすべて解除'); all.type = 'button'; all.addEventListener('click', () => { F = full({}); page = 0; clearSel(); render(-1); }); const li = el('li'); li.style.border = '0'; li.append(all); $('chips').append(li); }
   $('cap').replaceChildren(el('span', null, list.length + ' 件'), document.createTextNode('（条件に合う。全 ' + rows.length + ' 件）'));
   $('rows').replaceChildren(...view.map(row));
-  const e = $('empty'); e.hidden = list.length > 0; e.replaceChildren(); $('t').hidden = !rows.length;
+  const e = $('empty'); e.hidden = list.length > 0; e.replaceChildren(); $('tw').hidden = !rows.length;
   if (!list.length) {
     if (!rows.length) e.append(el('p', null, '案件はまだ登録されていない。'));
     else { e.append(el('p', null, '条件に合う案件は 0 件。別の条件を試すか、条件を解除する。')); const b = el('button', null, '条件をすべて解除'); b.type = 'button'; b.addEventListener('click', () => { F = full({}); render(-1); }); e.append(b); }
@@ -403,7 +403,7 @@ $('all').addEventListener('change', (e) => {
   if (allMatch) { sel = new Set(ids()); allMatch = false; }
   nos.forEach((no) => e.target.checked ? sel.add(no) : sel.delete(no)); syncSel();   // 混在のとき押すと全選択
 });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('dlg').open && ids().length && e.target.closest('#t, #bulk')) { clearSel(); syncSel(); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('dlg').open && ids().length && e.target.closest('#tw, #bulk')) { clearSel(); syncSel(); } });
 [['f-owner', 'owner'], ['f-kind', 'kind'], ['f-st', 'st']].forEach(([id, k]) => $(id).addEventListener('change', (e) => { F = { ...F, [k]: e.target.value, ids: null }; page = 0; clearSel(); render(); }));
 [['f-unpaid', 'unpaid'], ['f-today', 'today']].forEach(([id, k]) => $(id).addEventListener('change', (e) => { F = { ...F, [k]: e.target.checked, ids: null }; page = 0; clearSel(); render(); }));
 $('prev').addEventListener('click', () => { page--; if (!allMatch) sel = new Set(); render(); $('cap').focus(); });
