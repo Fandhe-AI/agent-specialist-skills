@@ -357,6 +357,7 @@ NN/g の 10 ヒューリスティクスは、広い経験則であり、具体�
 | 調査の資料・プロトタイプの文字組み | designer-typography |
 | 調査結果の図表（グラフの選び方・見せ方） | designer-dataviz |
 | ブランドの伝わり方の設計 | designer-brand |
+| 管理画面・業務画面の一覧・詳細・一括操作の設計の判断と、確かめる観点（長い名前・0 件・桁違いの数値） | designer-admin |
 | 調査結果をデザインシステムの部品・トークンの改善へつなぐ | designer-material |
 | 製品の形・寸法・人間工学 | designer-industrial |
 | Web の見た目の方向性・傾向・画像と質感・構図 | designer-web |
