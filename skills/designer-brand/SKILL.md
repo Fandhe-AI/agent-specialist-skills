@@ -323,6 +323,8 @@ IBM は 1956 年に、新時代を示しつつ連続性も伝えるロゴを求�
 | Web の見た目の方向性・傾向・画像と質感・構図（ロゴ・CI が決まった後の見た目） | designer-web |
 | 動き・遷移・状態・体感速度・キーボード・AI 応答の画面 | designer-interaction |
 | WebGL・シェーダー・粒子・生成的表現 | designer-creative-coding |
+| 画面の文言の書き方・用語集・敬語、ブランドのボイスとトーンを画面の文言に当てはめるところ | designer-ux-writing |
+| 達成基準での監査・支援技術での確認（ブランドの色の文字のコントラスト比の計算は本 skill） | designer-accessibility |
 
 ### レビュー観点チェックリスト
 
