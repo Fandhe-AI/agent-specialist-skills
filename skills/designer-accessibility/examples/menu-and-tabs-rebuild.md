@@ -7,6 +7,7 @@
 - 製品: 架空の調剤薬局「くすのき薬局」のサイト（架空）。薬の案内ページには、サイトのナビゲーションと、用法・注意・保管の 3 つの内容を切り替えるタブがある
 - 依頼文（架空）: 「ナビとタブをアクセシブルにしたい。スクリーンリーダー対応っぽくしてほしい。前の担当者が ARIA をたくさん付けたが、キーボードだと動かないと言われた」
 - 現状（前の版。架空）: ナビは `role="menubar"` に `role="menuitem"` のリンク。タブは `div` にクリックの処理だけを付けた。選択中のタブの地は #F2F6EC、選択されていないタブの地は #E9EFE2。焦点の輪郭は消してある
+- リンク先: `shops.html`・`contact.html` は、別ページの架空の相対 URL で、例の範囲外（`#top` は実在する）
 - 想定ユーザー: キーボードだけで操作する人、スクリーンリーダーの人、拡大して見る人。薬の案内は、薬を受け取った後に読み返される
 - 範囲外: 薬の内容の文言と医学的な正確さ（本文はサンプル文）、実際の読み上げ、動きの設計
 
@@ -140,8 +141,8 @@ body{ margin:0; font:1rem/1.7 system-ui,"Hiragino Sans","Noto Sans JP",sans-seri
   <nav class="kp-nav" aria-label="主要">
     <ul>
       <li><a href="#top" aria-current="page">お薬の案内</a></li>
-      <li><a href="#shops">店舗</a></li>
-      <li><a href="#contact">お問い合わせ</a></li>
+      <li><a href="shops.html">店舗</a></li>
+      <li><a href="contact.html">お問い合わせ</a></li>
     </ul>
   </nav>
 </header>

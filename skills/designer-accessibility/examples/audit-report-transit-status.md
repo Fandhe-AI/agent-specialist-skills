@@ -7,6 +7,7 @@
 - 製品: 架空の鉄道会社「やまぶき鉄道」の Web の運行情報ページ（架空）。路線ごとの状況・更新ボタン・駅名の検索・お知らせ・駅の一覧がある 1 ページ
 - 依頼文（架空）: 「運行情報ページを、アクセシビリティ対応済みっぽくしたい。自動検査のスコアは満点だった。監査の報告書として出して、直すところも教えてほしい」
 - 現状（監査の対象。架空）: 状況は色つきの丸だけで、文字が無い。お知らせは自動で流れ続ける。焦点の輪郭を消している。固定ヘッダーが付いている。更新ボタンの結果は、ふつうの文として差し込まれる。文字は `px` で固定している
+- リンク先: `notice.html`・`contact.html`・`stations/*.html` は、別ページの架空の相対 URL で、例の範囲外（ページの中の `#top`・`#st` は実在する）
 - 想定ユーザー: 毎朝見る通勤の人、拡大鏡で見る人、キーボードだけで操作する人、スクリーンリーダーの人、動きで気分が悪くなる人
 - 確かめた環境: Chrome 157（ヘッドレス、1280 × 800 を既定）。アクセシビリティツリーは、ブラウザーが公開する名前・役割・状態の書き出し。支援技術は使っていない（2026-11-16）
 - 範囲外: 実際の読み上げ（VoiceOver・NVDA・JAWS・TalkBack）、音声操作、利用者による理解、複数ページにまたがる基準、法的な判断
@@ -64,11 +65,11 @@
 | 2.1.1 キーボード | 適合 | Tab で、リンク・ボタン・入力欄の全てに届く（47 か所） | 実測。S018 |
 | 2.2.2 一時停止・停止・非表示 | 不適合 | お知らせが自動で流れ続け（20 秒周期）、止める手段が無い。動きを減らす設定でも動き続ける | 実測。S019・S074 |
 | 2.4.7 焦点の可視 | 不適合 | 全ての操作部品で `outline: none`（47 か所） | 実測。S021 |
-| 2.4.11 焦点が隠れない | 不適合 | Shift+Tab で戻ると、固定ヘッダーの下に、リンク 2 つが隠れる | 実測。S022・S036 |
+| 2.4.11 焦点が隠れない | 不適合 | Shift+Tab で戻ると、固定ヘッダーの下に、リンク 2 つの全体が隠れる（矩形の被覆 100%）。ほかに 1 つは 36% だけ覆われた（AA の不適合ではなく、AAA の 2.4.12 の対象。改善の推奨） | 実測。S022・S036 |
 | 2.4.2 ページの題 | 適合 | `title` が「運行情報 ｜ やまぶき鉄道」（ページの主題と、サイト名。区切りは縦線） | 実測。S021 |
 | 3.1.1 ページの言語 | 適合 | `lang="ja"` | 実測。S026 |
 | 2.4.3 焦点の順序 | 適合 | Tab の順路が DOM の順（見た目の順）と同じで、正の `tabindex` が無い | 実測。S021 |
-| 2.5.8 ターゲットの大きさ | 適合 | 閉じるボタンは 20 × 20 px で 24 px 未満。ただし 24 px の円が、隣の検索ボタンの枠に交わらない（円の半径 12 px に対し、中心から隣の枠まで 14 px）ので、間隔の例外を満たす | 実測。S025 |
+| 2.5.8 ターゲットの大きさ | 適合 | 閉じるボタンは 20 × 20 px で 24 px 未満。ただし 24 px 直径の円が、隣の検索ボタンの枠に交差しない（円の半径 12 px に対し、中心から隣の枠まで 14 px）。近くに他の小さいターゲットは無いので、小さいターゲットの円どうしの条件も満たす。間隔の例外を満たす | 実測。S025 |
 | 4.1.2 名前・役割・値 | 適合 | ボタン・入力欄の名前がツリーに出る。閉じるボタンは `aria-label` で名前を持つ | 実測。S030 |
 | 4.1.3 ステータスメッセージ | 不適合 | 更新の結果が、ツリーで通常の文として出る。`status` ではない（焦点は動かない） | 実測。S031 |
 | 3.3.8 認証（最低限） | 該当なし | このページには、認証の手順が無い | 実測（ツリーに入力欄は駅名の検索だけ）。S029 |
@@ -169,11 +170,11 @@ a{ color:var(--brand); }
 <body>
 <header class="yb-header">
   <strong>やまぶき鉄道</strong>
-  <nav aria-label="主要"><a href="#top">運行情報</a> <a href="#st">駅・路線</a> <a href="#ct">お問い合わせ</a></nav>
+  <nav aria-label="主要"><a href="#top">運行情報</a> <a href="#st">駅・路線</a> <a href="contact.html">お問い合わせ</a></nav>
 </header>
 <main class="yb-main" id="top">
   <h1>運行情報</h1>
-  <p>春のダイヤ改正について。<a href="#notice">詳しくはこちら</a></p>
+  <p>春のダイヤ改正について。<a href="notice.html">詳しくはこちら</a></p>
   <p><button type="button" class="yb-btn" id="yb-refresh">最新の情報に更新</button>
      <span id="yb-time">12:40 現在</span></p>
   <div id="yb-live" role="status"></div>
@@ -192,46 +193,46 @@ a{ color:var(--brand); }
   <h2 id="st">駅の情報</h2>
   <form class="yb-search"><label for="yb-q">駅名</label> <input class="yb-q" id="yb-q" type="search" autocomplete="off"> <button class="yb-btn" type="submit">検索</button></form>
   <ul class="yb-stations">
-    <li><a href="#s1">駅の情報 1</a></li>
-    <li><a href="#s2">駅の情報 2</a></li>
-    <li><a href="#s3">駅の情報 3</a></li>
-    <li><a href="#s4">駅の情報 4</a></li>
-    <li><a href="#s5">駅の情報 5</a></li>
-    <li><a href="#s6">駅の情報 6</a></li>
-    <li><a href="#s7">駅の情報 7</a></li>
-    <li><a href="#s8">駅の情報 8</a></li>
-    <li><a href="#s9">駅の情報 9</a></li>
-    <li><a href="#s10">駅の情報 10</a></li>
-    <li><a href="#s11">駅の情報 11</a></li>
-    <li><a href="#s12">駅の情報 12</a></li>
-    <li><a href="#s13">駅の情報 13</a></li>
-    <li><a href="#s14">駅の情報 14</a></li>
-    <li><a href="#s15">駅の情報 15</a></li>
-    <li><a href="#s16">駅の情報 16</a></li>
-    <li><a href="#s17">駅の情報 17</a></li>
-    <li><a href="#s18">駅の情報 18</a></li>
-    <li><a href="#s19">駅の情報 19</a></li>
-    <li><a href="#s20">駅の情報 20</a></li>
-    <li><a href="#s21">駅の情報 21</a></li>
-    <li><a href="#s22">駅の情報 22</a></li>
-    <li><a href="#s23">駅の情報 23</a></li>
-    <li><a href="#s24">駅の情報 24</a></li>
-    <li><a href="#s25">駅の情報 25</a></li>
-    <li><a href="#s26">駅の情報 26</a></li>
-    <li><a href="#s27">駅の情報 27</a></li>
-    <li><a href="#s28">駅の情報 28</a></li>
-    <li><a href="#s29">駅の情報 29</a></li>
-    <li><a href="#s30">駅の情報 30</a></li>
-    <li><a href="#s31">駅の情報 31</a></li>
-    <li><a href="#s32">駅の情報 32</a></li>
-    <li><a href="#s33">駅の情報 33</a></li>
-    <li><a href="#s34">駅の情報 34</a></li>
-    <li><a href="#s35">駅の情報 35</a></li>
-    <li><a href="#s36">駅の情報 36</a></li>
-    <li><a href="#s37">駅の情報 37</a></li>
-    <li><a href="#s38">駅の情報 38</a></li>
-    <li><a href="#s39">駅の情報 39</a></li>
-    <li><a href="#s40">駅の情報 40</a></li>
+    <li><a href="stations/1.html">駅の情報 1</a></li>
+    <li><a href="stations/2.html">駅の情報 2</a></li>
+    <li><a href="stations/3.html">駅の情報 3</a></li>
+    <li><a href="stations/4.html">駅の情報 4</a></li>
+    <li><a href="stations/5.html">駅の情報 5</a></li>
+    <li><a href="stations/6.html">駅の情報 6</a></li>
+    <li><a href="stations/7.html">駅の情報 7</a></li>
+    <li><a href="stations/8.html">駅の情報 8</a></li>
+    <li><a href="stations/9.html">駅の情報 9</a></li>
+    <li><a href="stations/10.html">駅の情報 10</a></li>
+    <li><a href="stations/11.html">駅の情報 11</a></li>
+    <li><a href="stations/12.html">駅の情報 12</a></li>
+    <li><a href="stations/13.html">駅の情報 13</a></li>
+    <li><a href="stations/14.html">駅の情報 14</a></li>
+    <li><a href="stations/15.html">駅の情報 15</a></li>
+    <li><a href="stations/16.html">駅の情報 16</a></li>
+    <li><a href="stations/17.html">駅の情報 17</a></li>
+    <li><a href="stations/18.html">駅の情報 18</a></li>
+    <li><a href="stations/19.html">駅の情報 19</a></li>
+    <li><a href="stations/20.html">駅の情報 20</a></li>
+    <li><a href="stations/21.html">駅の情報 21</a></li>
+    <li><a href="stations/22.html">駅の情報 22</a></li>
+    <li><a href="stations/23.html">駅の情報 23</a></li>
+    <li><a href="stations/24.html">駅の情報 24</a></li>
+    <li><a href="stations/25.html">駅の情報 25</a></li>
+    <li><a href="stations/26.html">駅の情報 26</a></li>
+    <li><a href="stations/27.html">駅の情報 27</a></li>
+    <li><a href="stations/28.html">駅の情報 28</a></li>
+    <li><a href="stations/29.html">駅の情報 29</a></li>
+    <li><a href="stations/30.html">駅の情報 30</a></li>
+    <li><a href="stations/31.html">駅の情報 31</a></li>
+    <li><a href="stations/32.html">駅の情報 32</a></li>
+    <li><a href="stations/33.html">駅の情報 33</a></li>
+    <li><a href="stations/34.html">駅の情報 34</a></li>
+    <li><a href="stations/35.html">駅の情報 35</a></li>
+    <li><a href="stations/36.html">駅の情報 36</a></li>
+    <li><a href="stations/37.html">駅の情報 37</a></li>
+    <li><a href="stations/38.html">駅の情報 38</a></li>
+    <li><a href="stations/39.html">駅の情報 39</a></li>
+    <li><a href="stations/40.html">駅の情報 40</a></li>
   </ul>
 </main>
 <script>
@@ -247,6 +248,40 @@ document.getElementById('yb-refresh').addEventListener('click', function () {
 </body>
 </html>
 ```
+
+### コントラストの計算（素の JS）
+
+本文の比は、WCAG の式（S013）で計算した値である。相対輝度は、sRGB の成分を 255 で割り、0.04045 以下なら 12.92 で割り、そうでなければ ((v + 0.055) / 1.055) の 2.4 乗にして、0.2126・0.7152・0.0722 の重みで足す（S013）。比は (明るい方 + 0.05) / (暗い方 + 0.05)（S013）。色を変えたら、次の関数で再計算する。
+
+```js
+// WCAG 2.2 の相対輝度とコントラスト比（hex は '#RRGGBB'）。丸めずに返す。判定には丸めた値を使わない。
+function luminance(hex) {
+  var c = [1, 3, 5].map(function (i) {
+    var v = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function contrast(a, b) {
+  var x = luminance(a), y = luminance(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+```
+
+関数の出力（小数第 4 位。判定には丸めない。S037）:
+
+| 前景 / 背景 | 比 | 本文の表記 |
+|---|---|---|
+| #356A1E / #FFFFFF | 6.4981 | 6.50:1 |
+| #1B2617 / #FFFFFF | 15.7160 | 15.72:1 |
+| #356A1E / #F4F7EE | 5.9985 | 6.00:1 |
+| #14230F / #FFFFFF | 16.4441 | 16.44:1 |
+| #14230F / #356A1E | 2.5306 | 2.53:1 |
+| #A3260A / #FFFFFF | 7.3971 | 7.40:1 |
+| #333333 / #FFFFFF | 12.6347 | 12.63:1 |
+| #BBBBBB / #FFFFFF | 1.9198 | 1.92:1 |
+| #E9EFE4 / #12170F | 15.5228 | 15.52:1 |
+| #8FCB6E / #12170F | 9.4665 | 9.47:1 |
 
 ## 初見検証
 
@@ -266,7 +301,7 @@ document.getElementById('yb-refresh').addEventListener('click', function () {
 |---|---|---|
 | ツリー（状況の名前） | 3 路線とも、状況のセルに名前なし | 状況が文字でツリーに出る |
 | キーボードの順路 | 47 か所に届く。全て `outline: none` | 47 か所。輪郭は全て実線 3 px |
-| 焦点が隠れる | Shift+Tab で 2 か所が固定ヘッダーの下。文字サイズ設定を 32 にすると 3 か所 | 隠れない（標準の設定でも、32 でも 0 か所） |
+| 焦点が隠れる | Shift+Tab で、全体が隠れたリンクが 2 か所（ほかに一部だけ覆われた 1 か所）。文字サイズ設定を 32 にすると、部品の中心が覆われた数は 3 か所 | 隠れない（標準の設定でも、32 でも 0 か所） |
 | 幅 320 px・390 px | `scrollWidth` 560 px（横にはみ出す） | 320 px・390 px とも、はみ出さない。320 px で文字 200%（作成者の CSS・文字サイズ設定 32）でも、はみ出さない |
 | 文字だけ 200%（作成者の CSS） | 本文 14 px のまま（`px`） | 本文が 2 倍。路線の行は 1 列になる |
 | 文字だけ 200%（ブラウザーの文字サイズ設定 32） | 本文 14 px のまま | 本文 32 px。路線の行は 1 列になる |

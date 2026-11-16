@@ -79,7 +79,7 @@
 |---|---|---|
 | 本文 | #1B2617（白地） | 15.72:1 |
 | 時刻 | #4A5846 | 7.57:1 |
-| 画面の説明の印 | 左の線 #5B6B57 と、先頭の文字「画面の説明:」 | 5.70:1（線）。文字が意味を持つ |
+| 画面の説明の印 | 左の線 #5B6B57 と、先頭の文字「画面の説明:」。この文字は、CSS の `content` ではなく、HTML の本文の文字（`span`）として書く | 5.70:1（線）。文字が意味を持つ |
 | リンク | #356A1E（「別の見方」の枠は #F4F7EE の地） | 6.00:1（白地では 6.50:1） |
 | 焦点の輪郭 | 3 px・#14230F・オフセット 2 px | 16.44:1（白地） |
 | リンクの高さ | 1.5rem 以上 | 24 px（S025） |
@@ -134,7 +134,7 @@ a{ color:var(--brand); }
 .ak-tr p{ margin:0 0 .75rem; }
 .ak-t{ color:var(--muted); font-variant-numeric:tabular-nums; margin-right:.5rem; }
 .ak-visual{ padding:.25rem .75rem; border-left:.25rem solid var(--line); color:var(--ink); }
-.ak-visual::before{ content:"画面の説明: "; font-weight:700; }
+.ak-kind{ font-weight:700; }
 @media (prefers-color-scheme:dark){
   :root{ --bg:#12170F; --ink:#E9EFE4; --muted:#B9C6B1; --line:#8C9E83; --brand:#8FCB6E; --on-brand:#10200A;
     --soft:#1C2418; --focus:#F4F8EF; --warn:#E9B949; --stop:#FF9F8A; --err:#FF9F8A; --media:#0B0F09; }
@@ -164,7 +164,7 @@ a{ color:var(--brand); }
   <section id="ak-transcript" class="ak-tr" aria-labelledby="ak-tr-h">
     <h2 id="ak-tr-h">書き起こし（画面の説明つき）</h2>
     <p><span class="ak-t">00:01</span>先生: 今日は、枝を切る前に確かめることから始めます。</p>
-    <p class="ak-visual"><span class="ak-t">00:04</span>先生が低い枝を指差す。切る位置に、赤い印のテープが巻いてある。</p>
+    <p class="ak-visual"><span class="ak-kind">画面の説明: </span><span class="ak-t">00:04</span>先生が低い枝を指差す。切る位置に、赤い印のテープが巻いてある。</p>
     <p><span class="ak-t">00:09</span>先生: 印の少し上で切ります。</p>
     <p><span class="ak-t">00:12</span>［ハサミを置く音］</p>
   </section>
@@ -204,7 +204,7 @@ WEBVTT
 
 | 項目 | 結果 |
 |---|---|
-| ツリー | `ariaSnapshot` では、h1・動画の下の文・h2・領域「この動画の別の見方」（リンク 2 つ）・領域「書き起こし（画面の説明つき）」。動画の要素は `ariaSnapshot` には出ず、ブラウザーのアクセシビリティツリー（CDP）では Video として出る。名前は h1 の文、説明は動画の下の文 |
+| ツリー | 「画面の説明:」は HTML の本文の文字で、段落の文字としてツリーに出る（`::before` ではない）。`ariaSnapshot` では、h1・動画の下の文・h2・領域「この動画の別の見方」（リンク 2 つ）・領域「書き起こし（画面の説明つき）」。動画の要素は `ariaSnapshot` には出ず、ブラウザーのアクセシビリティツリー（CDP）では Video として出る。名前は h1 の文、説明は動画の下の文 |
 | Tab の順路 | プレーヤー（メディア未読込の状態で 3 回止まる）→ 別の見方の 2 つのリンク → 末尾 |
 | 幅 320・390 px | はみ出さない |
 | 文字だけ 200%（作成者の CSS・文字サイズ設定 32） | どちらもはみ出さない（作成者の CSS は 1280 px と 320 px の両方） |

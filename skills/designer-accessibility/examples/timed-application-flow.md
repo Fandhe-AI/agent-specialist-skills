@@ -56,6 +56,19 @@
 | 延長 | 「20 分延ばす」を 1 回の操作で。回数の制限なし | 少なくとも 10 回（S046） |
 | 応じないとき | 2 分後に切れる。入力は残り、「再開する」で続けられる | S028 の考え方（整理） |
 
+### 状態（本 skill の整理）
+
+手続きの状態を、実行中・中断中・完了の 3 つで持つ。
+
+| 状態 | 入るとき | その状態でできること | 伝え方 |
+|---|---|---|---|
+| 実行中 | 開いたとき。「再開する」を押したとき | タイマーが動く。警告が出る。送信できる | - |
+| 中断中 | 時間が切れたとき。「中断する」を押したとき | 送信できない。入力は残る。「再開する」だけが進む手段 | 「時間が切れました」のパネルを出し、焦点を「再開する」へ移す。送信しようとしたら、送信しなかったことを `status` の文で言い、焦点を「再開する」へ移す |
+| 完了 | 実行中に送信したとき | タイマーは止まったまま。警告も時間切れのパネルも出ない | 時間切れのパネルを隠し、受付番号の見出しへ焦点を移す |
+
+- 中断中に Enter で送信しても、送信しない（実測）。完了後は警告が出ず、「再開する」の経路も無い（実測）
+- 状態の持ち方は本 skill の整理（出典なし）。時間制限の要件は S046
+
 ### 警告のダイアログ（本 skill の整理を含む）
 
 | 項目 | 仕様 | 根拠 |
@@ -66,7 +79,7 @@
 | Tab | ネイティブの `dialog` の既定に任せる。実測では、最後の要素から次へ進むと、一度ブラウザー側へ出てから先頭へ戻る。APG は、最後の要素から最初へ戻る（S058） | S058。実測（本 skill） |
 | Esc | 閉じる。閉じることを「続ける（延長）」として扱う | 閉じる（S058）。延長に結ぶのは整理 |
 | 閉じたとき | 呼び出す前に焦点があった要素へ戻る。無いとき、または焦点が本文（`body`）にあったときは見出しへ | S059。呼び出し元が無いのは、タイマーが開くため（整理） |
-| 時間切れで閉じたとき | 「再開する」ボタンへ焦点を移す | 呼び出し元が無い場合の整理 |
+| 時間切れで閉じたとき | 「再開する」ボタンへ焦点を移す。送信は止める（中断中） | 呼び出し元が無い場合の整理 |
 
 ### 通知
 
@@ -204,46 +217,65 @@ body{ margin:0; font:1rem/1.7 system-ui,"Hiragino Sans","Noto Sans JP",sans-seri
   var live = document.getElementById('tm-live');
   var form = document.getElementById('tm-form');
   var expired = document.getElementById('tm-expired');
+  var resume = document.getElementById('tm-resume');
   var warnTimer, endTimer, opener;
+  var state = 'running'; // running（実行中）・paused（中断中。時間切れか中断）・done（完了）
 
-  function arm() {
-    clearTimeout(warnTimer); clearTimeout(endTimer);
-    warnTimer = setTimeout(warn, (LIMIT - WARN) * 1000);
-    endTimer = setTimeout(function () { stop('time'); }, LIMIT * 1000);
-  }
-  function warn() { opener = document.activeElement; dlg.returnValue = ''; dlg.showModal(); }
   // 入力値は .value と textContent だけで扱う。HTML として差し込まない（innerHTML は使わない）。
   function hhmm(ms) {
     var d = new Date(Date.now() + ms), p = function (n) { return String(n).padStart(2, '0'); };
     return p(d.getHours()) + ':' + p(d.getMinutes());
   }
+  function arm() {
+    clearTimeout(warnTimer); clearTimeout(endTimer);
+    if (state !== 'running') return;
+    warnTimer = setTimeout(warn, (LIMIT - WARN) * 1000);
+    endTimer = setTimeout(function () { stop('time'); }, LIMIT * 1000);
+  }
+  function warn() {
+    if (state !== 'running') return;
+    opener = document.activeElement; dlg.returnValue = ''; dlg.showModal();
+  }
   function stop(why) {
+    if (state !== 'running') return;
+    state = 'paused';
     clearTimeout(warnTimer); clearTimeout(endTimer);
     if (dlg.open) dlg.close(why);
     expired.hidden = false;
-    document.getElementById('tm-resume').focus();
+    resume.focus();
   }
   dlg.addEventListener('close', function () {
-    if (dlg.returnValue === 'time') return;
+    if (state !== 'running' || dlg.returnValue === 'time') return;
     if (dlg.returnValue === 'stop') { stop('stop'); return; }
     arm();
     live.textContent = '時間を延ばしました。次の期限は ' + hhmm(LIMIT * 1000) + ' です。';
     var back = opener && opener !== document.body && opener.isConnected ? opener : document.getElementById('tm-h1');
     back.focus();
   });
-  document.getElementById('tm-resume').addEventListener('click', function () {
-    expired.hidden = true; arm(); document.getElementById('tm-name').focus();
+  resume.addEventListener('click', function () {
+    if (state !== 'paused') return;
+    state = 'running'; expired.hidden = true; live.textContent = ''; arm();
+    document.getElementById('tm-name').focus();
   });
   document.getElementById('tm-same').addEventListener('change', function (e) {
     document.getElementById('tm-recipient').value = e.target.checked ? document.getElementById('tm-name').value : '';
   });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (state === 'paused') { // 中断中は送信しない。止めたことを文で伝え、焦点を「再開する」へ移す
+      live.textContent = '手続きは中断中のため、まだ送信していません。「再開する」を選んでから、もう一度送信してください。';
+      resume.focus();
+      return;
+    }
+    if (state !== 'running') return;
+    state = 'done';
     clearTimeout(warnTimer); clearTimeout(endTimer);
+    if (dlg.open) dlg.close('done');
     form.hidden = true;
+    expired.hidden = true;
     document.getElementById('tm-done').hidden = false;
     document.getElementById('tm-done-h').focus();
-    document.getElementById('tm-saved').textContent = '最終の保存: 12:41';
+    document.getElementById('tm-saved').textContent = '最終の保存: ' + hhmm(0);
     live.textContent = '出願を保存しました。';
     setTimeout(function () { live.textContent = ''; }, 6000);
   });
@@ -274,12 +306,13 @@ body{ margin:0; font:1rem/1.7 system-ui,"Hiragino Sans","Noto Sans JP",sans-seri
 | Tab（ダイアログの中。ネイティブの `dialog` の既定の動き） | 「中断する」→ ブラウザー側（本文の外）→「20 分延ばす」→「中断する」→「20 分延ばす」。ネイティブの `dialog` では、一度ブラウザー側へ出てから戻る（この環境の観察。S058 の記述とは経路が違う） |
 | Esc | 閉じ、焦点は元の入力欄へ戻る。焦点が本文にあったときは、見出しへ戻る。「時間を延ばしました。次の期限は 20:24 です。」の形の文が `status` に入り、入力は残る。実際の読み上げは未確認 |
 | 延長の回数 | 11 回の延長を続けて行えた（回数の制限なし。S046 は少なくとも 10 回） |
-| 応答しないとき | ダイアログが閉じ、「時間が切れました」のパネルが出て、焦点は「再開する」。入力（氏名・メール）は残る |
-| 「中断する」 | 同じパネルが出て、焦点は「再開する」。入力は残る。「再開する」で氏名の欄へ焦点が戻る |
+| 応答しないとき | ダイアログが閉じ、「時間が切れました」のパネルが出て、焦点は「再開する」。入力（氏名・メール）は残る。この状態で送信（フォームの送信・フィールドでの Enter）しても送信されず、「手続きは中断中のため、まだ送信していません。…」が `status` に入り、焦点は「再開する」のまま |
+| 「中断する」 | 同じパネルが出て、焦点は「再開する」。入力は残る。送信はできない。「再開する」で氏名の欄へ焦点が戻り、状態は実行中へ戻る（前の送信の失敗の文は消える）。再開したあとは、送信できる |
 | 出願 | 焦点は見出し「出願を受け付けました」。受付番号 Q-24681 は画面に残る。「出願を保存しました。」は 6 秒後に消えるが、受付番号は残る |
+| 完了後 | 時間切れのパネルは隠れたまま。タイマーは再び動かず、7.5 秒待っても（6 秒の制限を超えても）警告も時間切れのパネルも出ない（状態は完了のまま） |
 | 領収書の宛名 | 「氏名と同じにする」で氏名が入る |
-| 幅 320・390 px | はみ出さない。ダイアログは 320 px の幅に収まる |
-| 文字だけ 200%（作成者の CSS・文字サイズ設定 32） | どちらもはみ出さない（作成者の CSS は 1280 px と 320 px の両方） |
+| 幅 320・390 px | ダイアログを開いた状態・中断中・完了のいずれも、ページ全体ははみ出さない（`scrollWidth` が幅と等しい）。ダイアログは 320 px の幅に収まる |
+| 文字だけ 200%（作成者の CSS・文字サイズ設定 32） | 1280 px と 320 px の両方で、ダイアログを開いた状態・中断中・完了のいずれも、ページ全体ははみ出さない。320 px では、ダイアログは高さ 798 px（画面 800 px）いっぱいになり、内側でスクロールする（内容 906 px、枠 794 px）。「中断する」へ Tab すると、画面の中（709〜797 px）へスクロールされる |
 | 色の比 | 入力欄の枠 5.70:1。他は仕様の表 |
 | ダーク | 本文 15.52:1・ヒント 10.19:1・入力欄の枠 6.35:1・ボタン 8.87:1・副ボタン 9.47:1・焦点の輪郭 16.90:1。幅 320・390 px ではみ出さない。強制カラーで輪郭は実線 3 px。動き 0 |
 | 動きを減らす設定 | 警告のダイアログを開いた状態で、アニメーションは、設定あり・なしとも 0 |

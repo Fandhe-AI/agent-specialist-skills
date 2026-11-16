@@ -240,6 +240,12 @@
 > (L1 + 0.05) / (L2 + 0.05), where L1 is the relative luminance of the lighter of the colors, and L2 is the relative luminance of the darker of the colors.
 >
 > Contrast ratios can range from 1 to 21 (commonly written 1:1 to 21:1).
+>
+> `L = 0.2126 * R + 0.7152 * G + 0.0722 * B where R , G and B are defined as:`
+>
+> if RsRGB <= 0.04045 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+>
+> RsRGB = R8bit/255
 
 - 媒体・日付: W3C, Web Content Accessibility Guidelines (WCAG) 2.2, W3C Recommendation 12 December 2024（初版 2023-10-05）
 - URL: https://www.w3.org/TR/WCAG22/ / https://www.w3.org/TR/2024/REC-WCAG22-20241212/
@@ -366,6 +372,12 @@
 ### S022 W3C WCAG 2.2（2.4.11 Focus Not Obscured (Minimum), Level AA, 2.2 で追加）
 
 > When a user interface component receives keyboard focus, the component is not entirely hidden due to author-created content.
+>
+> Success Criterion 2.4.12 Focus Not Obscured (Enhanced)
+>
+> Focus Not Obscured (Enhanced) (Level AAA)
+>
+> no part of the component is hidden by author-created content.
 
 - 媒体・日付: W3C, Web Content Accessibility Guidelines (WCAG) 2.2, W3C Recommendation 12 December 2024（初版 2023-10-05）
 - URL: https://www.w3.org/TR/WCAG22/ / https://www.w3.org/TR/2024/REC-WCAG22-20241212/
@@ -1246,6 +1258,12 @@
 > 『JIS X 8341-3:2016』への対応を表記する方法は以下の3つである。
 >
 > 「配慮」は、「準拠」「一部準拠」に至らない場合の対応度を示す際に用いる表記である。
+>
+> 「準拠」「一部準拠」は、ウェブコンテンツを『JIS X 8341-3:2016』の要件に従って制作・開発したうえで、『附属書JB（参考） 試験方法』に示されている方法や手順などを参考に試験を実施し、試験結果に基づいて対応の度合いを示す際に用いる表記である。
+>
+> 一部準拠 必須 試験を実施し、達成基準の一部を満たしていることを確認する。試験結果の公開は任意 今後の対応方針
+>
+> 目標とした適合レベルに該当する達成基準を全て満たしていない場合、今後の対応方針を示すことで「一部準拠」と表記することができる。
 
 - 媒体・日付: WAIC（2021年4月13日公開）
 - URL: https://waic.jp/docs/jis2016/compliance-guidelines/202104/
