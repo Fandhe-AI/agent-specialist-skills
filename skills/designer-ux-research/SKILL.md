@@ -363,6 +363,8 @@ NN/g の 10 ヒューリスティクスは、広い経験則であり、具体�
 | Web の見た目の方向性・傾向・画像と質感・構図 | designer-web |
 | 動き・遷移・状態・体感速度・キーボード・AI 応答の画面の設計 | designer-interaction |
 | WebGL・シェーダー・粒子・生成的表現 | designer-creative-coding |
+| 文言の書き方・用語集・ボイスとトーン・敬語（文言の理解度を確かめる計画と進行は本 skill） | designer-ux-writing |
+| 達成基準での監査・支援技術での確認（障害のある参加者との検証の募集・同意・謝礼の計画は共同） | designer-accessibility |
 
 橋渡しの例（導入されていれば）: designer-apple のレビューで「実際の初見の人で確かめたい」が出たら本 skill へ。本 skill の調査で「デザインの質が原因」と分かったら designer-apple へ（本 skill の整理）。調査結果を図表で伝えるなら designer-dataviz へ。
 
