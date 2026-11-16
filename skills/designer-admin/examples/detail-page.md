@@ -236,6 +236,7 @@
 body { margin: 0; background: var(--bg); color: var(--text);
   font: 0.875rem/1.5 system-ui, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
 .page { max-width: 80rem; margin: 0 auto; padding: 0.75rem 1rem 2rem; }
 .sheet { padding: 1rem 1.25rem 1.5rem; background: var(--surface); border: 1px solid var(--rule); }
 h1, h2, p, dl, dd, ol, ul { margin: 0; }
@@ -435,6 +436,7 @@ renderHead(); renderMemo(); renderSections(); renderDocs(); renderHist();
 - 絶対の日時は画面に文字で出し、ホバーの `title` に頼らない（S086）
 - 状態の印と削除の「✕」は `aria-hidden`。メモを保存すると、`role="status"` の領域に結果を出す。スクリーンリーダーで実際にどう読まれるかは未検証
 - 新しい機能と、非対応のときの姿（対応状況は本 skill で照合していない）: `clip-path`（読み上げ専用の文字を隠す）、`minmax(min(100%, 11rem), 1fr)`（古いブラウザーでは 1 列）、`word-break: auto-phrase`（履歴の折り返し位置。非対応のブラウザーでは、語の途中で折れうる）、JavaScript の `replaceAll`・`replaceChildren`。新しい色の指定（`oklch()` など）は使わない。動きは使わない（`prefers-reduced-motion` の分岐は要らない）
+- `hidden` 属性で出し入れする要素は、CSS の `display` の指定に負けないよう、全体の規則 `[hidden] { display: none !important; }` で隠す（`display: grid` や `display: flex` を持つ要素は、この規則が無いと `hidden` を付けても隠れない）
 - UI ライブラリの詳細の部品を使う場合は、先に `../references/library-defaults.md` の「既定値の台帳」の 12（詳細画面）を確かめる。見た目やコードは写さず、見出しの要約・節の順・重複の除去を先に決める
 
 ## 初見検証
@@ -472,6 +474,7 @@ renderHead(); renderMemo(); renderSections(); renderDocs(); renderHist();
   - 履歴の列: 390 px で日付 128 px・本文 176 px の 2 列、320 px で 1 列（本文 246 px）。直す前の版は、320 px で本文が 82 px だった
   - 最初の画面: メモの下端が、1440×900 で 373 px、390×844 で 480 px、320×640 で 572 px。未入金の下端は 141・257・284 px。メモと未入金は、スクロールせずに見える。履歴の下端（ページの上端から）は、1440×900 で 997 px、390×844 で 1398 px、320×640 で 1574 px（ページ全体の高さは 1123・1524・1700 px）
   - 操作（スクリプトで click と submit を実行）: 「メモを更新」でテキスト欄が開いてフォーカスが入り、保存で履歴が 6 件から 7 件になった。メモの本文・更新の行（`更新 2026/11/16 09:05（佐伯 和也）`）・履歴の最上段（`2026/11/16 09:05` のメモを変更）・履歴の見出しの下の 1 行（7 件。最後の更新は今日）が更新された。保存後・やめる後のフォーカスは「メモを更新」のボタンへ戻った。見出しのボタンは「…は、この例では実行しない。」を出した。書類は 5 件とリンク 1 行が出た。未入金は 1,372,000、次の期限は 2026/11/11（着工の予定）と 5 日超過。実際のキーボードでの Tab 操作は測っていない
+  - `hidden` の測定（修正後）: メモの編集の `form` とボタンに `hidden` を付け、`display` が `none`。「メモを更新」で `form` が `block`・編集ボタンが `none` になり、「やめる」と「保存」の後は焦点が「メモを更新」へ戻る。キーボードで押せるボタン・欄を 1 つずつ押し、`body` に落ちたものは 0
 - 未検証・未実施:
   - スクリーンリーダーでの読み上げ。Chrome 以外のブラウザー・他の OS・実機のスマートフォン。作った本人とは別の目での見直し。担当者への初見検証の実施（上の表は設計で、結果ではない）
   - 実在の業務データでの見え方。権限による出し分け。日程・入金の編集パネル。削除の確認。ダークでの灰色にした描画

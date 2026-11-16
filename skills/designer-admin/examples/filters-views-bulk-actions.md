@@ -162,6 +162,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 0.875rem/1.5 system-ui, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
 .page { max-width: 90rem; margin: 0 auto; padding: 0.75rem 1rem 2rem; }
 h1 { margin: 0 0 0.5rem; font-size: 1.125rem; }
 h1 small { margin-left: 0.5rem; color: var(--text-2); font-weight: 400; font-size: 0.8125rem; }
@@ -340,6 +341,7 @@ function viewBtn(v) {
 }
 const d_count = (f) => rows.filter((r) => match(r, full(f))).length;
 function render(fi) {
+  const fa = document.activeElement, fid = fa && fa.closest('#v-shared, #v-mine') ? fa.dataset.id : null;   // ビューのボタンを作り直すので、押したボタンの id を覚える
   rows = CASES.map(d);
   list = rows.filter((r) => match(r, F)).sort(cmp);
   const pages = Math.max(1, Math.ceil(list.length / PAGE)); page = Math.min(page, pages - 1);
@@ -368,6 +370,7 @@ function render(fi) {
   $('pager').hidden = pages < 2; $('pageno').textContent = (page + 1) + ' / ' + pages + ' ページ';
   $('prev').disabled = page === 0; $('next').disabled = page >= pages - 1;
   syncSel();
+  if (fid) { const nb = [...document.querySelectorAll('#v-shared button, #v-mine button')].find((x) => x.dataset.id === fid); if (nb) nb.focus(); }   // 同じビューのボタンへ焦点を戻す
   if (fi !== undefined) { const bs = $('chips').querySelectorAll('button.x'); (bs[Math.min(fi, bs.length - 1)] || $('fsum')).focus(); }
 }
 function row(r) {
@@ -465,6 +468,7 @@ render();
 
 - 表は `table`・`caption`・`th scope` で組み、一括操作と焦点の移動は上の仕様のとおり。選択は、行を作り直さずに状態だけを更新するので、チェックボックスの焦点が残る
 - 新しい機能と、非対応のときの姿（対応状況は本 skill で照合していない）: `dialog` と `showModal`（非対応なら確認が出ず、削除が動かない。古いブラウザーでは使えない）、`line-clamp`（非対応なら全文）、`accent-color`、`clip-path`、`minmax(min(100%, 11rem), 1fr)`（古いブラウザーでは 1 列）、`replaceAll`・`replaceChildren`。`oklch()` などの新しい色の指定は使わない
+- `hidden` 属性で出し入れする要素は、CSS の `display` の指定に負けないよう、全体の規則 `[hidden] { display: none !important; }` で隠す（`display: grid` や `display: flex` を持つ要素は、この規則が無いと `hidden` を付けても隠れない）
 - 動きは使わない（`prefers-reduced-motion` の分岐は要らない）。取り消しの表示を消すタイマーも持たない。UI ライブラリの表の部品を使う場合は、先に `../references/library-defaults.md` の「既定値の台帳」の 10（並べ替え・支援技術）ほか、選択と一括操作に関わる項目を確かめる。見た目やコードは写さない
 
 ## 初見検証
@@ -499,6 +503,7 @@ render();
   - 選択と削除: 見出しのチェックで「このページの 5 件を選択中」、「条件に合う 6 件すべてを選ぶ」で全件になり次のページでも保たれ、1 行を外すと「5 件を選択中」。全選択でないときのページ送りと Esc で解除された。キーボードで「条件に合う 6 件すべてを選ぶ」を押した後の `document.activeElement` は、作り直された「選択を解除」のボタン。そのボタンを押した後（Enter・Space・Esc のどれでも）は、見出しの選択チェック（`#all`）で、`body` に落ちない。一部だけ選んだあとの「選択を解除」も同じ。削除は、入金のある 2611-021 を除く 1 件で確認が開き、焦点は「やめる」。Esc で閉じると「削除」のボタン、実行すると表の見出しに焦点が移った。削除ボタンの色は 6.62・7.55（文字）と 6.48・7.26（枠）で、ダイアログ内の枠 / 面は 7.78・8.33
   - 一部失敗と取り消し: 全 12 件で担当を割り当てると 11 件が成功し、2608-134 が理由つきで失敗。失敗だけの表示で 1 件になった。期限を 7 日延ばすと、表示中は 6 件から 0 件になる旨が出て、「元に戻す」で 6 件に戻った
   - 文字 200%（`html` の `font-size` を 200% にして近似。メディアクエリの `rem` は変わらない）・320 px: ライトとダークで、`scrollWidth` が 320（変更前は 445）。表は `role="region"`・`tabindex="0"`・`aria-labelledby` を持つ容器の中で動く。工事名の全文は `title` 属性にも置いた（補助）
+  - `hidden` の測定（修正後）: 結果の領域・0 件の表示・表の容器・ページ送りに `hidden` を付け、`display` がすべて `none`（修正前はページ送りが `flex` のまま）。ビューのボタンを Enter で押した後の焦点は、作り直された同じビューのボタン（修正前は `body`）。作り直しの経路は、ビュー 3 つ・チップの「×」・ページ送り・一括操作（期限・割り当て）・元に戻す・削除のダイアログ（Esc）を 1 つずつ押して、`body` に落ちたものは 0
 - 未検証・未実施:
   - スクリーンリーダーでの読み上げ（`aria-pressed`・`indeterminate`・`role="status"`・チップの「を外す」）。Chrome 以外のブラウザー・他の OS・実機のスマートフォン
   - ダークと 390・320 px での操作（描画と横はみ出しだけ測った）。Shift+Tab での逆順・Tab の順序の通し

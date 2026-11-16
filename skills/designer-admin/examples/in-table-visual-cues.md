@@ -212,6 +212,7 @@
 body { margin: 0; background: var(--bg); color: var(--text);
   font: 0.875rem/1.5 system-ui, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
 .page { max-width: 90rem; margin: 0 auto; padding: 0.75rem 1rem 2rem; }
 h1 { margin: 0 0 0.5rem; font-size: 1.125rem; }
 .note { margin: 0.375rem 0 0; color: var(--text-2); font-size: 0.8125rem; }
@@ -421,6 +422,7 @@ renderMonths();
 - 表は `table`・`caption`・`th scope` で組む。並べ替えは、この例では省いた（`list-from-db-columns.md` の見出しのボタンと `aria-sort`）。既定の並びは、次の期限が早い順、同じ日は最終更新が古い順
 - 棒の幅は、`bar.style.setProperty('--p', …)` で CSS のカスタムプロパティに渡し、`calc(var(--p) * 1%)` で長さにする。データを属性やスタイルの文字列に連結しない
 - 新しい機能と、非対応のときの姿（対応状況は本 skill で照合していない）: `line-clamp`（工事名の 2 行切り。非対応なら全文）、`clip-path`（読み上げ専用の文字を隠す）、`calc()` と CSS カスタムプロパティの組み合わせ（棒の幅。非対応のときの姿は測っていない。未検証）、JavaScript の `replaceAll`・`replaceChildren`・`??`。新しい色の指定（`oklch()` など）は使わない。動きは使わない（`prefers-reduced-motion` の分岐は要らない）
+- `hidden` 属性で出し入れする要素は、CSS の `display` の指定に負けないよう、全体の規則 `[hidden] { display: none !important; }` で隠す（`display: grid` や `display: flex` を持つ要素は、この規則が無いと `hidden` を付けても隠れない）
 - UI ライブラリの表の部品を使う場合は、先に `../references/library-defaults.md` の「既定値の台帳」の 1（数字）・3（状態）・11（日付・時刻）を確かめる。見た目やコードは写さず、どの列に図を置くかの判断（上の表）を先に決める
 
 ## 初見検証
@@ -460,6 +462,7 @@ renderMonths();
   - 描画: 1440 px で、案件の表は 12 行。既定の並びは 2610-097、2611-018、2610-061、2611-009、2611-021、2611-030、2611-003、2611-025、2610-088、2610-074、2609-201、2608-134。棒は 5 行、「0」が 2 行、「-」が 5 行。月次の表は 6 行で、前月比は +17.8%・−33.9%・+39.5%・+22.1%、前年同月は +15.6%・+15.0%（本文の表と一致）。読み上げ用の文（`sr`）が DOM に入っていることを読んだ（実際の読み上げは未検証）
   - 件数: `#rows=0` で案件の表は 0 行、「案件はまだ登録されていない。」が表示対象（`hidden` が偽）。`#rows=1` で 1 行。どちらも月次の表は 6 行
   - 文字 200%（`html` の `font-size` を 200% にして近似。メディアクエリの `rem` は変わらない）・320 px: ライトとダークで、`scrollWidth` が 320（変更前は 608）。表は容器の中で動く。工事名の全文は `title` 属性にも置いた（補助。キーボードでは届かない）。1440 px の表の位置は変更前と同じ
+  - `hidden` と焦点の測定（修正後）: 0 件の表示（`hidden`）の `display` が `none`。この例は、描画後にキーボードで作り直す経路が無く（表は読み込み時に 1 回だけ描く）、焦点が `body` に落ちる経路は 0
 - 未検証・未実施:
   - スクリーンリーダーでの読み上げ（上の表は設計で、結果ではない）。Chrome 以外のブラウザー・他の OS・実機のスマートフォン。作った本人とは別の目での見直し。担当者への初見検証の実施
   - 実在の業務データでの見え方。数百件の件数。ダークでの灰色にした描画。棒の読み取りの正確さ（利用者での確認）
