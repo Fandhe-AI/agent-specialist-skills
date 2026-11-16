@@ -69,15 +69,16 @@
 | 劣化の順序 | (1) 点の数を減らす (2) DPR の上限を下げる (3) 補間をやめて切り替えだけにする (4) 層 1 | 軽い順。実機で測って決める。本例のコードは、この順で自動に落とす実装を持たない（手動・未実装） |
 | 章の位置 | 章の位置（`offsetTop` など）は、読み込み・resize のときに測ってキャッシュする。スクロールのたびには読まない | レイアウトの強制を避ける |
 | resize | canvas の大きさ（幅か高さ）が変わったときに作り直し、投影の縦横比を保つ。補間の位置（`cur`）は保つので、形は飛ばない。canvas の高さは `100lvh`（大きいほうの画面の高さ）にして、モバイルのアドレスバーの出入りでは大きさが変わらないようにする | 高さだけ変えて作り直さないと、形が縦に潰れる。アドレスバーでの確認は実機で、未検証 |
+| 地と墨の色 | ライトは淡い藍紫の地 `#dad9f0` と無彩色の墨 `#1f1f24`。ダークは `#0b1020` と `#eef2ff`（変えない） | 天文の報告なので、夜の手前の空を思わせる寒色の地にする。墨は無彩色にして、点群を地から分ける（本 skill の判断） |
 | 図と本文 | 図は雰囲気を示す装飾で、数値や実際の形を表さない。本文は、図の内容を断定しない | 点の数は端末で変わり、形は式の飾りである |
 
 ### 色と文字
 
-カードの地は半透明で、背景の点が透ける。点が最も透けて読みにくくなる最悪の場合で、WCAG の相対輝度式で計算した（基準の 4.5:1 は、本台帳に原文が無く未照合）。
+カードの地は半透明で、背景の点が透ける。点が最も透けて読みにくくなる最悪の場合で、WCAG の相対輝度式で計算した（本 skill の計算。基準の本文 4.5:1・大きい文字 3:1 は、本台帳に原文が無く未照合）。ライトの輪郭と静止図 `#1f1f24` は、地 `#dad9f0` に対して 11.85（文字でない部分の 3:1 以上）。
 
 | 配色 | 文字 | カードの地（最悪の場合） | 比 |
 |---|---|---|---|
-| ライト | `#17203a` | `#f3f1ea` の 92 % の下に最も濃い点 `#17203a` 相当が透ける（約 `#e1e0dc`） | 12.19 |
+| ライト | `#1f1f24` | `#dad9f0` の 92 % の下に最も濃い点 `#1f1f24` 相当が透ける（約 `#cbcae0`） | 10.21 |
 | ダーク | `#eef2ff` | `#0b1020` の 90 % の下に最も明るい点（白）が透ける（約 `#232836`） | 13.15 |
 
 ## 文言
@@ -102,7 +103,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Orbit Almanac 年次報告</title>
 <style>
-  :root { color-scheme: light dark; --bg: #f3f1ea; --fg: #17203a; --card: rgb(243 241 234 / 0.92); --line: #17203a; }
+  :root { color-scheme: light dark; --bg: #dad9f0; --fg: #1f1f24; --card: rgb(218 217 240 / 0.92); --line: #1f1f24; }
   @media (prefers-color-scheme: dark) { :root { --bg: #0b1020; --fg: #eef2ff; --card: rgb(11 16 32 / 0.9); --line: #a9c0ff; } }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   * { box-sizing: border-box; }
@@ -246,7 +247,7 @@ void main() {
     const w = [0, 1, 2].map((i) => Math.max(0, 1 - Math.abs(cur - i)));
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     if (dark.matches) { gl.blendFunc(gl.ONE, gl.ONE); gl.uniform3f(loc.uColor, 0.55, 0.68, 1.0); }
-    else { gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.uniform3f(loc.uColor, 0.09, 0.13, 0.23); }
+    else { gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.uniform3f(loc.uColor, 0.122, 0.122, 0.141); }
     gl.uniform3f(loc.uW, w[0], w[1], w[2]);
     const dist = w[0] * DIST[0] + w[1] * DIST[1] + w[2] * DIST[2];
     gl.uniformMatrix4fv(loc.uMvp, false, mvp(0.4 + (reduce.matches ? 0 : cur * 0.6), canvas.width / canvas.height, dist));
@@ -317,7 +318,7 @@ geometry.setAttribute('aB', new THREE.BufferAttribute(B, 3));
 geometry.setAttribute('aC', new THREE.BufferAttribute(C, 3));
 const dark = matchMedia('(prefers-color-scheme: dark)').matches;
 const material = new THREE.ShaderMaterial({
-  uniforms: { uW: { value: new THREE.Vector3(1, 0, 0) }, uSize: { value: 40 }, uColor: { value: dark ? new THREE.Vector3(0.55, 0.68, 1.0) : new THREE.Vector3(0.09, 0.13, 0.23) } },   // 色は本体と同じ値（配色で切り替える）。THREE.Color は色空間の変換が入る
+  uniforms: { uW: { value: new THREE.Vector3(1, 0, 0) }, uSize: { value: 40 }, uColor: { value: dark ? new THREE.Vector3(0.55, 0.68, 1.0) : new THREE.Vector3(0.122, 0.122, 0.141) } },   // 色は本体と同じ値（配色で切り替える）。THREE.Color は色空間の変換が入る
   vertexShader: `
     attribute vec3 aB; attribute vec3 aC; uniform vec3 uW; uniform float uSize;
     void main() {
@@ -359,6 +360,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 - 操作の確認（2026-11-16）: 目次の 3 つのリンクをクリックすると、それぞれ `#ch1`・`#ch2`・`#ch3` に移り、章の先頭が画面の上端に来た（`scroll-behavior: smooth` の最中は、移動の途中の値になる）。動きを減らす設定でも、3 番目のリンクで `#ch3` に移った
 - 文脈の喪失の確認（2026-11-16）: 文脈を擬似的に失わせると、`html` の `gl` のクラスが外れ、章ごとの静止図が出た。復帰させると、`gl` のクラスが戻り、描画の解像度は 1440 で、喪失の前と同じ画像になった（差 0 画素）。復帰後のスクロールでも形が変わった
 - 直した不具合の再現の確認（2026-11-16）: 縦長の画面で形が端にかかるか（カードと目次を隠して、画面の端 3 画素に形の画素があるかを数えた）。修正前は、390 × 844 の章 2 で左端 258 画素・右端 26 画素、320 × 640 の章 2 で左端 179 画素・右端 20 画素、1280 × 900 の章 2 で下端 156 画素だった。修正後は、3 つの大きさの 3 章すべてで 0 画素だった。窓の高さだけを 900 から 500 に変えると（幅は 1440 のまま）、球の外接枠は 704 × 704 から 390 × 390 になり、丸いままだった（canvas を作り直さずに縦横比を投影から取る案は採らず、大きさが変わったら作り直す形にした。作り直しでも補間の位置は保つ）。モバイルのアドレスバーの出入りは、実機で確かめていない（未検証）
+- 配色の確認（2026-11-16）: ライトの地を `#dad9f0`（OKLCH で明度 89.3・彩度 0.031・色相 288）、墨を無彩色の `#1f1f24`（彩度 0.009）にした。ページの CSS・`uniform3f`・three.js の `Vector3` を同じ値に揃え、コントラスト比を本 skill の計算で引き直した（「色と文字」）。ライトとダークを 1440・390・320 px で描画し直す確認は、この変更では未実施（未検証）。Safari・Firefox・実機も未確認
 - 隣の領域: スクロール演出の時間・イージングは designer-interaction、本文の書体・色は designer-typography・designer-web（いずれも導入されていれば）
 
 ## この例の出典
