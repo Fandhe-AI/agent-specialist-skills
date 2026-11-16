@@ -59,13 +59,13 @@
 | キーボード | 記事はリンクで、Enter で開く。「一覧へ戻る」もリンク | S98 |
 | 名前の付け方 | `view-transition-name` は、遷移の直前に、いまの要素の 1 つにだけ付ける（付ける前に、全部外す）。更新の中でも全部外してから、次の要素の 1 つにだけ付ける。取って代わられた遷移が名前を残しても、次の遷移が重ねない。同じ名前が同時に 2 つあると遷移が失敗する | 本 skill の整理（実装の注意）。名前は一意でなければならない（出典は未取得） |
 
-コントラスト比（WCAG の相対輝度式で計算。基準の 4.5:1・3:1 の原文は本 skill の台帳に無く、未照合）:
+コントラスト比（本 skill の計算。WCAG の相対輝度式による。基準の 4.5:1・3:1 の原文は本 skill の台帳に無く、未照合。配色は 5 例で共通の仮置きで、写さない）:
 
 | 組み合わせ（前景 / 背景） | ライト | ダーク |
 |---|---|---|
-| 本文 / 背景 | 16.56 | 16.02 |
-| 補助文字 / 背景 | 8.68 | 9.50 |
-| リンク・フォーカスの輪 / 背景 | 5.99 | 8.59 |
+| 本文 / 背景 | 14.01 | 15.76 |
+| 補助文字 / 背景 | 7.97 | 9.19 |
+| リンク・フォーカスの輪 / 背景 | 5.88 | 8.43 |
 | 図形の文字（白）/ 図形の最も明るい色 | 5.98 | 5.98 |
 
 ## 文言
@@ -88,7 +88,7 @@
     <ul class="articles">
       <li><a class="card" href="#/1" data-id="1"><span class="thumb" style="--c1:#1f5f8b;--c2:#12385a" aria-hidden="true">貸</span>
         <span class="card-body"><strong>備品の貸し出しは 3 つの手順で済む</strong><span>申請・受け取り・返却の流れ</span></span></a></li>
-      <li><a class="card" href="#/2" data-id="2"><span class="thumb" style="--c1:#7a3b8f;--c2:#4a2159" aria-hidden="true">会</span>
+      <li><a class="card" href="#/2" data-id="2"><span class="thumb" style="--c1:#55606b;--c2:#33393f" aria-hidden="true">会</span>
         <span class="card-body"><strong>会議室の予約は前日の 17 時まで</strong><span>変更と取り消しの期限</span></span></a></li>
       <li><a class="card" href="#/3" data-id="3"><span class="thumb" style="--c1:#2f6b3a;--c2:#1c4023" aria-hidden="true">経</span>
         <span class="card-body"><strong>経費の申請は月末にまとめて出す</strong><span>領収書の貼り方</span></span></a></li>
@@ -109,11 +109,11 @@
 ```css
 :root {
   color-scheme: light dark;
-  --bg: #ffffff; --text: #1b1f24; --text-2: #454c55; --link: #0b5cd5; --line: #6b7280;
+  --bg: #f1eafb; --text: #261a33; --text-2: #4e4259; --link: #7b2fc4; --line: #766a84;
   --ease-out: cubic-bezier(0, 0, 0, 1);       /* standard-decelerate（S29）*/
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #15171b; --text: #f1f2f4; --text-2: #b7bdc7; --link: #8ab4ff; --line: #8d95a3; }
+  :root { --bg: #1a1422; --text: #f3eef8; --text-2: #c0b5cc; --link: #d69af8; --line: #9a8da8; }
 }
 body { margin: 0; background: var(--bg); color: var(--text);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif; line-height: 1.7; }
@@ -153,7 +153,7 @@ document.addEventListener('mousedown', (e) => { if (e.detail > 1 && actionable(e
 const SITE = ' - ナレッジ棚';
 const articles = {
   1: ['貸', '備品の貸し出しは 3 つの手順で済む', '申請フォームを出し、総務で受け取り、使い終わったら同じ棚へ返す。貸し出しの記録は総務が残す。', '#1f5f8b', '#12385a'],
-  2: ['会', '会議室の予約は前日の 17 時まで', '予約の変更と取り消しも前日の 17 時までに済ませる。当日の急な変更は総務へ連絡する。', '#7a3b8f', '#4a2159'],
+  2: ['会', '会議室の予約は前日の 17 時まで', '予約の変更と取り消しも前日の 17 時までに済ませる。当日の急な変更は総務へ連絡する。', '#55606b', '#33393f'],
   3: ['経', '経費の申請は月末にまとめて出す', '領収書は台紙に貼り、日付の順に並べる。金額の違いは申請者が直してから出す。', '#2f6b3a', '#1c4023'],
   4: ['鍵', '倉庫の鍵は総務で預かる', '倉庫を使うときは、総務で鍵を借りて記録する。返すときも記録を残す。', '#a14a1b', '#6b2e0f'],
 };
@@ -256,6 +256,7 @@ if (idFromHash()) { current = idFromHash(); show(current); } else document.title
 - 連打: カードや「一覧へ戻る」のダブルクリック・Enter の押しっぱなしで、遷移が 1 回だけ起きる。履歴が余分に増えない
 - 履歴: 一覧から開いて「一覧へ戻る」を押しても、履歴の件数が増えない。URL を直接開いた詳細で押したときだけ 1 件増える
 - 題と見出し: 詳細は `h1` が 1 つで、`document.title` が記事の題に変わり、戻ると一覧の題に戻る
+- 配色: 本文・補助文字・エラーの文字は 4.5:1 以上、フォーカスの輪・枠線・部品の輪郭は 3:1 以上（本 skill の計算。値は `## 仕様` の表）。配色は 5 例共通の仮置きで、写さない。配色の変更後の描画（1440・390・320 px、ライトとダーク、動きを減らす設定）は未検証。色以外の記述と実測の数値は変えていない
 - 実測（Chrome 156、2026-11-16、1440・390・320 px）: 遷移中のアニメーションは、`::view-transition-group(hero)` が 300 ms、`::view-transition-old(root)` と `::view-transition-new(root)` が 200 ms。動きを減らす設定では、`hero` の名前が付かず、アニメーションは背景の 150 ms だけ（`::view-transition-group(hero)` が無い）。履歴の件数は、一覧から詳細を開くと 1 件増え、「一覧へ戻る」を押しても増えない（`history.back()`）。URL を直接開いた詳細で「一覧へ戻る」を押すと 1 件増える。ダブルクリック・Enter の押しっぱなしでは、開く操作が 1 回だけ（履歴は 1 件）。詳細は `h1` が 1 つで、`document.title` が「記事の題 - ナレッジ棚」になり、戻ると「記事一覧 - ナレッジ棚」。`#/2` を付けた URL を直接開くと詳細が開き、存在しない `#/99` を開いても一覧が出る。画面の高さ 250 px で、一覧を 200 px スクロールして 4 件目を開き、戻ると、リンクでもブラウザーの戻るでも、位置が 218 px（200 px を復元し、カードを画面内へ最小限だけ動かした値）、フォーカスは 4 件目のカード、カードは 160〜250 px で画面内。演出中の押下: (a) 戻る遷移の 100 ms 後に、出ていく詳細の画像を押しても、一覧のまま（別の詳細は開かない）。(b) 開く遷移の 100 ms 後に押すと、演出が終わって最終の詳細が出て、その後の「一覧へ戻る」で一覧へ戻り、フォーカスは元のカードにある。(a)(b) とも 1440・390・320 px で同じだった。開く・戻る・進む・ハッシュの変更・画面の押下を、間隔 0〜350 ms の乱数で 3〜7 回続ける 60 通りを 3 回（種 1・7・99）流して、最終の画面が URL と一致し、`view-transition-name` の残りが 0 件、演出中の印（`playing`）が偽に戻った。遷移の失敗は、取って代わられた（`New ViewTransition started`）・押下で終わらせた（`skipTransition() called`）の 2 種類だけで、名前の重複による失敗は無かった。他のブラウザー・実機は未検証。`::view-transition` の疑似要素を直接押す操作は、座標から実 DOM を押す版を採らないため、検証の対象外
 - 推測の明示: 200 ms・300 ms・150 ms は本 skill の目安である。遷移が認知負荷を下げるという効果は MDN の記述で、実験の裏づけを取得していない（S87）。他ブラウザーの対応と、文書間の遷移は未検証である
 
