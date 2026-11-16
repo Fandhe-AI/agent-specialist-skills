@@ -104,7 +104,8 @@
 | リンク・強調の輪 / 行の面 | 5.35 | 7.67 |
 | ボタンの文字 / アクセント | 6.89 | 8.43 |
 | 枠線（非文字）/ 背景 | 4.30 | 5.78 |
-| 本文 / 強調した行の背景 | 11.00 | 10.84 |
+| 本文 / 強調した行の背景 | 11.54 | 10.84 |
+| エラーの文字 / 強調した行の背景（全件失敗の行を削除して取り消したとき、エラーの行が強調の上に載る） | 4.59 | 5.42 |
 
 骨組みの棒は装飾（読む対象ではない）として、コントラスト比の対象に数えない（本 skill の整理）。
 
@@ -146,7 +147,7 @@
 :root {
   color-scheme: light dark;
   --bg: #f1eafb; --surface: #e8dff4; --text: #261a33; --text-2: #4e4259; --accent: #7b2fc4; --on-accent: #ffffff;
-  --line: #766a84; --error: #b3261e; --skel: #d3c8e0; --flash: #ddccf7;
+  --line: #766a84; --error: #b3261e; --skel: #d3c8e0; --flash: #e0d2f8;
 }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #1a1422; --surface: #241c2f; --text: #f3eef8; --text-2: #c0b5cc; --accent: #d69af8; --on-accent: #1a1422;
