@@ -14,7 +14,7 @@ downstream リポジトリでは **1 agent 1 skill** の原則で、導入した
 回答させ、main 自身のトークン消費を抑える。この sub-agent 生成・委譲設定の初期セットアップを
 担うのが本リポジトリの中核スキル `init-claude-specialist` である。
 
-このリポジトリが配布する実スペシャリスト skill は 10 件（`designer-apple`・`designer-typography`・`designer-brand`・`designer-ux-research`・`designer-industrial`・`designer-material`・`designer-dataviz`・`designer-web`・`designer-creative-coding`・`designer-interaction`）。箱
+このリポジトリが配布する実スペシャリスト skill は 11 件（`designer-apple`・`designer-typography`・`designer-brand`・`designer-ux-research`・`designer-industrial`・`designer-material`・`designer-dataviz`・`designer-web`・`designer-creative-coding`・`designer-interaction`・`designer-admin`）。箱
 （`init-claude-specialist` と著作規約）を整備したうえで、スペシャリスト skill は今後も追加していく。
 
 ## Repository Structure
@@ -89,6 +89,16 @@ skills/                               -- スキル本体（各ディレクトリ
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
       design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
     examples/                         -- 制作例（コンポーネントの動きの仕様・一覧から詳細へのページ遷移・スクロール連動の製品説明・読み込みと楽観的更新と取り消し・AI 下書きの応答画面。5 件）
+  designer-admin/                     -- 管理画面・業務画面のデザイナー（一覧・詳細・絞り込み・一括操作・社内ツール。スペシャリスト skill）
+    SKILL.md
+    references/
+      sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
+      design-history.md               -- デザイン史の要点（見取り図・繰り返すパターン・媒体別の使い方）
+      library-defaults.md             -- OSS・UI ライブラリの既定値の台帳（版・取得日・既定値・既定のままだと弱い点）
+      review-checklist.md             -- レビュー観点チェックリスト（全 21 項目）
+      lenses.md                       -- 人物・組織別の視点（区分つき・創作発言にしない）
+      jp-notation.md                  -- 国内の表記（日付・桁区切り・和暦・文言・全角半角）
+    examples/                         -- 制作例（DB の列から作り直した案件一覧・詳細画面・表の中の印と小さな図・絞り込みと保存したビュー・一括操作・操作の記録と CSV 取り込みの結果。5 件）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
@@ -137,6 +147,7 @@ skills/                               -- スキル本体（各ディレクトリ
     designer-web                      -- ../../skills/designer-web への symlink（スペシャリスト skill）
     designer-creative-coding          -- ../../skills/designer-creative-coding への symlink（スペシャリスト skill）
     designer-interaction              -- ../../skills/designer-interaction への symlink（スペシャリスト skill）
+    designer-admin                    -- ../../skills/designer-admin への symlink（スペシャリスト skill）
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
     create-agent/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に Agent 雛形・配布対象外）
     create-skill/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に SKILL 雛形・配布対象外）
@@ -235,7 +246,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `out-of-scope-tracking.md` | implement-issue / implement-issue-tree / implement-review / implement-review-pr / create-pr、実装・修正・レビューを行う全 Agent | 実装対象外の追跡規約（スコープ外事項を見つけたら Issue で追跡し、現在の PR に混入させない） |
 | `tool-neutral-skills.md` | `skills/` のスペシャリスト skill（`init-claude-specialist` は適用外） | 配布スペシャリスト skill を Claude Code / Codex / OpenCode のどれで読まれても同じ内容で使える書き方（ツール固有名・置換変数・固有表記を本文に書かない） |
 
-## Current Skills (11)
+## Current Skills (12)
 
 ### セットアップ (1)
 
@@ -243,7 +254,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 |--------|------|
 | init-claude-specialist | 導入済みスペシャリスト skill を検出し、1 agent 1 skill で専用 sub-agent・委譲 rule を生成する |
 
-### スペシャリスト (10)
+### スペシャリスト (11)
 
 | スキル | 説明 |
 |--------|------|
@@ -257,6 +268,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | designer-web | Web デザイナー（見た目の方向性）。方向性を言葉で決めてから作る・既定の見た目の点検・色と書体・構図・写真と質感・傾向（コラージュ・手触り・静かな Web）・年配の利用者の観点・AI っぽい見た目の作り直しを相談 |
 | designer-creative-coding | クリエイティブデベロッパー。WebGL・Three.js・シェーダー・粒子・ジェネラティブ・スクロールで進む 3D・性能予算・WebGL が無いときと動きを減らす設定の代替表示を相談 |
 | designer-interaction | インタラクションデザイナー・デザインエンジニア。操作感・マイクロインタラクション・ページ遷移・スクロール演出・ローディングの見せ方・アニメーションの長さ・AI の応答画面・楽観的更新・prefers-reduced-motion を相談 |
+| designer-admin | 管理画面のデザイナー（業務画面・社内ツール）。一覧表・詳細画面の情報の取捨選択・状態の印・表の中の小さな図・絞り込みと一括操作・空とエラー・密度・OSS の管理画面キットの既定値の点検を相談 |
 
 今後も追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
