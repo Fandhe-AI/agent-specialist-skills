@@ -311,6 +311,8 @@ specialist: true
 | designer-web | Web の見た目の方向性・傾向・画像と質感・構図 | 製品紹介ページ（Web）の見た目の方向性と、製品写真の質感の見せ方は designer-web に回す。製品本体の画面は designer-apple。実物の形・素材・仕上げ・量産・人体・修理は本 skill |
 | designer-interaction | 動き・遷移・状態・体感速度・キーボード操作・AI 応答の画面 | 製品紹介ページや連携アプリなど Web・アプリ画面の動き・遷移の詳細設計は designer-interaction に回す。製品本体の画面の内容・文言・動きは designer-apple、物理操作（ボタン・つまみ・握り）の形と力は本 skill |
 | designer-creative-coding | WebGL・シェーダー・粒子・生成的表現 | 製品の 3D 表現・粒子・生成的な映像演出は designer-creative-coding に回す。実物の形状・素材・成形の制約は本 skill |
+| designer-ux-writing | 文言の書き方・用語集・ボイスとトーン・敬語 | 製品の表示・取扱説明の文言の書き方は designer-ux-writing に回す（共同）。形・素材・仕上げ・量産・人体・修理は本 skill |
+| designer-accessibility | 達成基準での監査・支援技術での確認 | 機器の画面の部分は designer-accessibility に回す。物理の握り・触覚・人体寸法は本 skill |
 
 ### デザイン例の索引
 
