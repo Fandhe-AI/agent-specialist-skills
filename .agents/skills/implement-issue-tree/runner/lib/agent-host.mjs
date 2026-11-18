@@ -67,7 +67,7 @@ import { checkPins, launcherPinPaths, mergePins, pinFiles } from './pins.mjs'
 import { recoverGitFor } from './recover-git.mjs'
 import { CLEANUP_LABEL, CLEAR_WORDS, checkCleanupTarget, parseCleanupPrompt } from './cleanup-host.mjs'
 import { STATE_READ_LABEL, readStateFile, stateDirOf, stateFileOf, stateParentOf } from './state-read.mjs'
-import { createSequencer, createWorktree, gitLocationFreeEnv, relockOwnWorktree, unlockOwnWorktree, verifyWorktreeGitdir } from './worktree.mjs'
+import { createSequencer, createWorktree, gitLocationFreeEnv, relockOwnWorktree, runExclusive, unlockOwnWorktree, verifyWorktreeGitdir } from './worktree.mjs'
 
 // ---- 実行仕様 ----
 
@@ -145,6 +145,10 @@ export const EXEC_RULES = Object.freeze([
   // 既定の label（merge:optin-record:#N）は使われないため表に置かない（runner-exec-rules.test.mjs が全行の到達を縛る）
   rule('optin-record-(?:verify|reverify):#\\d+', 'observe-pr.sh', ['optin-record'], 'envelope', null),
 ])
+
+// 同じリポジトリの worktree 管理領域・ref・ブランチを書くスクリプト（git worktree remove・prune・branch -D・update-ref）。
+// 隔離 worktree の作成（worktree.mjs の createWorktree）と並行すると packed-refs・worktrees/ の lock で競合するため、同じキューへ通す
+const REPO_WRITING_SCRIPTS = new Set(['worktree-remove.sh', 'recover-prep.sh'])
 
 const isPlainObject = (x) => x !== null && typeof x === 'object' && !Array.isArray(x)
 
@@ -555,7 +559,9 @@ export function createAgentHost({ adapter, cfg }) {
     if (unlocked.length > 0) rec.unlocked = unlocked
     let r
     try {
-      r = await runScript('bash', args, { cwd: mainRoot, input, timeoutMs }, { label, prompt, spec })
+      // リポジトリの管理領域・ref を書くスクリプトは createWorktree と同じキューで流す（キューの待ちは timeoutMs に含めない。時間切れはスクリプトの起動から数える）
+      const go = () => runScript('bash', args, { cwd: mainRoot, input, timeoutMs }, { label, prompt, spec })
+      r = await (REPO_WRITING_SCRIPTS.has(spec.script) ? runExclusive(mainRoot, go) : go())
     } finally {
       await relockOwn(unlocked, label)
     }
@@ -597,14 +603,25 @@ export function createAgentHost({ adapter, cfg }) {
     const target = checkCleanupTarget({ mainRoot, path: p.path, parent: p.parent, issue: p.issue })
     if (!target.ok) return refuse(`対象を確かめられない: ${target.reason}`)
     const launcher = join(skillDir, 'scripts', 'run-verified.sh')
-    const deadline = Date.now() + timeoutMs
     const started = Date.now()
+    // 2 段の共有予算。スクリプトが実際に動いた時間（runScript の開始から終わりまで）だけを積み、キューの待ちは数えない。
+    // 期限を 1 点で決めると、1 段目の後の relockOwn のキュー待ちが 2 段目の予算を食うため、使用済みの累計から残りを出す
+    let usedMs = 0
     const step = async (name, sha256, argv, stdin) => {
       const mismatch = pinMismatch()
       if (mismatch) return { refused: `pin-mismatch: ${mismatch}` }
       const input = Buffer.from(stdin, 'utf8')
       writeLog(logDir, `exec-${name}.json`, { script: name, argv, stdinBytes: input.length, cwd: mainRoot })
-      const r = await runScript('bash', [launcher, sha256, name, ...argv], { cwd: mainRoot, input, timeoutMs: Math.max(1, deadline - Date.now()) }, { label, prompt })
+      // worktree-remove.sh は createWorktree と同じキューで流す。各段の時間切れは「予算 − 前の段が使った実行時間」で、キューを抜けた後に数える
+      const go = async () => {
+        const t0 = Date.now()
+        try {
+          return await runScript('bash', [launcher, sha256, name, ...argv], { cwd: mainRoot, input, timeoutMs: Math.max(1, timeoutMs - usedMs) }, { label, prompt })
+        } finally {
+          usedMs += Date.now() - t0
+        }
+      }
+      const r = await (REPO_WRITING_SCRIPTS.has(name) ? runExclusive(mainRoot, go) : go())
       writeLog(logDir, `stdout-${name}.txt`, r.stdout ?? '')
       writeLog(logDir, `stderr-${name}.txt`, r.stderr ?? '')
       return { r }
