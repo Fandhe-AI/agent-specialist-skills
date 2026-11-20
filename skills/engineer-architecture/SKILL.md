@@ -341,7 +341,7 @@ specialist-effort: medium
 |---|---|---|
 | 商品検索の基盤を決める ADR | [examples/adr-search-engine-choice.md](examples/adr-search-engine-choice.md) | 架空の中規模 EC。専用の全文検索エンジンか、既存の RDB の全文検索か。相談への返答の文面と、ADR の本体 |
 | 荷物追跡サービスの C4 の図 | [examples/c4-parcel-tracking-context-container.md](examples/c4-parcel-tracking-context-container.md) | 架空の地域配送業者。コンテキストとコンテナの 2 枚、描かないものの決め方、Structurizr DSL の断片 |
-| 依存の規則を検査で守る | [examples/dependency-rules-fitness-check.md](examples/dependency-rules-fitness-check.md) | 架空の会計 SaaS。モジュール間の依存の規則を設定に書き、CI で検査する。小さな Node.js のスクリプトと、検査を入れる条件・入れない条件 |
+| 依存の規則を検査で守る | [examples/dependency-rules-fitness-check.md](examples/dependency-rules-fitness-check.md) | 架空の会計 SaaS。規則の設定（JSON）と、CI から検査の道具を呼ぶ手順の契約（終了コードの約束・道具を選ぶ条件）。検査を入れる条件・入れない条件 |
 | API の項目名の変更を Expand/Contract で進める | [examples/parallel-change-api-field-rename.md](examples/parallel-change-api-field-rename.md) | 架空の宿泊予約の公開 API。新旧の項目を併存させる 3 つの相、利用の測定で縮小に進む条件、同時に切り替えられる場合 |
 | 他者の設計案をレビューして返す | [examples/design-review-points-read-cache.md](examples/design-review-points-read-cache.md) | 架空の社内ポイント制度の、読み取りのキャッシュ層の案。チェックリストの全項目の判定表と、返答の文面 |
 
