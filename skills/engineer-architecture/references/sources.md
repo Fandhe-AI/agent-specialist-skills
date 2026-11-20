@@ -2,23 +2,23 @@
 
 `engineer-architecture`（ソフトウェアアーキテクト）の `SKILL.md` が根拠にする出典の台帳。人物・論文・原典の一次資料、クラウド事業者の指針、決定の記録（ADR）・図・設計文書の様式、段階的な移行の手法、チームと構造の議論、批判と各社の事例から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・発言者や媒体・日付・URL・取得日・検証区分を記す。台帳は通読せず、番号（S001 など）で検索して該当の項目だけ読む。番号は振り直さない。
 
-全 40 件。いずれも逐語の引用を持つ（引用ブロックは 56 件）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 40 件。いずれも逐語の引用を持つ（引用ブロックは 100 件）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
 - 検証区分
-  - A: 原典・公式ページ・著者本人のサイト・出版社頁の原稿（HTML・Markdown・PDF）を取得し、引用文が逐語で含まれることを、タグ除去と空白の正規化のうえで部分一致により再照合した（引用符・アポストロフィ・ダッシュの字形は揃えて比較した）。引用ブロックの字形は原稿のまま。引用が取得日の時点でページにあることの確認であり、主張の正しさの保証ではない
+  - A: 原典・公式ページ・著者本人のサイト・出版社頁の原稿（HTML・Markdown・PDF）、または原典の保存コピー（Internet Archive の Wayback Machine）を取得し、引用文が逐語で含まれることを、タグ除去と空白の正規化のうえで部分一致により再照合した（引用符・アポストロフィ・ダッシュの字形は揃えて比較した）。引用ブロックの字形は原稿のまま。引用が取得日の時点でページにあることの確認であり、主張の正しさの保証ではない
   - B: 第三者の複製・ミラー・解説頁、他媒体経由で引いた文、または原稿の本文との部分一致が通らなかったもの。引用文の原稿との一致は確認したが、原典そのものではない。理由は備考の「区分の根拠」か「注意」に書いた
   - C: 批判・留保・評価の側の主張。引用が逐語であることのみを確認し、主張の正しさ・因果は確認していない
   - U: 未検証。事実・引用として使わない。末尾の表に集め、番号を振らない
 - 「自称」: 企業・組織・個人が自分の進め方や成果を自分で述べたもの。第三者による検証ではない（Segment・Shopify・Istio・Prime Video・Basecamp などの記事は、その会社の自称として扱う）
-- 数値（人数・倍率・費用の削減率など）は、区分 A で原文を確認できたものだけを「出典あり」とする。事例の数値は各社の自称で、一般化しない
-- 引用文は原文を改変していない（引用符・アポストロフィ・ダッシュ・空白の字形は原稿のまま）。日本語の要旨・備考の整理は本 skill の言葉であり、発言者本人の発言ではない。「注意」に書いた箇所は出典が述べていないことの断りである
+- 数値（人数・倍率・費用の削減率など）は、区分 A で原文を確認できたものを「出典あり」とする。区分 C の数値（批判・自称側）は、区分を添えて紹介し、「出典あり」とは書かない。事例の数値は各社の自称で、一般化しない
+- 引用文は原文を改変していない（引用符・アポストロフィ・ダッシュ・空白の字形は原稿のまま）。日本語の要旨・備考の整理は本 skill の言葉であり、発言者本人の発言ではない。要旨・使いどころの欄は、引用ブロックが言う範囲を超える内容を含みうる。skill 本文が S 番号で支えてよいのは、引用ブロックが言うことだけで、残りは「本 skill の整理」と書く。「注意」に書いた箇所は出典が述べていないことの断りである
 - 項目の「URL」は利用者が開ける文書の URL、「URL（原稿）」は、それとは別に照合に使った固定の原稿や保存コピーの URL（あるときだけ）。取得日は 2026-11-20
 - 引用文は、URL に対して、タグ除去・空白正規化のうえ `grep -F` で第三者も再照合できる
 - ライセンス上の扱い（各項目の備考に「ライセンス」として書いた）
-  - 逐語可（出典明記。各条件に従う）: S013、S039、S047。CC BY の表示、または CC BY-SA 4.0 の継承条件つきの許諾を確認したもの。S047 は、組織の外へ翻案を公開するときに同じライセンスでの公開が要る。配布する skill 本文は、長い転載を避け、短い引用と要旨で使う
-  - 短い引用のみ: 上記以外のすべて。著作権表示のみ・全権利留保・許諾の明記なし・条件を確認できなかったもの。出典を明示した短い引用（1〜3 文）にとどめ、段落単位の転載・翻訳をしない。Microsoft Learn・AWS の頁、個人・企業サイトの記事などが入る。再配布できると書かない
+  - 逐語可（出典明記。各条件に従う）: S013、S039。CC BY の表示を確認したもの。配布する skill 本文は、長い転載を避け、短い引用と要旨で使う
+  - 短い引用のみ: 上記以外のすべて（S047 を含む。arc42 のテンプレートの CC BY-SA 4.0 は、S047 の備考に別に書いた）。著作権表示のみ・全権利留保・許諾の明記なし・条件を確認できなかったもの。出典を明示した短い引用（1〜3 文）にとどめ、段落単位の転載・翻訳をしない。Microsoft Learn・AWS の頁、個人・企業サイトの記事などが入る。再配布できると書かない
 
 ## 帰属上の注意
 
@@ -57,7 +57,7 @@
 - URL: https://www.win.tue.nl/~wstomv/edu/2ip30/references/criteria_for_modularization.pdf
 - 取得日: 2026-11-20
 - 検証区分: B
-- 備考: ライセンス: 短い引用のみ。PDF の冒頭に「Copyright 1972, Association for Computing Machinery, Inc. General permission to republish, but not for profit, all or part of this material is granted, provided that reference is made to this publication」とある。短い引用に留める。 要旨（本 skill の言葉）: 処理の手順で分けるのでなく、変わりそうな設計判断や難しい判断ごとにモジュールを切り、その判断を他から隠す。インターフェースは中身をなるべく見せないように決める。 使いどころ: モジュール境界の切り方。変更に強い分割の根拠（情報隠蔽）。 注意: ACM Digital Library の頁は取得できなかった（403）。照合は大学の講義資料サイトにある PDF の複製。同じ PDF の別の箇所に OCR 由来の文字化けがあるため、化けていない段落を引用に選んだ。DOI は本文から確認できていない。同じ PDF を A とする見方もありうるが、第三者の複製なので B にそろえた。
+- 備考: ライセンス: 短い引用のみ。PDF の冒頭に「Copyright 1972, Association for Computing Machinery, Inc. General permission to republish, but not for profit, all or part of this material is granted, provided that reference is made to this publication」とある。短い引用に留める。 要旨（本 skill の言葉。引用は、モジュールが隠す設計判断と、中身を見せないインターフェースの部分だけ。変更に強いという評価は引用の範囲外）: 処理の手順で分けるのでなく、変わりそうな設計判断や難しい判断ごとにモジュールを切り、その判断を他から隠す。インターフェースは中身をなるべく見せないように決める。 使いどころ: モジュール境界の切り方。変更に強い分割の根拠（情報隠蔽）。 注意: ACM Digital Library の頁は取得できなかった（403）。照合は大学の講義資料サイトにある PDF の複製。同じ PDF の別の箇所に OCR 由来の文字化けがあるため、化けていない段落を引用に選んだ。DOI は本文から確認できていない。同じ PDF を A とする見方もありうるが、第三者の複製なので B にそろえた。
 
 ### S011 John Ousterhout『A Philosophy of Software Design』（著者のページと Clean Code との比較）
 
@@ -68,13 +68,17 @@
 - URL（原稿）: https://github.com/johnousterhout/aposd-vs-clean-code（Clean Code との比較の頁。この項目の引用の取得元）
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。リポジトリ頁にライセンス表示を見つけられなかった。短い引用に留める。 要旨（本 skill の言葉）: 深いモジュール（簡単なインターフェースの裏に多くの機能を隠す）と浅いモジュール（隠す量が少なくインターフェースが複雑）を区別する。細かく分けすぎるとかえって絡み合う。書籍の第 2 版（2021 年 7 月）が出ている。 使いどころ: モジュールの分割の粒度。分けすぎの危険。インターフェースの複雑さを費用として数える。 区分の根拠: 著者の頁とリポジトリ。本の本文そのものは未確認。 注意: 書名の「deep module」という語の原典の章は、書籍のため未確認。章番号は書かない。
+- 備考: ライセンス: 短い引用のみ。リポジトリ頁にライセンス表示を見つけられなかった。短い引用に留める。 要旨（本 skill の言葉。引用は method の部分だけ。以下の深い・浅いモジュールと分けすぎの話は書籍の内容の要旨で、引用の範囲外）: 簡単なインターフェースの裏に多くの機能を持たせるのが良い method だという一文が引用にある。深いモジュール（簡単なインターフェースの裏に多くの機能を隠す）と浅いモジュール（隠す量が少なくインターフェースが複雑）を区別する。細かく分けすぎるとかえって絡み合う。書籍の第 2 版（2021 年 7 月）が出ている。 使いどころ: モジュールの分割の粒度。分けすぎの危険。インターフェースの複雑さを費用として数える。 区分の根拠: 著者の頁とリポジトリ。本の本文そのものは未確認。 注意: 書名の「deep module」という語の原典の章は、書籍のため未確認。章番号は書かない。
 
 ### S013 Eric Evans「Domain-Driven Design Reference」（2015 年版 PDF）
 
 > Explicitly define the context within which a model applies.
 
 > Multiple models are inevitable, yet when code based on distinct models is combined, software becomes buggy, unreliable, and difficult to understand.
+
+> Explicitly set boundaries in terms of team organization, usage within specific parts of the application, and physical manifestations such as code bases and database schemas.
+
+> Apply Continuous Integration to keep model concepts and terms strictly consistent within these bounds, but don't be distracted or confused by issues outside.
 
 - 媒体・日付: Domain Language, Inc.、2015 年（PDF 表紙に「© 2015 Eric Evans」）。冒頭の謝辞は 2014 年 6 月の日付
 - URL: https://www.domainlanguage.com/ddd/reference/
@@ -86,6 +90,8 @@
 ### S016 Robert C. Martin「The Clean Architecture」
 
 > This rule says that source code dependencies can only point inwards .
+
+> The outer circles are mechanisms. The inner circles are policies.
 
 - 媒体・日付: The Clean Code Blog、2012 年 8 月 13 日（URL の日付による。頁本文には日付が出なかった）
 - URL: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
@@ -101,7 +107,7 @@
 - URL: https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。Microsoft Learn の利用条件。原稿リポジトリ（MicrosoftDocs 側）は取得時点で GitHub の API と raw の双方が 404 で、ライセンス本文を確認できなかった。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉）: 外部や旧系との間に翻訳の層を置き、片方の設計を相手に汚染させない。 使いどころ: 旧系・外部 API の都合を新系に持ち込ませたくないとき。
+- 備考: ライセンス: 短い引用のみ。Microsoft Learn の利用条件。原稿リポジトリ（MicrosoftDocs 側）は取得時点で GitHub の API と raw の双方が 404 で、ライセンス本文を確認できなかった。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉。引用は、サブシステムの間に置く翻訳の層の部分だけ。旧系・外部との関係と汚染の話は引用の範囲外）: 外部や旧系との間に翻訳の層を置き、片方の設計を相手に汚染させない。 使いどころ: 旧系・外部 API の都合を新系に持ち込ませたくないとき。
 
 ## 構成の選択（モノリス・マイクロサービス）
 
@@ -120,6 +126,12 @@
 > Almost all the successful microservice stories have started with a monolith that got too big and was broken up
 
 > you should build a new application as a monolith initially, even if you think it's likely that it will benefit from a microservices architecture later on.
+
+> Almost all the cases where I've heard of a system that was built as a microservice system from scratch, it has ended up in serious trouble.
+
+> even experienced architects working in familiar domains have great difficulty getting boundaries right at the beginning.
+
+> Any refactoring of functionality between services is much harder than it is in a monolith.
 
 - 媒体・日付: martinfowler.com bliki、2015 年 6 月 3 日
 - URL: https://martinfowler.com/bliki/MonolithFirst.html
@@ -145,7 +157,7 @@
 - URL: https://martinfowler.com/articles/microservice-trade-offs.html
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉）: 利点（モジュール境界の強化・独立した配備・技術の多様性）と費用（分散・結果整合性・運用の複雑さ）を並べ、文脈で選ぶ。 使いどころ: 分割の得失を表で並べる論点。
+- 備考: ライセンス: 短い引用のみ。「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉。引用は、費用と利益を文脈に当てはめて選ぶ部分だけ。利点と費用の個別の項目は引用の範囲外）: 利点（モジュール境界の強化・独立した配備・技術の多様性）と費用（分散・結果整合性・運用の複雑さ）を並べ、文脈で選ぶ。 使いどころ: 分割の得失を表で並べる論点。
 
 ### S025 Martin Fowler「Microservice Premium」
 
@@ -161,6 +173,12 @@
 
 > if you don't have certain baseline competencies, you shouldn't consider using the microservice style.
 
+> Rapid provisioning : you should be able to fire up a new server in a matter of hours.
+
+> it's essential that a monitoring regime is in place to detect serious problems quickly.
+
+> Rapid application deployment: with many services to manage, you need to be able to quickly deploy them, both to test environments and to production.
+
 - 媒体・日付: martinfowler.com bliki、2014 年 8 月 28 日
 - URL: https://martinfowler.com/bliki/MicroservicePrerequisites.html
 - 取得日: 2026-11-20
@@ -175,6 +193,10 @@
 
 > Large documents are never kept up to date. Small, modular documents have at least a chance at being updated.
 
+> We will keep ADRs in the project repository under doc/arch/adr-NNN.md
+
+> ADRs will be numbered sequentially and monotonically. Numbers will not be reused.
+
 - 媒体・日付: Cognitect blog、2011 年 11 月 15 日
 - URL: https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 - 取得日: 2026-11-20
@@ -184,6 +206,18 @@
 ### S029 Michael Nygard, Documenting Architecture Decisions（様式）
 
 > If a decision is reversed, we will keep the old one around, but mark it as superseded. (It's still relevant to know that it was the decision, but is no longer the decision.)
+
+> The format has just a few parts.
+
+> Context This section describes the forces at play, including technological, political, social, and project local.
+
+> Decision This section describes our response to these forces.
+
+> If a later ADR changes or reverses a decision, it may be marked as "deprecated" or "superseded" with a reference to its replacement.
+
+> All consequences should be listed here, not just the "positive" ones.
+
+> The whole document should be one or two pages long.
 
 - 媒体・日付: 2011-11-15
 - URL: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
@@ -195,6 +229,10 @@
 
 > An Architecture Decision Record (ADR) is a short document that captures and explains a single decision relevant to a product or ecosystem.
 
+> Firstly they act as a record of decisions, allowing people months or years later to understand why the system is constructed in the way that it is.
+
+> But perhaps even more valuable, the act of writing them helps to clarify thinking, particularly with groups of people.
+
 - 媒体・日付: martinfowler.com bliki、2026 年 3 月 24 日
 - URL: https://martinfowler.com/bliki/ArchitectureDecisionRecord.html
 - 取得日: 2026-11-20
@@ -204,6 +242,8 @@
 ### S031 Martin Fowler, Architecture Decision Record（superseded）
 
 > Once an ADR is accepted, it should never be reopened or changed - instead it should be superseded.
+
+> They should not be modified if the decision is changed, but linked to a superseding decision.
 
 - 媒体・日付: 2026-03-24
 - URL: https://martinfowler.com/bliki/ArchitectureDecisionRecord.html
@@ -217,6 +257,14 @@
 
 > The C4 model is an easy to learn, developer friendly approach to software architecture diagramming
 
+> A set of hierarchical abstractions - software systems , containers , components , and code .
+
+> A set of hierarchical diagrams - system context , containers , components , and code .
+
+> An additional set of supporting diagrams - system landscape , dynamic , and deployment .
+
+> Notation independent . Tooling independent .
+
 - 媒体・日付: c4model.com（トップ頁と FAQ）。日付の表示なし
 - URL: https://c4model.com/
 - 取得日: 2026-11-20
@@ -229,11 +277,15 @@
 
 > you should know what qualities are really important for your stakeholders, in a specific and measurable way.
 
+> Quality scenarios make quality requirements concrete and allow to decide whether they are fulfilled (in the sense of acceptance criteria).
+
+> In literature, the idea of a quality attribute tree has also been described, which puts the generic term "quality" as the root and uses a tree-like refinement of the term "quality".
+
 - 媒体・日付: 頁に日付表示なし
 - URL: https://docs.arc42.org/section-10/
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。arc42 のライセンス頁（https://arc42.org/license）は、テンプレートを CC BY-SA 4.0 とし、クレジットの表示・ライセンスへのリンク・変更の明示を求め、組織の外へ翻案を公開するときは同じライセンスで公開する（継承）と述べる（保存原稿で確認）。docs.arc42.org の本頁そのものには、ライセンス表示を確認できていない。 要旨（本 skill の言葉）: 品質要求は具体的・測定可能に書く。品質ツリーと品質シナリオを使う。 使いどころ: 「速く」「安全に」を測れる形にするとき。
+- 備考: ライセンス: 短い引用のみ。引用元の頁（docs.arc42.org）のライセンスは確認できていない。別に、arc42 のライセンス頁（https://arc42.org/license）は、テンプレートそのものを CC BY-SA 4.0 とし、クレジットの表示・ライセンスへのリンク・変更の明示を求め、組織の外へ翻案を公開するときは同じライセンスで公開する（継承）と述べる（保存原稿で確認）。この条件は、テンプレートについてのもので、本頁の引用や翻案に及ぶとは確認できていないため、本頁は短い引用のみで扱う。 要旨（本 skill の言葉）: 品質要求は具体的・測定可能に書く。品質ツリーと品質シナリオを使う。 使いどころ: 「速く」「安全に」を測れる形にするとき。
 
 ### S051 Neal Ford・Rebecca Parsons・Patrick Kua「Building Evolutionary Architectures」（公式サイト）
 
@@ -249,11 +301,13 @@
 
 > The common reason why people build presumptive features is because they think it will be cheaper to build it now rather than build it later.
 
+> Even in this happy case, building the presumptive feature incurs two serious costs. The first cost is the cost of delayed value.
+
 - 媒体・日付: martinfowler.com, 2015 年 5 月 26 日。XP に由来する（同記事: "Yagni is a way to refer to the XP practice of Simple Design"、起源は Kent Beck と Chet Hendrickson の会話と脚注にある）
 - URL: https://martinfowler.com/bliki/Yagni.html
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 今は要らない機能を「先に作ると安い」と思って作るのは、作る費用・遅れる価値の費用・持ち越す複雑さの費用を払う。Yagni は要らないものを作らないことで、設計をしないことではなく、変えやすさ（リファクタリング・テスト）が前提になる。 使いどころ: 過剰設計への批判の定番。「将来のため」の抽象化を止める根拠。変えやすさ（リファクタリング等）が前提だという趣旨も同記事にある（要旨。詳細は記事で確認のこと）。 区分の根拠: 記事の記述。XP 側の原典は未取得。 注意: XP 側の原典は未取得。
+- 備考: ライセンス: 短い引用のみ。表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉。引用は、見込みの機能を作る理由と、遅れる価値の費用の部分だけ。変えやすさが前提という話は引用の範囲外）: 今は要らない機能を「先に作ると安い」と思って作るのは、作る費用・遅れる価値の費用・持ち越す複雑さの費用を払う。Yagni は要らないものを作らないことで、設計をしないことではなく、変えやすさ（リファクタリング・テスト）が前提になる。 使いどころ: 過剰設計への批判の定番。「将来のため」の抽象化を止める根拠。変えやすさ（リファクタリング等）が前提だという趣旨も同記事にある（要旨。詳細は記事で確認のこと）。 区分の根拠: 記事の記述。XP 側の原典は未取得。 注意: XP 側の原典は未取得。
 
 ## クラウド事業者の指針と配備の原則
 
@@ -283,6 +337,10 @@
 
 > Design for change rather than designing for a fixed end state.
 
+> Making decisions reversible where possible. Prefer approaches that allow you to change direction without significant rework.
+
+> Use canary deployments, feature flags, and A/B testing to validate changes incrementally before full commitment.
+
 - 媒体・日付: 2026-11-16 最終更新（頁表示）
 - URL: https://docs.aws.amazon.com/wellarchitected/latest/framework/framework.html
 - URL（原稿）: https://docs.aws.amazon.com/wellarchitected/latest/framework/framework.md
@@ -296,6 +354,8 @@
 
 > Essentially everyone, when they first build a distributed application, makes the following eight assumptions. All prove to be false in the long run and all cause big trouble and painful learning experiences.
 
+> 1. The network is reliable 2. Latency is zero 3. Bandwidth is infinite 4. The network is secure 5. Topology doesn't change 6. There is one administrator 7. Transport cost is zero 8. The network is homogeneous
+
 - 媒体・日付: James Gosling のサイト nighthacks.com にある頁（日付の表示なし）。もとは Sun の blog（blogs.sun.com/jag）にあった頁
 - URL: https://nighthacks.com/jag/res/Fallacies.html
 - 取得日: 2026-11-20
@@ -308,11 +368,13 @@
 
 > CAP prohibits only a tiny part of the design space: perfect availability and consistency in the presence of partitions, which are rare.
 
+> The CAP theorem states that any networked shared-data system can have at most two of three desirable properties: consistency (C) equivalent to having a single up-to-date copy of the data; high availability (A) of that data (for updates); and tolerance to network partitions (P).
+
 - 媒体・日付: IEEE Computer 掲載、InfoQ 再掲 2012 年 5 月 30 日（原稿に "first appeared in Computer magazine" とある）
 - URL: https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。表示なし（InfoQ と IEEE Computer Society の掲載。著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 「3 つから 2 つ選ぶ」という言い方は最初から誤解を招いた。CAP が禁じるのは、分断があるときに完全な一貫性と可用性を両方取ることだけで、分断は稀。分断を明示して扱えば、設計の幅は広い。 使いどころ: 提唱者自身による CAP の言い直し（2012 年）。「CP か AP か」で製品を分類する話を止める根拠。 区分の根拠: InfoQ 再掲の本文。IEEE 原版は未取得。 注意: InfoQ 再掲の本文で照合した。IEEE 原版は未取得。
+- 備考: ライセンス: 短い引用のみ。表示なし（InfoQ と IEEE Computer Society の掲載。著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 「3 つから 2 つ選ぶ」という言い方は最初から誤解を招いた。CAP が禁じるのは、分断があるときに完全な一貫性と可用性を両方取ることだけで、分断は稀（記事の観察であり、個別のシステムのネットワークで成り立つかは、観測や障害モデルで確かめる）。一貫性と可用性は、記事の定義（引用にある）で読む。分断を明示して扱えば、設計の幅は広い。 使いどころ: 提唱者自身による CAP の言い直し（2012 年）。「CP か AP か」で製品を分類する話を止める根拠。 区分の根拠: InfoQ 再掲の本文。IEEE 原版は未取得。 注意: InfoQ 再掲の本文で照合した。IEEE 原版は未取得。
 
 ### S074 Martin Kleppmann「Please stop calling databases CP or AP」（批判側）
 
@@ -330,6 +392,8 @@
 
 > the term "Strangler Fig" is now often used to describe a gradual approach to legacy modernization.
 
+> Like the fig, it begins with small additions, often new features, that are built on top of, yet separate to the legacy code base. As we do this we move bits of behavior from the legacy system into the new code base.
+
 - 媒体・日付: martinfowler.com bliki、頁表示 2024 年 8 月 22 日（2004 年の原記事「Strangler Application」を改稿した版。2001 年のオーストラリアの旅行に由来すると頁に書かれている）
 - URL: https://martinfowler.com/bliki/StranglerFigApplication.html
 - 取得日: 2026-11-20
@@ -339,6 +403,14 @@
 ### S079 Martin Fowler, Strangler Fig
 
 > The alternative that my colleagues and I prefer, is to do a gradual process of modernization.
+
+> Replacements seem easy to specify, but often it's hard to figure out the details of existing behavior. What's worse, much of that behavior is stuff that isn't really wanted, so building it is a waste.
+
+> This will involve identifying seams that we can insert into the system to allow it to be split
+
+> While this may appear to be a waste, the reduced risk and earlier value from the gradual approach outweigh its costs.
+
+> If there's no change in organizational culture and leadership, the new systems will end up in a similar mess.
 
 - 媒体・日付: 2024-08-22
 - URL: https://martinfowler.com/bliki/StranglerFigApplication.html
@@ -350,11 +422,17 @@
 
 > "Branch by Abstraction" is a technique for making a large-scale change to a software system in gradual way that allows you to release the system regularly while the change is still in-progress.
 
+> We create an abstraction layer that captures the interaction between one section of the client code and the current supplier.
+
+> We gradually move all client code over to use the abstraction layer until all interaction with the supplier is done by the abstraction layer.
+
+> Once we are ready we switch that section of the client code to use the new supplier.
+
 - 媒体・日付: martinfowler.com bliki、2014 年 1 月 7 日
 - URL: https://martinfowler.com/bliki/BranchByAbstraction.html
 - 取得日: 2026-11-20
 - 検証区分: B
-- 備考: ライセンス: 短い引用のみ。「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉）: 置き換えたい部分に抽象の層を挟み、呼び出し側を段階的に新しい実装へ移す。大きな変更の間も定期的にリリースできる。用語は Paul Hammant が導入し、Stacy Curl が原案と頁は述べる。 使いどころ: 大規模な置き換えを小さな手順に分ける論点。／内部の部品（ライブラリ・フレームワーク・モジュール）の入れ替え。Strangler は外部から見える境界の入れ替えで使い分ける。 区分の根拠: 頁内の脚注番号を除いて引いたため（下の注意を参照）。 注意: 引用の冒頭「Branch by Abstraction」の直後に頁の脚注番号があり、脚注番号を除いて引いたため、頁の本文との部分一致が通らない。そこで B に下げた。後半の「that allows you to release the system regularly while the change is still in-progress.」は頁の本文と逐語で一致した。
+- 備考: ライセンス: 短い引用のみ。「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉）: 置き換えたい部分に抽象の層を挟む。段階 1 は、呼び出し側を、既存の実装を使う抽象へ移すこと。段階 2 は、同じ抽象の背後で新しい実装を作り、呼び出し側の区画ごとに切り替えること。大きな変更の間も定期的にリリースできる。用語は Paul Hammant が導入し、Stacy Curl が原案と頁は述べる。 使いどころ: 大規模な置き換えを小さな手順に分ける論点。／内部の部品（ライブラリ・フレームワーク・モジュール）の入れ替え。Strangler は外部から見える境界の入れ替えで使い分ける。 区分の根拠: 頁内の脚注番号を除いて引いたため（下の注意を参照）。 注意: 引用の冒頭「Branch by Abstraction」の直後に頁の脚注番号があり、脚注番号を除いて引いたため、頁の本文との部分一致が通らない。そこで B に下げた。後半の「that allows you to release the system regularly while the change is still in-progress.」は頁の本文と逐語で一致した。
 
 ### S083 Danilo Sato, Parallel Change（Expand and Contract）
 
@@ -384,6 +462,8 @@
 ### S090 Martin Fowler, Conway's Law（逆コンウェイ）
 
 > Here we deliberately alter the development team's organization structure to encourage the desired software architecture, an approach referred to as the Inverse Conway Maneuver
+
+> The term "inverse Conway maneuver" was coined by Jonny LeRoy and Matt Simons in an article published in the December 2010 issue of the Cutter IT journal.
 
 - 媒体・日付: 2022-10-20
 - URL: https://martinfowler.com/bliki/ConwaysLaw.html
@@ -427,6 +507,8 @@
 
 > we have just 12 programmers
 
+> The patterns that make sense for organizations orders of magnitude larger than yours, are often the exact opposite ones that'll make sense for you.
+
 - 媒体・日付: Signal v. Noise, 2016 年 2 月 29 日
 - URL: https://signalvnoise.com/svn3/the-majestic-monolith/
 - 取得日: 2026-11-20
@@ -445,7 +527,7 @@
 - URL: https://segment.com/blog/goodbye-microservices/（原稿は Twilio ドメイン側の同記事のページ）
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。表示なし（ページ末は Copyright © 2026 Twilio Inc）。引用は短く。 要旨（本 skill の言葉）: Segment は宛先（destination）ごとに分けたサービスを多数運用したところ、共有ライブラリの変更の試験・展開が全体に波及し、速度が落ち、欠陥が増え、3 人の常勤が維持に追われた。宛先を 1 つのリポジトリ・1 つのサービスにまとめ、依存の版を 1 つに揃えたところ生産性が上がったと自称する。結論の節に「簡単な決定ではなかった」とも書く。 使いどころ: 小さなチームでサービスを増やしすぎた失敗の型と、揺り戻しの公開事例。「宛先ごとのサービス」という分け方の失敗であって、マイクロサービス一般の否定ではない。数値は同社の自称で、一般化しない。 区分の根拠: 記事の記述。会社の自称。
+- 備考: ライセンス: 短い引用のみ。表示なし（ページ末は Copyright © 2026 Twilio Inc）。引用は短く。 要旨（本 skill の言葉。引用は、小さなチームが複雑さに足を取られたことと、3 人の常勤の部分だけ。宛先ごとに分けた経緯は引用の範囲外）: Segment は宛先（destination）ごとに分けたサービスを多数運用したところ、共有ライブラリの変更の試験・展開が全体に波及し、速度が落ち、欠陥が増え、3 人の常勤が維持に追われた。宛先を 1 つのリポジトリ・1 つのサービスにまとめ、依存の版を 1 つに揃えたところ生産性が上がったと自称する。結論の節に「簡単な決定ではなかった」とも書く。 使いどころ: 小さなチームでサービスを増やしすぎた失敗の型と、揺り戻しの公開事例。「宛先ごとのサービス」という分け方の失敗であって、マイクロサービス一般の否定ではない。数値は同社の自称で、一般化しない。 区分の根拠: 記事の記述。会社の自称。
 
 ### S105 Shopify Engineering（Kirsten Westeinde）, "Deconstructing the Monolith"
 
@@ -454,6 +536,8 @@
 > Each software architecture has its own set of pros and cons, and a different solution will make sense for an app depending on what phase of its growth it is in.
 
 > It has been worked on for over a decade by more than a thousand developers.
+
+> It was initially built as a monolith, meaning that all of these distinct functionalities were built into the same codebase with no boundaries between them.
 
 - 媒体・日付: Shopify Engineering, 2019 年 2 月 21 日
 - URL: https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity
@@ -480,6 +564,10 @@
 > We realized that distributed approach wasn’t bringing a lot of benefits in our specific use case, so we packed all of the components into a single process.
 
 > the way we used some components caused us to hit a hard scaling limit at around 5% of the expected load.
+
+> The two most expensive operations in terms of cost were the orchestration workflow and when data passed between distributed components.
+
+> we moved all components into a single process to keep the data transfer within the process memory, which also simplified the orchestration logic.
 
 - 媒体・日付: Prime Video Tech ブログ, 2023 年 3 月 22 日
 - URL: https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90（元の記事。取得時点では元のサイトに接続できず、保存先から取得）
