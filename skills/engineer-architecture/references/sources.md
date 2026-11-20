@@ -2,7 +2,7 @@
 
 `engineer-architecture`（ソフトウェアアーキテクト）の `SKILL.md` が根拠にする出典の台帳。人物・論文・原典の一次資料、クラウド事業者の指針、決定の記録（ADR）・図・設計文書の様式、段階的な移行の手法、チームと構造の議論、批判と各社の事例から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・発言者や媒体・日付・URL・取得日・検証区分を記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。
 
-全 40 件。いずれも逐語の引用を持つ（引用ブロックは 73 件）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 41 件。いずれも逐語の引用を持つ（引用ブロックは 75 件）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
@@ -22,7 +22,7 @@
   - 脚注番号: 頁の脚注番号が引用の途中に入るときは、脚注番号を除いて引く。そのため頁の本文との部分一致が通らない。その項目は、脚注番号を含まない後半の語句で照合し、区分を B にする（S082）
   - 引用文は、上の前処理のうえ `grep -F` で部分一致を確かめる
 - ライセンス上の扱い（各項目の備考に「ライセンス」として書いた）
-  - 逐語可（出典明記。各条件に従う）: S013、S039、S074。CC BY の表示を確認したもの（S013 は CC BY 4.0 と CC BY 3.0、S039 は CC BY 4.0、S074 は CC BY 3.0）。ライセンス上は出典を示せば逐語で引用できるが、配布する skill 本文は、編集方針として、長い転載を避け、短い引用と要旨で使う
+  - 逐語可（出典明記。各条件に従う）: S013、S039、S074、S075。CC BY の表示を確認したもの（S013 は CC BY 4.0 と CC BY 3.0、S039 は CC BY 4.0、S074 と S075 は同じ頁で CC BY 3.0）。ライセンス上は出典を示せば逐語で引用できるが、配布する skill 本文は、編集方針として、長い転載を避け、短い引用と要旨で使う
   - 短い引用のみ: 上記以外のすべて（S047 を含む。arc42 のテンプレートの CC BY-SA 4.0 は、S047 の備考に別に書いた）。著作権表示のみ・全権利留保・許諾の明記なし・条件を確認できなかったもの。出典を明示した短い引用（1〜3 文）にとどめ、段落単位の転載・翻訳をしない。Microsoft Learn・AWS の頁、個人・企業サイトの記事などが入る。再配布できると書かない
 
 ## 帰属上の注意
@@ -362,6 +362,18 @@
 - 検証区分: C
 - 備考: ライセンス: 逐語可（出典明記・各条件に従う）。頁末に「Unless otherwise specified, all content on this site is licensed under a Creative Commons Attribution 3.0 Unported License」（CC BY 3.0 の表示を確認した）。出典を示せば引用できる。ただし、skill の中では編集方針として、引用を短くする。 要旨（本 skill の言葉。引用が言うのは、CAP は単純化が過ぎ、誤解も多く、系の性質の記述にはあまり役立たない、という点だけ。データベースを CP や AP と呼ぶ分類への批判・より正確な枠組みへの誘導は、引用の範囲外）: CAP は、系の性質の記述には向かない。 使いどころ（本 skill の整理）: 「CAP だから」で選定を済ませる議論への留保。 区分の根拠: CAP を使った分類への批判。Kleppmann 本人の文面で照合した。
 
+### S075 Martin Kleppmann, "Please stop calling databases CP or AP"
+
+> Consistency in CAP actually means linearizability , which is a very specific (and very strong) notion of consistency.
+
+> Availability in CAP is defined as "every request received by a non-failing [database] node in the system must result in a [non-error] response".
+
+- 媒体・日付: 個人ブログ, 2015 年 5 月 11 日（原稿の "Published by Martin Kleppmann on 11 May 2015"）
+- URL: https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
+- 取得日: 2026-11-20
+- 検証区分: C
+- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。S074 と同じ頁で、頁末の CC BY 3.0 の表示は S074 に書いた。ただし、skill の中では編集方針として、引用を短くする。 要旨（本 skill の言葉。引用が言うのは、CAP の一貫性は線形化可能性という非常に強い一貫性の意味であること、CAP の可用性は、故障していないノードが受けたすべての要求が、エラーでない応答を返すことと定義されること。ACID の C とは別物であること・実用の「高可用」と一致しないこと・製品を CP/AP に分けるのは雑という結論は、引用の範囲外）: CAP の一貫性は線形化可能性、可用性は非故障ノードが受けた要求への非エラー応答。 使いどころ（本 skill の整理）: CAP の用語を設計の議論で使うとき、定義を確認する習慣の根拠。 区分の根拠: 批判側の主張。定義の指摘は原文で確認したが、「CP/AP の分類は無意味」という結論の当否は確認していない。 注意: 引用中の「linearizability ,」の空白と、可用性の引用の括弧書き（[database]・[non-error]）は原文のまま。S074 と同じ頁で、2 つの項目の引用は合わせて 2 文。
+
 ## 段階的な移行
 
 ### S078 Martin Fowler「Strangler Fig」
@@ -420,7 +432,7 @@
 
 - 媒体・日付: Datamation、1968 年（著者サイトの転載頁に「Copyright 1968, F. D. Thompson Publications, Inc. Reprinted by permission of Datamation magazine」と明記。号の月は原稿から確認できていない）
 - URL: https://www.melconway.com/Home/Committees_Paper.html
-- URL（原稿）: https://www.melconway.com/Home/pdf/committees.pdf（原誌のスキャン。取得したが OCR の質が低く、照合には使っていない）
+- 参考（照合には使っていない）: https://www.melconway.com/Home/pdf/committees.pdf（原誌のスキャン。取得したが OCR の質が低い。照合に使った文書は上の URL の転載頁）
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。雑誌の著作権は出版社に帰属。転載は許諾つきと頁に明記。短い引用に留める。 要旨（本 skill の言葉）: システムを設計する組織は、その組織の連絡の構造をなぞった設計を出してしまう。組織の形は、取り得る設計の案を先に絞っている。 使いどころ（本 skill の整理）: チーム境界とモジュール・サービスの境界を一緒に決める論点。逆コンウェイ操作の前提。／Conway の法則の一次資料（1968 年）。後の「逆 Conway 操作」の話に進む前に、原論文の主張が「写る」であって「写せ」ではない点を押さえる。 区分の根拠: 著者本人のサイトにある転載。原誌の頁そのものではない点は注記。 注意: 原誌のスキャン PDF は OCR の質が低く、照合に使っていない（照合は著者サイトの転載頁）。Fowler の頁や記事が引く Conway の文は言い換えで、原文とは文言が違う。逐語はこの項目の原文を使う。
@@ -484,7 +496,8 @@
 > with 3 full-time engineers spending most of their time just keeping the system alive.
 
 - 媒体・日付: Segment（現 Twilio）の開発者向けブログ, 2018 年 7 月 10 日
-- URL: https://segment.com/blog/goodbye-microservices/（原稿は Twilio ドメイン側の同記事のページ）
+- URL: https://segment.com/blog/goodbye-microservices/
+- URL（原稿）: https://www.twilio.com/en-us/blog/developers/best-practices/goodbye-microservices（Twilio ドメイン側の同記事のページ。この項目の引用の照合に使った）
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。表示なし（ページ末は Copyright © 2026 Twilio Inc）。引用は短く。 要旨（本 skill の言葉。引用は、小さなチームが複雑さに足を取られたこと、速度が落ち欠陥が増えたこと、3 人の常勤が維持に追われたことの部分だけ。宛先ごとに分けた経緯・共有ライブラリの変更の波及・まとめた後の生産性・結論の節の記述は引用の範囲外）: Segment は宛先（destination）ごとに分けたサービスを多数運用したところ、共有ライブラリの変更の試験・展開が全体に波及し、速度が落ち、欠陥が増え、3 人の常勤が維持に追われた。宛先を 1 つのリポジトリ・1 つのサービスにまとめ、依存の版を 1 つに揃えたところ生産性が上がったと自称する。結論の節に「簡単な決定ではなかった」とも書く。 使いどころ（本 skill の整理）: 小さなチームでサービスを増やしすぎた失敗の型と、揺り戻しの公開事例。マイクロサービス一般の否定ではない。「宛先ごとのサービス」という分け方の話は、引用の範囲外。数値は同社の自称で、一般化しない。 区分の根拠: 記事の記述。会社の自称。
@@ -523,7 +536,7 @@
 
 - 媒体・日付: Prime Video Tech ブログ, 2023 年 3 月 22 日
 - URL: https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90（元の記事。取得時点では元のサイトに接続できず、保存先から取得）
-- URL（原稿）: https://web.archive.org/web/2023/https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90（Internet Archive の保存ページ。ページ表記は © 1996-2023 Amazon）
+- URL（原稿）: https://web.archive.org/web/20231230202019/https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90（Internet Archive の保存ページ。保存時点は 2023-12-30 20:20:19 UTC。この項目の引用の照合に使った。ページ表記は © 1996-2023 Amazon）
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。表示なし（著作権は Amazon。引用は短く）。 要旨（本 skill の言葉。引用が言うのは、サービスをモノリスへ移したらインフラ費用が 90% 超下がったこと、一部のコンポーネントの使い方のせいで想定負荷の約 5% で拡張の限界に当たったこと、費用が最も高い 2 つの操作がオーケストレーションのワークフローと分散コンポーネント間のデータの受け渡しだったこと。数千の同時ストリーム・Step Functions と Lambda・1 プロセスへの書き直し・状態遷移数・S3 の呼び出し・映像・音声の欠陥検出という対象は、引用の範囲外）: 90% 超は、監視サービスのインフラ費用の削減で、開発や移行を含む総費用ではない。引用は「our service」と言い、Prime Video 全体の構成の話ではない。数値（"over 90%"）は同社チームの自称。 使いどころ（本 skill の整理）: 揺り戻しの公開事例の中心。モノリスへ移したらインフラ費用が 90% 超下がったという自称と、費用が最も高かった操作（オーケストレーションと、分散コンポーネント間のデータの受け渡し）を、同社チームの自称として示す。「サーバーレス・分散が合わないのは、データの受け渡しが多い処理」という限定は、本 skill の整理（引用は、費用が最も高い操作を述べるだけ）。「ケースごとに決める」旨と、拡張が縦方向になる代償は、引用に載せていないので、本 skill の根拠にしない。 区分の根拠: アーカイブ版の原文と一致。元サイトの現行の記事の有無は未確認。 注意: アーカイブ版の原文と一致した。元ドメインには取得時に接続できず（名前解決できず）、元記事の現行の公開状況は未確認。
