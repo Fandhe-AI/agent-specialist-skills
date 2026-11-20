@@ -1,14 +1,14 @@
 # engineer-infrastructure 出典台帳
 
-`engineer-infrastructure`（SRE・プラットフォームエンジニアの相談役）の `SKILL.md` が根拠にする出典の台帳。SRE の書籍とワークブックの公開版、人物・原典の一次資料、計測と警報の公開仕様、事故対応の公開文書、公開の安全・容量・費用・IaC・復旧の指針、配信の指標、公開された事後検証、国内の公的資料から、SKILL.md が引く項目を主題ごとに並べた。引用原文・媒体と日付・URL・取得日・検証区分・ライセンスを記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。欠番は欠番のままにする（この台帳に載せていない番号は、まだ引いていない項目である）。
+`engineer-infrastructure`（SRE・プラットフォームエンジニアの相談役）の `SKILL.md` と `references/` が根拠にする出典の台帳。SRE の書籍とワークブックの公開版、人物・原典の一次資料、計測と警報の公開仕様、事故対応の公開文書、公開の安全・容量・費用・IaC・復旧の指針、配信の指標、公開された事後検証、歴史・組織の出典（ITIL・DevOps・Platform の資料）、国内の公的資料から、`SKILL.md` と `references/` が引く項目を主題ごとに並べた。引用原文・媒体と日付・URL・取得日・検証区分・ライセンスを記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。欠番は欠番のままにする（この台帳に載せていない番号は、まだ引いていない項目である）。
 
-全 117 件。逐語の引用を持つ項目が 112 件（引用ブロックは 198 件）、書誌のみ・要旨のみ（本文を引用しない）の項目が 5 件。区分の内訳は A 100 件、C 12 件、R 5 件（B は該当なし）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 120 件。逐語の引用を持つ項目が 115 件（引用ブロックは 202 件）、書誌のみ・要旨のみ（本文を引用しない）の項目が 5 件。区分の内訳は A 102 件、B 1 件、C 12 件、R 5 件。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
 - 検証区分
   - A: 原典・公式ページ・著者本人のサイト・発行元の頁の原稿（HTML・Markdown・PDF）、または原典の保存コピー（Internet Archive の Wayback Machine）を取得し、引用文が逐語で含まれることを、タグ除去と空白の正規化のうえで部分一致により照合した。日本語の PDF は抽出で文字間に空白が入るため、空白を除いて比較した（S125・S126・S127・S128）。引用が取得日の時点でページにあることの確認であり、主張の正しさの保証ではない
-  - B: 第三者の複製・解説頁、他媒体経由で引いた文。引用文が、その頁の本文と一致することは確かめたが、原典そのものとの照合ではない（この台帳には該当する項目が無い）
+  - B: 第三者の複製・解説頁、他媒体経由で引いた文。引用文が、その頁の本文と一致することは確かめたが、原典そのものとの照合ではない（S107 の Wikipedia。S110 の創設者の記述も Wikipedia の記述で B 相当と備考に書いた）
   - C: 批判・留保・評価の側の主張。引用が逐語であることのみを確認し、主張の正しさ・因果は確認していない
   - R: 書誌（書名・著者・出版社・年・版）だけを出版社頁などで確かめた項目、または教科書的な事実を要旨だけで書いた項目（S071）。本文を引用しない
   - U: 未検証。事実・引用として使わない。末尾の表に集め、番号を振らない
@@ -24,7 +24,7 @@
   - 比較の前処理: タグを除去し、HTML 実体を復号し、空白の連続を 1 つに畳み、引用符・アポストロフィ・ダッシュを直線形と半角ハイフンに揃える。そのうえで部分一致を確かめる
   - 脚注番号: 頁の脚注番号が引用の途中に入るときは、脚注番号をまたぐ引用をしない。脚注番号の手前で切った項目は、備考に書いた
 - ライセンス上の扱い（各項目の備考に「ライセンス」として書いた）
-  - 逐語可（出典明記。各条件に従う）: CC BY 4.0 の S021、S022、S023、S024、S072、S073、S074、S075、S089、S094、S095、S096、S114。Apache License 2.0 の S012、S016、S020、S025、S026、S037、S038、S040、S043。公共データ利用規約（PDL1.0）の S127、S128。米国政府の著作物（著作権の対象外）の S090。配布する skill 本文は、逐語可でも長い転載を避け、短い引用と要旨で使う
+  - 逐語可（出典明記。各条件に従う）: CC BY 4.0 の S021、S022、S023、S024、S072、S073、S074、S075、S089、S094、S095、S096、S114。CC BY-SA 4.0 の S107（翻案を公開するときは同じライセンスが要る）。Apache License 2.0 の S012、S016、S020、S025、S026、S037、S038、S040、S043。公共データ利用規約（PDL1.0）の S127、S128。米国政府の著作物（著作権の対象外）の S090。配布する skill 本文は、逐語可でも長い転載を避け、短い引用と要旨で使う
   - 改変不可（CC BY-NC-ND 4.0）・本文では要旨で使う: S001、S002、S003、S004、S005、S006、S009、S010、S013、S014、S015、S017、S018、S033、S034、S035、S041、S042、S053、S054、S057、S064、S065、S111、S115。SRE の書籍とワークブックの公開版。翻訳も改変に当たるので、訳文を引用の形で載せない。短い逐語（1〜3 文）と、本 skill の言葉の要旨と番号で指す
   - 要旨のみ（本文を引用しない）: S052、S071、S082、S097、S112。書誌のみの項目と、教科書的な事実の要旨
   - 短い引用のみ: 上記以外のすべて。著作権表示のみ・全権利留保・表示なし・再利用の条件を確かめられなかったもの。出典を明示した短い引用（1〜3 文）にとどめ、段落単位の転載・翻訳をしない。再配布できると書かない
@@ -1223,6 +1223,18 @@
 
 ## 歴史と時代区分
 
+### S107 ITIL の起こり（Wikipedia 経由）
+
+> the UK Government's Central Computer and Telecommunications Agency (CCTA) in the 1980s developed a set of recommendations designed to standardize IT management practices across government functions
+
+> In 1989, ITIL was released.
+
+- 媒体・日付: Wikipedia「ITIL」の History の節（版の日付は控えていない）
+- URL: https://en.wikipedia.org/wiki/ITIL
+- 取得日: 2026-11-20
+- 検証区分: B
+- 備考: ライセンス: CC BY-SA 4.0（頁の表示で確認。翻案を公開するときは同じライセンスが要る）。 要旨（本 skill の言葉）: 1980 年代に英国政府の機関が、政府全体の IT 管理を標準化する推奨をまとめ、1989 年に ITIL として出した。 使いどころ（本 skill の整理）: 歴史の要点の起点。変更管理・工程で統制する運用が、どんな組織（大きな官庁・組織横断）を前提に生まれたかを示す。ITIL の良し悪しの評価には使わない。 区分の根拠・範囲: ITIL の発行元の一次資料は取得していない。
+
 ### S108 Werner Vogels（Amazon）、ACM Queue の対談「A Conversation with Werner Vogels」
 
 > The traditional model is that you take your software to the wall that separates development and operations, and throw it over and then forget about it. Not at Amazon. You build it, you run it.
@@ -1233,6 +1245,28 @@
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 「© ACM, Inc」の表示のみ。引用は短く。 要旨（本 skill の言葉）: 開発が作ったものを運用へ壁越しに投げる従来の型をやめ、作ったチームが運用までを受け持つ。開発者が日々の運用と顧客に触れることで、サービスの質が上がったと語る（Amazon の自称）。 使いどころ（本 skill の整理）: 「作った人が運用する」の早い時期の公開の発言（2006 年）。DevOps の語より前にあることを年表で示す。Amazon の規模・社内の組織が前提で、一般化しない。 区分の根拠・範囲: 保存版の原文と一致。元サイトの現行の頁は 403 で未確認。
+
+### S109 John Allspaw・Paul Hammond「10+ Deploys Per Day: Dev and Ops Cooperation at Flickr」（Velocity 2009 の講演概要）
+
+> Operations and development are disciplines that historically have been limited to a predictable list of responsibilities and have suffered from a culture of finger-pointyness.
+
+- 媒体・日付: O'Reilly Velocity 2009（San Jose）の講演頁。2009 年 6 月 23 日（火）13:00 の枠（頁の表示 "1:00pm Tuesday, 06/23/2009" で確認）
+- URL: http://en.oreilly.com/velocity2009/public/schedule/detail/7641（元の頁は http。直接は取得していない）
+- URL（原稿）: https://web.archive.org/web/20100110115647/http://en.oreilly.com/velocity2009/public/schedule/detail/7641（Internet Archive の保存版）
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 開発と運用は、決まった責任の範囲に閉じ、互いを責め合う文化に苦しんできた。Flickr で両者の役割が混ざって良くなった理由と方法（一押しのデプロイ、アプリのログ、容量の把握、障害対応）を話す、という概要。概要の冒頭は Flickr の開発ブログの「1 週間で 18 人が 496 件の変更を 67 回デプロイ」の引用（Flickr の自称）。 使いどころ（本 skill の整理）: DevOps の起点として語られる講演の一次（概要）。「1 日 10 回以上のデプロイ」は数値の目標ではなく、協力の結果として語られた点を押さえる。 区分の根拠・範囲: 講演の概要文。スライド本体は取得できていない。
+
+### S110 最初の devopsdays（ゲント、2009）
+
+> The first devopsdays happened in Belgium - Ghent and was a great success.
+
+- 媒体・日付: devopsdays の旧サイトの「Devopsdays Ghent 2009」の頁（頁に日付の表示なし。年は頁題の「2009」）。月日は未確認
+- URL: https://legacy.devopsdays.org/events/2009-ghent/
+- URL（補助）: https://en.wikipedia.org/wiki/DevOps（Wikipedia「DevOps」。開催の年と創設者の記述の確認に使った）
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 旧サイトは表示なし（引用は短く）。Wikipedia は CC BY-SA 4.0。 要旨（本 skill の言葉）: 2009 年にベルギーのゲントで最初の devopsdays が開かれた。以後、各国に広がった（Wikipedia の記述）。 使いどころ（本 skill の整理）: 年表の 2009 年。DevOps の語が会議の名前として広まった時点。開催の月日は書かない（未確認）。 区分の根拠・範囲: 主催側の頁の原文。年は頁題のみ。創設者の記述は Wikipedia の記述で B 相当。
 
 ### S111 Benjamin Treynor Sloss「Introduction」（Site Reliability Engineering、Google）— SRE の成り立ちと DevOps との関係
 
@@ -1483,5 +1517,5 @@
 | Little の法則の原論文（John D. C. Little, "A Proof for the Queuing Formula: L = λW", Operations Research, 1961 とされる） | 論文の頁は取得していない。著者・誌名・年は調査の記述で、一次で確かめていない | 教科書的な事実として要旨だけを使い（S071、R）、書誌を引用の根拠にしない |
 | AWS Builders' Library の著者の姓 | 頁の表示名（Marc・David・Colm・Mike）だけ。記事は builder.aws.com へ移転済み | 姓を記憶で補わない（S058・S063・S066〜S069） |
 | AWS Well-Architected の柱の白書の頁と、統合後の同名の BP 頁 | 旧白書の頁は「historical reference only and will be deprecated」。統合後の同名の BP 頁は 404。コスト・運用の柱の BP 頁は引用していない | S091・S092 は廃止予定の頁と断る。移転先が取れたら取り直す |
-| 年の未確認 | Team Topologies 初版、CNCF Platforms white paper の発行年、SRE 書籍の刊行年（本文は「early 2016」の執筆とだけ）、Cook の文書の初出、Google Cloud の障害の報告（S123）の公開日 | 年を書かない |
+| 年の未確認 | Team Topologies 初版、CNCF Platforms white paper の発行年、devopsdays ゲントの月日、SRE 書籍の刊行年（本文は「early 2016」の執筆とだけ）、Cook の文書の初出、Google Cloud の障害の報告（S123）の公開日 | 年を書かない |
 | ライセンスの未確認 | Atlassian・AWS・martinfowler.com・principlesofchaos.org・IPA・Terraform の文書・個人のブログなど、著作権表示はあるが再利用の条件を確かめられないもの | 短い引用と要旨にとどめる |
