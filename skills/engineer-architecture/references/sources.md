@@ -25,7 +25,7 @@
   - 脚注番号: 頁の脚注番号が引用の途中に入るときは、脚注番号をまたぐ引用をしない。脚注番号を含まない部分だけを引用に残し、頁の本文との逐語の一致を確かめる（S082 は、文の後半だけを残した。照合の範囲は、その項目の引用ブロックのすぐ近くに書いた）
   - 引用文は、上の前処理のうえ `grep -F` で部分一致を確かめる
 - ライセンス上の扱い（各項目の備考に「ライセンス」として書いた）
-  - 逐語可（出典明記。各条件に従う）: S013、S039、S074、S075。CC BY の表示を確認したもの（S013 は CC BY 4.0 と CC BY 3.0、S039 は CC BY 4.0、S074 と S075 は同じ頁で CC BY 3.0）。ライセンス上は出典を示せば逐語で引用できるが、配布する skill 本文は、編集方針として、長い転載を避け、短い引用と要旨で使う
+  - 逐語可（出典明記。各条件に従う）: S013、S039、S074、S075。CC BY の表示を確認したもの（S013 は CC BY 4.0（https://creativecommons.org/licenses/by/4.0/）と CC BY 3.0（https://creativecommons.org/licenses/by/3.0/）で、引用した箇所にどちらの版が適用されるかは原稿から確定できなかった。S039 は CC BY 4.0（https://creativecommons.org/licenses/by/4.0/）。S074 と S075 は同じ頁で CC BY 3.0（https://creativecommons.org/licenses/by/3.0/））。ライセンス上は出典を示せば逐語で引用できるが、配布する skill 本文は、編集方針として、長い転載を避け、短い引用と要旨で使う
   - 短い引用のみ: 上記以外のすべて（S047 を含む。arc42 のテンプレートの CC BY-SA 4.0 は、S047 の備考に別に書いた）。著作権表示のみ・全権利留保・許諾の明記なし・条件を確認できなかったもの。出典を明示した短い引用（1〜3 文）にとどめ、段落単位の転載・翻訳をしない。Microsoft Learn・AWS の頁、個人・企業サイトの記事などが入る。再配布できると書かない
 
 ## 帰属上の注意
@@ -83,7 +83,7 @@
 - URL（原稿）: https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。PDF と頁に「licensed under the Creative Commons Attribution 4.0 International License」（DDD Reference 本体）。2004 年の書籍から抜き出した要約部分は、頁によれば CC BY 3.0 Unported。出典を示せば逐語引用できる。ただし長い転載は避け、短い引用に留める。 要旨（本 skill の言葉）: 大きな系には複数のモデルが必ず現れる。モデルが通用する範囲（チーム・コード・DB スキーマ）を明示して境界づける。境界の内側では用語を厳密に揃える。 使いどころ（本 skill の整理）: 境界づけられた文脈（モデルが通用する範囲の明示）の用語。文脈図・腐敗防止層・サービス境界の根拠としての使い方は、引用の範囲外。
+- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。PDF（DDD_Reference_2015-03.pdf）と頁に「licensed under the Creative Commons Attribution 4.0 International License」（DDD Reference 本体。https://creativecommons.org/licenses/by/4.0/）。2004 年の書籍から抜き出した要約部分は、頁によれば CC BY 3.0 Unported（https://creativecommons.org/licenses/by/3.0/）。引用した箇所は Bounded Context の要約で、どちらの版が適用されるかは、保存した PDF と頁の本文から確定できなかった。出典を明示し、両方の版の条件に従う。出典を示せば逐語引用できる。ただし長い転載は避け、短い引用に留める。 要旨（本 skill の言葉）: 大きな系には複数のモデルが必ず現れる。モデルが通用する範囲（チーム・コード・DB スキーマ）を明示して境界づける。境界の内側では用語を厳密に揃える。 使いどころ（本 skill の整理）: 境界づけられた文脈（モデルが通用する範囲の明示）の用語。文脈図・腐敗防止層・サービス境界の根拠としての使い方は、引用の範囲外。
 
 ### S016 Robert C. Martin「The Clean Architecture」
 
@@ -241,7 +241,7 @@
 - URL: https://c4model.com/
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。頁に「This website and example diagrams are licensed under a Creative Commons Attribution 4.0 International License」。出典を示せば引用・翻案できる（CC BY 4.0）。 要旨（本 skill の言葉）: システム・コンテナ・コンポーネント・コードの 4 階層の抽象と、システムコンテキスト・コンテナ・コンポーネント・コードの図、補助の図（landscape・dynamic・deployment）で構成する。記法と道具には依存しない。作者は Simon Brown で、UML や 4+1 ビューに着想を得て簡素化したと FAQ が述べる（作者と着想は引用の範囲外。FAQ の頁で確認）。 使いどころ（本 skill の整理）: 構成図の描き方、図の粒度、読み手ごとの図の使い分け。 注意: FAQ の頁で、作者名と UML・4+1 への言及、ライセンス表示を確認した。 区分の根拠: C4 の公式サイトで、C4 が何であるかの一次資料なので A（(i)(ii) に当たらない。成果の主張や他の手法との比較は一般化しない）。
+- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。頁に「This website and example diagrams are licensed under a Creative Commons Attribution 4.0 International License」。出典を示せば引用・翻案できる（CC BY 4.0。https://creativecommons.org/licenses/by/4.0/）。 要旨（本 skill の言葉）: システム・コンテナ・コンポーネント・コードの 4 階層の抽象と、システムコンテキスト・コンテナ・コンポーネント・コードの図、補助の図（landscape・dynamic・deployment）で構成する。記法と道具には依存しない。作者は Simon Brown で、UML や 4+1 ビューに着想を得て簡素化したと FAQ が述べる（作者と着想は引用の範囲外。FAQ の頁で確認）。 使いどころ（本 skill の整理）: 構成図の描き方、図の粒度、読み手ごとの図の使い分け。 注意: FAQ の頁で、作者名と UML・4+1 への言及、ライセンス表示を確認した。 区分の根拠: C4 の公式サイトで、C4 が何であるかの一次資料なので A（(i)(ii) に当たらない。成果の主張や他の手法との比較は一般化しない）。
 
 ## 品質特性とトレードオフ
 
@@ -363,7 +363,7 @@
 - URL: https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
 - 取得日: 2026-11-20
 - 検証区分: C
-- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。頁末に「Unless otherwise specified, all content on this site is licensed under a Creative Commons Attribution 3.0 Unported License」（CC BY 3.0 の表示を確認した）。出典を示せば引用できる。ただし、skill の中では編集方針として、引用を短くする。 要旨（本 skill の言葉。引用が言うのは、CAP は単純化が過ぎ、誤解も多く、系の性質の記述にはあまり役立たない、という点だけ。データベースを CP や AP と呼ぶ分類への批判・より正確な枠組みへの誘導は、引用の範囲外）: CAP は、系の性質の記述には向かない。 使いどころ（本 skill の整理）: 「CAP だから」で選定を済ませる議論への留保。 区分の根拠: (i)。CAP を使った分類への批判を主題とする記事。Kleppmann 本人の文面で照合した。
+- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。頁末に「Unless otherwise specified, all content on this site is licensed under a Creative Commons Attribution 3.0 Unported License」（CC BY 3.0 の表示を確認した。https://creativecommons.org/licenses/by/3.0/）。出典を示せば引用できる。ただし、skill の中では編集方針として、引用を短くする。 要旨（本 skill の言葉。引用が言うのは、CAP は単純化が過ぎ、誤解も多く、系の性質の記述にはあまり役立たない、という点だけ。データベースを CP や AP と呼ぶ分類への批判・より正確な枠組みへの誘導は、引用の範囲外）: CAP は、系の性質の記述には向かない。 使いどころ（本 skill の整理）: 「CAP だから」で選定を済ませる議論への留保。 区分の根拠: (i)。CAP を使った分類への批判を主題とする記事。Kleppmann 本人の文面で照合した。
 
 ### S075 Martin Kleppmann, "Please stop calling databases CP or AP"
 
@@ -373,7 +373,7 @@
 - URL: https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
 - 取得日: 2026-11-20
 - 検証区分: C
-- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。S074 と同じ頁で、頁末の CC BY 3.0 の表示は S074 に書いた。ただし、skill の中では編集方針として、引用を短くする。 要旨（本 skill の言葉。引用が言うのは、CAP の一貫性は線形化可能性という非常に強い一貫性の意味であること、という点だけ。CAP の可用性の定義・形式化の原文（Gilbert と Lynch。この台帳には書誌も載せていない）との対応・ACID の C とは別物であること・実用の「高可用」と一致しないこと・製品を CP/AP に分けるのは雑という結論は、引用の範囲外）: CAP の一貫性は線形化可能性という強い意味。 使いどころ（本 skill の整理）: CAP の一貫性の意味を確認する習慣の根拠。 区分の根拠: (i)。S074 と同じ批判の記事なので、同じ区分の C（SKILL.md は一貫性の意味を確かめるために使うが、使い方は区分に影響しない）。意味の指摘は原文で確認したが、「CP/AP の分類は無意味」という結論の当否は確認していない。 注意: 引用中の「linearizability ,」の空白は原文のまま。S074 と同じ頁で、2 つの項目の引用は合わせて 2 文（S074 が 1 文、この項目が 1 文）。
+- 備考: ライセンス: 逐語可（出典明記・各条件に従う）。S074 と同じ頁で、頁末の CC BY 3.0 の表示（https://creativecommons.org/licenses/by/3.0/）は S074 に書いた。ただし、skill の中では編集方針として、引用を短くする。 要旨（本 skill の言葉。引用が言うのは、CAP の一貫性は線形化可能性という非常に強い一貫性の意味であること、という点だけ。CAP の可用性の定義・形式化の原文（Gilbert と Lynch。この台帳には書誌も載せていない）との対応・ACID の C とは別物であること・実用の「高可用」と一致しないこと・製品を CP/AP に分けるのは雑という結論は、引用の範囲外）: CAP の一貫性は線形化可能性という強い意味。 使いどころ（本 skill の整理）: CAP の一貫性の意味を確認する習慣の根拠。 区分の根拠: (i)。S074 と同じ批判の記事なので、同じ区分の C（SKILL.md は一貫性の意味を確かめるために使うが、使い方は区分に影響しない）。意味の指摘は原文で確認したが、「CP/AP の分類は無意味」という結論の当否は確認していない。 注意: 引用中の「linearizability ,」の空白は原文のまま。S074 と同じ頁で、2 つの項目の引用は合わせて 2 文（S074 が 1 文、この項目が 1 文）。
 
 ## 段階的な移行
 
