@@ -31,7 +31,7 @@
 → 規則の見直しの担当と時期を決める
 ```
 
-- 検査を入れる条件（本 skill の整理）: 境界を越える変更が実際に障害や手戻りを生んでいる。コードが機械的に解析できる（静的な import が主）。違反の数を、直せる範囲に収められる
+- 検査を入れる条件（本 skill の整理）: 境界を越える変更が実際に障害や手戻りを生んでいる。コードの import が、下の「検査の範囲」に収まる。範囲の外を使う環境では、この断片を必須の検査に使わず、構文を解析する検査に置き換える（本 skill の整理）。違反の数を、直せる範囲に収められる
 - 入れない条件（本 skill の整理）: 数か月で捨てる系。境界がまだ仮説で、毎週引き直している間（規則の書き換えが検査より多くなる）。検査の保守の費用が、守る価値を上回る
 - 検査は CI の必須の確認にする。違反があれば、非 0 の終了コードで失敗する
 
@@ -46,11 +46,13 @@
 | この例の適応度関数 | 規則違反の件数。件数を測る検査として実装する。違反 0 は、規則 2 つについて目的に反しないことの代理。目的全体への適合は別 | 本 skill の整理。テストとして測るのは、S052 の引用の範囲外 |
 | 規則 1: 公開の入口 | 他のモジュールが import してよいのは、相手の `index.js` だけ | 本 skill の整理。この例の設定 |
 | 規則 2: 禁止する向き | 在庫から請求への依存を禁じる | 本 skill の整理。この例の設定 |
-| 終了コード | 0: 違反なし。1: 違反あり。2: 検査自体の失敗（規則ファイルが読めない・対象が無い・検査対象が 0 件） | 本 skill の整理。検査の失敗を「違反なし」に倒さないため |
+| 終了コード | 0: 違反なし。1: 違反あり。2: 検査自体の失敗（規則ファイルが読めない・対象が無い・modules に属して検査したファイルが 0 件・引数欠け・Node.js が無い） | 本 skill の整理。検査の失敗を「違反なし」に倒さないため |
 | 既存の違反 | CI を必須にする前に、すべて直す。直せないものは、規則か境界の見直しに回す。例外を載せる仕組みは、この断片には無い | 本 skill の整理 |
 | 検査の頻度と担当 | PR ごとに CI。規則の見直しは四半期ごと、開発リーダーが担当 | 本 skill の整理。この例の設定 |
 | 見直しの基準（架空） | 測り方: 四半期ごとの CI の違反件数の推移と、規則の追加の要望の件数。基準: 違反件数が前の四半期より増えた、または追加の要望が 3 件以上のとき、規則を見直す議題に載せる | 本 skill の整理。閾値は架空の前提 |
-| 検査の限界 | 拾えない: 動的に組み立てた import 先・パスの別名・`.js` 以外（`.mjs`・`.cjs`・`.ts`）のファイル。誤検出する: コメントや文字列に書かれた import 風の文 | 本 skill の整理。下のスクリプトの実装による |
+| 検査の範囲 | 対象: `from` または `import` と指定子が同じ行にある静的 import で、指定子が `./` か `../` で始まり `.js` で終わるもの。走査するのは `.js` のファイルで、`modules` に属するものだけを検査する | 本 skill の整理。下のスクリプトの実装による |
+| 検査の限界 | 範囲の外（拾えない）: `from` と指定子が別の行にある import・拡張子を省いた指定・`.json`・ディレクトリの入口（package.json など）・動的 import・`require`・パスの別名・`.mjs`・`.cjs`・`.ts`。シンボリックリンクは辿らず飛ばす。誤検出する: コメントや文字列に書かれた import 風の文 | 本 skill の整理。下のスクリプトの実装による |
+| 実行の前提 | Node.js が要る。このスクリプトの動作を見た版は v24.13.0 だけで、他の版は未確認。CI の手順の前に `command -v node` で存在を見て、無ければ exit 2 | 本 skill の整理 |
 
 ## 文言
 
@@ -62,7 +64,7 @@
 >
 > 選ぶ条件: 変更の手戻りが実際に出ていて、import が静的に読める間は、この検査が合います。
 >
-> 失うもの: 規則の設定と検査の保守に手間がかかる。境界を引き直すたびに設定を直す。動的な import・パスの別名・`.js` 以外のファイルは拾えず、コメント内の import 風の文は誤検出になる。
+> 失うもの: 規則の設定と検査の保守に手間がかかる。境界を引き直すたびに設定を直す。検査の範囲の外（複数行にまたがる指定・拡張子を省いた指定・動的 import・`require`・パスの別名・`.js` 以外）は拾えず、コメント内の import 風の文は誤検出になる。
 >
 > 切り替える合図: 次のどちらかのとき、解析の道具を比べ直します（再評価）。規則の追加の要望が四半期に 3 件以上、または、誤検出の報告が四半期に 3 件以上（架空の基準。開発リーダーが四半期の見直しで数える）。規則ファイルが直近 4 週間で 3 回以上変わる状態（架空の基準）なら、検査より先に境界を固めます。
 >
@@ -89,12 +91,21 @@
     }
     ```
 
+CI の手順（Node.js の存在を先に見る）。
+
+- `ci/check-deps.sh`
+
+    ```sh
+    command -v node >/dev/null 2>&1 || { echo "Node.js が無いので検査できない" >&2; exit 2; }
+    node tools/check-deps.mjs deps-rules.json .
+    ```
+
 違反を出す自己完結のスクリプト（外部のライブラリは使わない）。使い方は `node tools/check-deps.mjs deps-rules.json .`。
 
 - `tools/check-deps.mjs`
 
     ```javascript
-    import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+    import { readFileSync, readdirSync, statSync, lstatSync, existsSync } from "node:fs";
     import { join, dirname, relative, resolve, sep } from "node:path";
 
     const [rulesPath, projectDir] = process.argv.slice(2);
@@ -116,26 +127,27 @@
 
       const walk = (d) => readdirSync(d).flatMap((n) => {
         const p = join(d, n);
-        return statSync(p).isDirectory() ? walk(p) : p.endsWith(".js") ? [p] : [];
+        const st = lstatSync(p);
+        if (st.isSymbolicLink()) return [];
+        return st.isDirectory() ? walk(p) : p.endsWith(".js") ? [p] : [];
       });
       const files = walk(rootDir);
-      if (files.length === 0) fail("検査する .js が 0 件");
 
       const moduleOf = (abs) => {
         const rel = relative(rootDir, abs).split(sep);
         return modules.includes(rel[0]) ? { name: rel[0], inner: rel.slice(1).join("/") } : null;
       };
-      const pattern = /(?:from\s+|import\s*\(\s*|require\s*\(\s*|import\s+)["']([^"']+)["']/g;
+      const pattern = /\b(?:from|import)\s+["'](\.\.?\/[^"']*\.js)["']/g;
       const violations = [];
+      let inspected = 0;
 
       for (const file of files) {
         const own = moduleOf(file);
         if (!own) continue;
+        inspected += 1;
         readFileSync(file, "utf8").split("\n").forEach((line, i) => {
           for (const m of line.matchAll(pattern)) {
-            if (!m[1].startsWith(".")) continue;
-            let target = resolve(dirname(file), m[1]);
-            if (!target.endsWith(".js")) target = existsSync(target + ".js") ? target + ".js" : join(target, entry);
+            const target = resolve(dirname(file), m[1]);
             const dest = moduleOf(target);
             if (!dest || dest.name === own.name) continue;
             const where = `${relative(projectDir, file)}:${i + 1}`;
@@ -144,15 +156,16 @@
           }
         });
       }
+      if (inspected === 0) fail("modules に属する .js が 0 件で、検査していない");
       violations.forEach((v) => console.log(v));
-      console.log(`検査したファイル ${files.length} 件、違反 ${violations.length} 件`);
+      console.log(`検査したファイル ${inspected} 件、違反 ${violations.length} 件`);
       process.exit(violations.length > 0 ? 1 : 0);
     } catch (e) {
       fail(`想定外の例外（${e.message}）`);
     }
     ```
 
-読み方（本 skill の整理）: 規則ファイルを読み、`src` 配下の `.js` から相対の import を拾い、相手のモジュールを求める。別のモジュールの `index.js` 以外を指す import と、禁止した向きの import を、ファイルと行つきで出す。import を読む部分は正規表現で、構文解析ではない。
+読み方（本 skill の整理）: 規則ファイルを読み、`src` 配下の `.js` を、シンボリックリンクを辿らずに走査し、`modules` に属するファイルから、検査の範囲の import を拾う。相手のパスは、書かれた `.js` の相対指定だけから求め、拡張子の補完やディレクトリの入口の推測はしない。別のモジュールの `index.js` 以外を指す import と、禁止した向きの import を、ファイルと行つきで出す。import を読む部分は正規表現で、構文解析ではない。範囲の外を書く環境では、この断片を必須の検査に使わない。
 
 ## 初見検証
 
@@ -169,8 +182,9 @@
 
 - 構造の目標が 1 文で書かれ、規則が目標に対応している（本 skill の整理）
 - 規則の意味が明示され、検査が自動で動く（S051 は「適合」の意味を明示し、できる限り自動化すると述べる）
-- 検査が、違反を終了コード 1、検査自体の失敗を 2 に分け、失敗を「違反なし」として扱わない
-- 検査が拾えないもの（動的 import・パスの別名・`.js` 以外のファイル）と、誤検出するもの（コメント内の import 風の文）が、限界として書かれている
+- 検査が、違反を終了コード 1、検査自体の失敗（検査したファイルが 0 件、Node.js が無い場合を含む）を 2 に分け、失敗を「違反なし」として扱わない
+- 実行の前提（Node.js と、動作を見た版）が書かれ、CI の手順が存在を先に見る
+- 検査の範囲と、範囲の外（複数行にまたがる指定・拡張子の省略・`.json`・ディレクトリの入口・動的 import・`require`・パスの別名・`.js` 以外・シンボリックリンク）と、誤検出するもの（コメント内の import 風の文）が、限界として書かれている
 - 既存の違反が、CI を必須にする前に直されている。直せないものは、規則か境界の見直しに回っている
 - 規則の見直しに、測り方・基準・担当・時期がある（違反件数の推移と規則の追加の要望の件数。閾値は架空）
 - 違反 0 が、規則 2 つについての代理であり、目的全体への適合ではないと書かれている
