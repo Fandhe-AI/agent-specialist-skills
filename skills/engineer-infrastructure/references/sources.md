@@ -350,7 +350,7 @@
 - URL: https://prometheus.io/docs/practices/histograms/
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 頁フッターは「All components are available under the Apache 2 License」。頁の原稿がある `prometheus/docs` リポジトリの LICENSE は Apache License 2.0（取得して確認）。短い引用に留める。 要旨（本 skill の言葉）: 分布の計測は、使えるなら native histogram を選ぶ。summary は分位点をクライアント側で計算するので、あとから別の窓・別の分位点で計算し直せず、複数のインスタンスの分位点を集約できない（頁の記述。逐語は文の途中で切れるため要旨に留める）。分位点はどの方式でも推定値で、バケットの切り方で誤差が決まる。 使いどころ（本 skill の整理）: 「p99 を全インスタンスで出したい」相談。平均だけで遅延を語らない根拠。native histogram は Prometheus の機能名なので、製品の比較にはしない。
+- 備考: ライセンス: 頁フッターは「All components are available under the Apache 2 License」。頁の原稿がある `prometheus/docs` リポジトリの LICENSE は Apache License 2.0（取得して確認）。短い引用に留める。 要旨（本 skill の言葉）: 分布の計測は、使えるなら native histogram を選ぶ。summary は分位点をクライアント側で計算するので、あとから別の窓・別の分位点で計算し直せず、複数のインスタンスの分位点を集約できない（頁の記述。逐語は文の途中で切れるため要旨に留める）。分位点は、計測する側のプログラムで計算しても Prometheus のサーバーで計算しても推定値と書く（引用 2）。誤差の出どころの区別（バケットの切り方など）は引用の範囲外。 使いどころ（本 skill の整理）: 「p99 を全インスタンスで出したい」相談。Prometheus の histogram と summary の文脈で、分位点が推定値であることの根拠。平均だけで遅延を語る話は、本 skill の整理。native histogram は Prometheus の機能名なので、製品の比較にはしない。
 
 ### S027 Charity Majors「Observability is a Many-Splendored Definition」（可観測性の定義）
 
