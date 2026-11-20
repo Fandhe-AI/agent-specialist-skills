@@ -51,6 +51,7 @@ Claude Code の Claude Skills として使用するスキルは、原則とし�
 | **designer-ux-writing** | UX ライティング・コンテンツデザイナー（画面の文言）。ボタン・エラー・確認・通知の文言・用語集・ボイスとトーン・国内の表記と敬語・やさしい日本語・翻訳を前提にした文字列・騙しの文言を書かない判断を相談 |
 | **designer-accessibility** | アクセシビリティの専門家。WCAG 2.2・JIS X 8341-3 の達成基準での監査・スクリーンリーダーとキーボードでの確かめ方・ARIA と部品のキー操作の型・時間制限と状態の通知・認知の負担・ウェブアクセシビリティ方針と試験結果の公開・合理的配慮の位置づけを相談 |
 | **engineer-architecture** | ソフトウェアアーキテクト。モジュールの境界・モノリスかサービス分割か・品質特性のトレードオフ・ADR・C4・段階的な移行を相談 |
+| **engineer-infrastructure** | SRE・プラットフォームエンジニア。SLO と error budget・可観測性と警報・障害対応と事後検証（責めない振り返り）・公開の安全・容量と費用・IaC を相談 |
 
 今後も追加予定です。新規スペシャリスト skill の著作は `.claude/rules/specialist-authoring.md` の規約と `skills/init-claude-specialist/sample/specialist-skill-example.md`（見本）を参照してください。
 

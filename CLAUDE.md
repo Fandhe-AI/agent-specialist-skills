@@ -14,7 +14,7 @@ downstream リポジトリでは **1 agent 1 skill** の原則で、導入した
 回答させ、main 自身のトークン消費を抑える。この sub-agent 生成・委譲設定の初期セットアップを
 担うのが本リポジトリの中核スキル `init-claude-specialist` である。
 
-このリポジトリが配布する実スペシャリスト skill は 14 件（`designer-apple`・`designer-typography`・`designer-brand`・`designer-ux-research`・`designer-industrial`・`designer-material`・`designer-dataviz`・`designer-web`・`designer-creative-coding`・`designer-interaction`・`designer-admin`・`designer-ux-writing`・`designer-accessibility`・`engineer-architecture`）。箱
+このリポジトリが配布する実スペシャリスト skill は 15 件（`designer-apple`・`designer-typography`・`designer-brand`・`designer-ux-research`・`designer-industrial`・`designer-material`・`designer-dataviz`・`designer-web`・`designer-creative-coding`・`designer-interaction`・`designer-admin`・`designer-ux-writing`・`designer-accessibility`・`engineer-architecture`・`engineer-infrastructure`）。箱
 （`init-claude-specialist` と著作規約）を整備したうえで、スペシャリスト skill は今後も追加していく。
 
 ## Repository Structure
@@ -125,6 +125,10 @@ skills/                               -- スキル本体（各ディレクトリ
       history.md                      -- 分野の歴史の要点（見取り図・繰り返すパターン・相談の種類別の使い方）
       review-checklist.md             -- 設計レビューの観点（文書で判断できる項目と実測が要る項目）
     examples/                         -- 制作例（検索基盤の選定の ADR・荷物追跡サービスの C4 の図・設計案のレビュー。3 件）
+  engineer-infrastructure/            -- SRE・プラットフォームエンジニア（SLO・可観測性・障害対応と事後検証・公開の安全・容量と費用。スペシャリスト skill）
+    SKILL.md
+    references/
+      sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
@@ -177,6 +181,7 @@ skills/                               -- スキル本体（各ディレクトリ
     designer-ux-writing               -- ../../skills/designer-ux-writing への symlink（スペシャリスト skill）
     designer-accessibility            -- ../../skills/designer-accessibility への symlink（スペシャリスト skill）
     engineer-architecture             -- ../../skills/engineer-architecture への symlink（スペシャリスト skill）
+    engineer-infrastructure           -- ../../skills/engineer-infrastructure への symlink（スペシャリスト skill）
     anthropic-claude-code…            -- ../../.agents/skills/<name> への symlink（vendored スキル 23 件）
     create-agent/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に Agent 雛形・配布対象外）
     create-skill/                     -- リポジトリ管理スキル（実ディレクトリ、sample/ に SKILL 雛形・配布対象外）
@@ -275,7 +280,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | `out-of-scope-tracking.md` | implement-issue / implement-issue-tree / implement-review / implement-review-pr / create-pr、実装・修正・レビューを行う全 Agent | 実装対象外の追跡規約（スコープ外事項を見つけたら Issue で追跡し、現在の PR に混入させない） |
 | `tool-neutral-skills.md` | `skills/` のスペシャリスト skill（`init-claude-specialist` は適用外） | 配布スペシャリスト skill を Claude Code / Codex / OpenCode のどれで読まれても同じ内容で使える書き方（ツール固有名・置換変数・固有表記を本文に書かない） |
 
-## Current Skills (15)
+## Current Skills (16)
 
 ### セットアップ (1)
 
@@ -283,7 +288,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 |--------|------|
 | init-claude-specialist | 導入済みスペシャリスト skill を検出し、1 agent 1 skill で専用 sub-agent・委譲 rule を生成する |
 
-### スペシャリスト (14)
+### スペシャリスト (15)
 
 | スキル | 説明 |
 |--------|------|
@@ -301,6 +306,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | designer-ux-writing | UX ライティング・コンテンツデザイナー（画面の文言）。ボタン・エラー・確認・通知の文言・用語集・ボイスとトーン・国内の表記と敬語・やさしい日本語・翻訳を前提にした文字列・騙しの文言を書かない判断を相談 |
 | designer-accessibility | アクセシビリティの専門家。WCAG 2.2・JIS X 8341-3 の達成基準での監査・スクリーンリーダーとキーボードでの確かめ方・ARIA と部品のキー操作の型・時間制限と状態の通知・認知の負担・ウェブアクセシビリティ方針と試験結果の公開・合理的配慮の位置づけを相談 |
 | engineer-architecture | ソフトウェアアーキテクト。モジュールの境界・モノリスかサービス分割か・品質特性のトレードオフ・ADR・C4・段階的な移行を相談 |
+| engineer-infrastructure | SRE・プラットフォームエンジニア。SLO と error budget・可観測性と警報・障害対応と事後検証（責めない振り返り）・公開の安全・容量と費用・IaC を相談 |
 
 今後も追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
