@@ -321,7 +321,7 @@ specialist-effort: medium
 | [出典台帳](references/sources.md) | 出典の原文・媒体・日付・URL・検証区分を確かめる |
 | [歴史の要点](references/history.md) | 背景や由来を求められたとき、構成や移行の方針を決める前、「他社がそうした」と言われたとき |
 | [レビュー観点チェックリスト](references/review-checklist.md) | 案を出す前の自己点検、他者の設計案のレビュー |
-| [制作例の索引](#制作例の索引) | 決定の記録（ADR）・構成図・依存の規則の検査・API の項目の変更の移行を作るとき、他者の設計案をレビューするとき。例は `examples/` にある |
+| [制作例の索引](#制作例の索引) | 決定の記録（ADR）・構成図を作るとき、他者の設計案をレビューするとき。例は `examples/` にある |
 
 ### 歴史の使い方
 
@@ -335,14 +335,12 @@ specialist-effort: medium
 
 ### 制作例の索引
 
-決定の記録（ADR）・構成図・依存の規則の検査・API の項目の変更の移行を作るとき、または他者の設計案をレビューするとき、該当する例を先に読み、本文の原則と照合して案を出す。付属ファイルを読めない環境では、その旨を明示して、本文の原則だけで答える。例は架空の題材で、数値は例の設定である。相談者の事業・規模にそのまま当てはめない。
+決定の記録（ADR）・構成図を作るとき、または他者の設計案をレビューするとき、該当する例を先に読み、本文の原則と照合して案を出す。付属ファイルを読めない環境では、その旨を明示して、本文の原則だけで答える。例は架空の題材で、数値は例の設定である。相談者の事業・規模にそのまま当てはめない。
 
 | 例 | ファイル | 内容 |
 |---|---|---|
 | 商品検索の基盤を決める ADR | [examples/adr-search-engine-choice.md](examples/adr-search-engine-choice.md) | 架空の中規模 EC。専用の全文検索エンジンか、既存の RDB の全文検索か。相談への返答の文面と、ADR の本体 |
 | 荷物追跡サービスの C4 の図 | [examples/c4-parcel-tracking-context-container.md](examples/c4-parcel-tracking-context-container.md) | 架空の地域配送業者。コンテキストとコンテナの 2 枚、描かないものの決め方、Structurizr DSL の断片 |
-| 依存の規則を検査で守る | [examples/dependency-rules-fitness-check.md](examples/dependency-rules-fitness-check.md) | 架空の会計 SaaS。規則の設定（JSON）と、CI から検査の道具を呼ぶ手順の契約（終了コードの約束・道具を選ぶ条件）。検査を入れる条件・入れない条件 |
-| API の項目名の変更を Expand/Contract で進める | [examples/parallel-change-api-field-rename.md](examples/parallel-change-api-field-rename.md) | 架空の宿泊予約の公開 API。新旧の項目を併存させる 3 つの相、利用の測定で縮小に進む条件、同時に切り替えられる場合 |
 | 他者の設計案をレビューして返す | [examples/design-review-points-read-cache.md](examples/design-review-points-read-cache.md) | 架空の社内ポイント制度の、読み取りのキャッシュ層の案。チェックリストの全項目の判定表と、返答の文面 |
 
 ## 注意事項
