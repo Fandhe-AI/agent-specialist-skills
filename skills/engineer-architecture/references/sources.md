@@ -1,8 +1,8 @@
 # engineer-architecture 出典台帳
 
-`engineer-architecture`（ソフトウェアアーキテクト）の `SKILL.md` が根拠にする出典の台帳。人物・論文・原典の一次資料、クラウド事業者の指針、決定の記録（ADR）・図・設計文書の様式、段階的な移行の手法、チームと構造の議論、批判と各社の事例から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・発言者や媒体・日付・URL・取得日・検証区分を記す。台帳は通読せず、番号（S001 など）で検索して該当の項目だけ読む。番号は振り直さない。
+`engineer-architecture`（ソフトウェアアーキテクト）の `SKILL.md` が根拠にする出典の台帳。人物・論文・原典の一次資料、クラウド事業者の指針、決定の記録（ADR）・図・設計文書の様式、段階的な移行の手法、チームと構造の議論、批判と各社の事例から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・発言者や媒体・日付・URL・取得日・検証区分を記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。
 
-全 40 件。いずれも逐語の引用を持つ（引用ブロックは 100 件）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 40 件。いずれも逐語の引用を持つ（引用ブロックは 73 件）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
@@ -15,7 +15,12 @@
 - 数値（人数・倍率・費用の削減率など）は、区分 A で原文を確認できたものを「出典あり」とする。区分 C の数値（批判・自称側）は、区分を添えて紹介し、「出典あり」とは書かない。事例の数値は各社の自称で、一般化しない
 - 引用文は原文を改変していない（引用符・アポストロフィ・ダッシュ・空白の字形は原稿のまま）。日本語の要旨・備考の整理は本 skill の言葉であり、発言者本人の発言ではない。要旨・使いどころの欄は、引用ブロックが言う範囲を超える内容を含みうる。skill 本文が S 番号で支えてよいのは、引用ブロックが言うことだけで、残りは「本 skill の整理」と書く。「注意」に書いた箇所は出典が述べていないことの断りである
 - 項目の「URL」は利用者が開ける文書の URL、「URL（原稿）」は、それとは別に照合に使った固定の原稿や保存コピーの URL（あるときだけ）。取得日は 2026-11-20
-- 引用文は、URL に対して、タグ除去・空白正規化のうえ `grep -F` で第三者も再照合できる
+- 再照合の手順（第三者が引用を確かめるとき）
+  - 照合先: まず URL（利用者が開く頁）。頁が変わった・取得できない項目は、URL（原稿）または保存コピーを使う
+  - PDF: テキストに抽出してから照合する。日本語の PDF は文字間に空白が入るため、空白を除いて比べる
+  - 比較の前処理: タグを除去し、HTML 実体を復号し、空白の連続を 1 つに畳む。引用符・アポストロフィ・ダッシュの字形は、比較では揃える。引用ブロックは原稿の字形のまま書く
+  - 脚注番号: 頁の脚注番号が引用の途中に入るときは、脚注番号を除いて引く。そのため頁の本文との部分一致が通らない。その項目は、脚注番号を含まない後半の語句で照合し、区分を B にする（S082）
+  - 引用文は、上の前処理のうえ `grep -F` で部分一致を確かめる
 - ライセンス上の扱い（各項目の備考に「ライセンス」として書いた）
   - 逐語可（出典明記。各条件に従う）: S013、S039。CC BY の表示を確認したもの。配布する skill 本文は、長い転載を避け、短い引用と要旨で使う
   - 短い引用のみ: 上記以外のすべて（S047 を含む。arc42 のテンプレートの CC BY-SA 4.0 は、S047 の備考に別に書いた）。著作権表示のみ・全権利留保・許諾の明記なし・条件を確認できなかったもの。出典を明示した短い引用（1〜3 文）にとどめ、段落単位の転載・翻訳をしない。Microsoft Learn・AWS の頁、個人・企業サイトの記事などが入る。再配布できると書かない
@@ -26,16 +31,6 @@
 - Conway の法則を引くとき、Conway の原文（逐語は Conway 自身の項目）と、Fowler の頁・記事が引く言い換えを取り違えない。逆コンウェイ操作の語の出どころは Fowler の脚注の記述で、原本は未確認
 
 ## 定義と本質
-
-### S001 Martin Fowler「Software Architecture Guide」
-
-> When people in the software industry talk about “architecture”, they refer to a hazily defined notion of the most important aspects of the internal design of a software system.
-
-- 媒体・日付: martinfowler.com の案内頁（頁内の日付は確認できず）
-- URL: https://martinfowler.com/architecture/
-- 取得日: 2026-11-20
-- 検証区分: A
-- 備考: ライセンス: 短い引用のみ。頁末は「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉）: 「アーキテクチャ」は、システム内部の設計のうち最も重要な面を指す、輪郭の曖昧な語。 使いどころ: 用語の定義。「何を決めるか」を先に絞る論点。
 
 ### S006 Martin Fowler, "Who Needs an Architect?"（アーキテクチャの定義）
 
@@ -68,7 +63,7 @@
 - URL（原稿）: https://github.com/johnousterhout/aposd-vs-clean-code（Clean Code との比較の頁。この項目の引用の取得元）
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。リポジトリ頁にライセンス表示を見つけられなかった。短い引用に留める。 要旨（本 skill の言葉。引用は method の部分だけ。以下の深い・浅いモジュールと分けすぎの話は書籍の内容の要旨で、引用の範囲外）: 簡単なインターフェースの裏に多くの機能を持たせるのが良い method だという一文が引用にある。深いモジュール（簡単なインターフェースの裏に多くの機能を隠す）と浅いモジュール（隠す量が少なくインターフェースが複雑）を区別する。細かく分けすぎるとかえって絡み合う。書籍の第 2 版（2021 年 7 月）が出ている。 使いどころ: モジュールの分割の粒度。分けすぎの危険。インターフェースの複雑さを費用として数える。 区分の根拠: 著者の頁とリポジトリ。本の本文そのものは未確認。 注意: 書名の「deep module」という語の原典の章は、書籍のため未確認。章番号は書かない。
+- 備考: ライセンス: 短い引用のみ。リポジトリ頁にライセンス表示を見つけられなかった。短い引用に留める。 要旨（本 skill の言葉。引用は method の部分だけ。深い・浅いモジュールと分けすぎの話は、method についての引用からの応用で、書籍の本文は未確認）: 簡単なインターフェースの裏に多くの機能を持たせるのが良い method だという一文が引用にある。深いモジュール・浅いモジュールの区別と、細かく分けすぎると絡み合うという見方は、method の引用からの応用で、書籍の本文は未確認。書籍の第 2 版（2021 年 7 月）が出ている。 使いどころ: モジュールの分割の粒度。分けすぎの危険。インターフェースの複雑さを費用として数える。 区分の根拠: 著者の頁とリポジトリ。本の本文そのものは未確認。 注意: 書名の「deep module」という語の原典の章は、書籍のため未確認。章番号は書かない。
 
 ### S013 Eric Evans「Domain-Driven Design Reference」（2015 年版 PDF）
 
@@ -127,11 +122,7 @@
 
 > you should build a new application as a monolith initially, even if you think it's likely that it will benefit from a microservices architecture later on.
 
-> Almost all the cases where I've heard of a system that was built as a microservice system from scratch, it has ended up in serious trouble.
-
 > even experienced architects working in familiar domains have great difficulty getting boundaries right at the beginning.
-
-> Any refactoring of functionality between services is much harder than it is in a monolith.
 
 - 媒体・日付: martinfowler.com bliki、2015 年 6 月 3 日
 - URL: https://martinfowler.com/bliki/MonolithFirst.html
@@ -173,8 +164,6 @@
 
 > if you don't have certain baseline competencies, you shouldn't consider using the microservice style.
 
-> Rapid provisioning : you should be able to fire up a new server in a matter of hours.
-
 > it's essential that a monitoring regime is in place to detect serious problems quickly.
 
 > Rapid application deployment: with many services to manage, you need to be able to quickly deploy them, both to test environments and to production.
@@ -189,13 +178,9 @@
 
 ### S027 Michael Nygard「Documenting Architecture Decisions」
 
-> An architecture decision record is a short text file in a format similar to an Alexandrian pattern.
+> Small, modular documents have at least a chance at being updated.
 
-> Large documents are never kept up to date. Small, modular documents have at least a chance at being updated.
-
-> We will keep ADRs in the project repository under doc/arch/adr-NNN.md
-
-> ADRs will be numbered sequentially and monotonically. Numbers will not be reused.
+> Numbers will not be reused.
 
 - 媒体・日付: Cognitect blog、2011 年 11 月 15 日
 - URL: https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions
@@ -205,33 +190,19 @@
 
 ### S029 Michael Nygard, Documenting Architecture Decisions（様式）
 
-> If a decision is reversed, we will keep the old one around, but mark it as superseded. (It's still relevant to know that it was the decision, but is no longer the decision.)
-
-> The format has just a few parts.
-
-> Context This section describes the forces at play, including technological, political, social, and project local.
-
-> Decision This section describes our response to these forces.
-
 > If a later ADR changes or reverses a decision, it may be marked as "deprecated" or "superseded" with a reference to its replacement.
-
-> All consequences should be listed here, not just the "positive" ones.
-
-> The whole document should be one or two pages long.
 
 - 媒体・日付: 2011-11-15
 - URL: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: 短い引用のみ。ページ末尾に、権利放棄の文言（has waived all copyright and related or neighboring rights）の表示がある。CC0 の名称は頁から確認できていないため、本 skill では短い引用のみで扱う。（S027 と同じ頁）。 要旨（本 skill の言葉）: 様式は Title・Context・Decision・Status・Consequences の 5 部。連番で欠番を作らず、番号は再利用しない。1〜2 頁、将来の開発者への会話として full sentence で書く。結果は良いものだけでなく全部書く。 使いどころ: Nygard 型の様式を示すとき（MADR・Azure との比較）。
+- 備考: ライセンス: 短い引用のみ。ページ末尾に、権利放棄の文言（has waived all copyright and related or neighboring rights）の表示がある。CC0 の名称は頁から確認できていないため、本 skill では短い引用のみで扱う。（S027 と同じ頁）。 要旨（本 skill の言葉）: 様式は Title・Context・Decision・Status・Consequences の 5 部。順に採番し、番号は再利用しない。1〜2 頁、将来の開発者への会話として full sentence で書く。結果は良いものだけでなく全部書く。 使いどころ: Nygard 型の様式を示すとき（MADR・Azure との比較）。
 
 ### S030 Martin Fowler「Architecture Decision Record」
 
 > An Architecture Decision Record (ADR) is a short document that captures and explains a single decision relevant to a product or ecosystem.
 
-> Firstly they act as a record of decisions, allowing people months or years later to understand why the system is constructed in the way that it is.
-
-> But perhaps even more valuable, the act of writing them helps to clarify thinking, particularly with groups of people.
+> the act of writing them helps to clarify thinking, particularly with groups of people.
 
 - 媒体・日付: martinfowler.com bliki、2026 年 3 月 24 日
 - URL: https://martinfowler.com/bliki/ArchitectureDecisionRecord.html
@@ -242,8 +213,6 @@
 ### S031 Martin Fowler, Architecture Decision Record（superseded）
 
 > Once an ADR is accepted, it should never be reopened or changed - instead it should be superseded.
-
-> They should not be modified if the decision is changed, but linked to a superseding decision.
 
 - 媒体・日付: 2026-03-24
 - URL: https://martinfowler.com/bliki/ArchitectureDecisionRecord.html
@@ -337,16 +306,23 @@
 
 > Design for change rather than designing for a fixed end state.
 
-> Making decisions reversible where possible. Prefer approaches that allow you to change direction without significant rework.
-
-> Use canary deployments, feature flags, and A/B testing to validate changes incrementally before full commitment.
-
 - 媒体・日付: 2026-11-16 最終更新（頁表示）
 - URL: https://docs.aws.amazon.com/wellarchitected/latest/framework/framework.html
 - URL（原稿）: https://docs.aws.amazon.com/wellarchitected/latest/framework/framework.md
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。著作権は Amazon Web Services, Inc. 等に帰属（ページ末尾の Copyright 表記）。再利用の許諾条件は取得時には確認できず。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉）: 固定の最終形ではなく変化を前提に設計する。判断はなるべく可逆にし、計測で仮定を検証し、カナリアやフィーチャーフラグで小さく試す。 使いどころ: 最初に完全な設計を求められたとき。
+
+### S061 AWS Well-Architected Framework（信頼性の柱）
+
+> Resilience is the ability of a workload to recover from infrastructure or service disruptions, acquire computing resources dynamically to meet demand, and mitigate disruptions such as misconfigurations or transient network issues.
+
+- 媒体・日付: 頁に日付表示なし（取得日の頁）
+- URL: https://docs.aws.amazon.com/wellarchitected/latest/framework/reliability.html
+- URL（原稿）: https://docs.aws.amazon.com/wellarchitected/latest/framework/reliability.md
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。著作権は Amazon Web Services, Inc. 等に帰属（ページ末尾の Copyright 表記）。再利用の許諾条件は取得時には確認できず。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉）: 信頼性の中心は耐障害性（回復・動的な資源確保・設定ミス等の緩和）。ほかの柱（運用・セキュリティ・性能・コスト）も信頼性に効く。数値目標はこの頁の引用範囲では確認していない。 使いどころ: 可用性を「落ちない」ではなく「回復できる」と説明するとき。
 
 ## 分散とデータ
 
@@ -373,8 +349,8 @@
 - 媒体・日付: IEEE Computer 掲載、InfoQ 再掲 2012 年 5 月 30 日（原稿に "first appeared in Computer magazine" とある）
 - URL: https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/
 - 取得日: 2026-11-20
-- 検証区分: A
-- 備考: ライセンス: 短い引用のみ。表示なし（InfoQ と IEEE Computer Society の掲載。著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 「3 つから 2 つ選ぶ」という言い方は最初から誤解を招いた。CAP が禁じるのは、分断があるときに完全な一貫性と可用性を両方取ることだけで、分断は稀（記事の観察であり、個別のシステムのネットワークで成り立つかは、観測や障害モデルで確かめる）。一貫性と可用性は、記事の定義（引用にある）で読む。分断を明示して扱えば、設計の幅は広い。 使いどころ: 提唱者自身による CAP の言い直し（2012 年）。「CP か AP か」で製品を分類する話を止める根拠。 区分の根拠: InfoQ 再掲の本文。IEEE 原版は未取得。 注意: InfoQ 再掲の本文で照合した。IEEE 原版は未取得。
+- 検証区分: B
+- 備考: ライセンス: 短い引用のみ。表示なし（InfoQ と IEEE Computer Society の掲載。著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 「3 つから 2 つ選ぶ」という言い方は最初から誤解を招いた。CAP が禁じるのは、分断があるときに完全な一貫性と可用性を両方取ることだけで、分断は稀（記事の観察であり、個別のシステムのネットワークで成り立つかは、観測や障害モデルで確かめる）。一貫性と可用性は、記事の定義（引用にある）で読む。分断を明示して扱えば、設計の幅は広い。 使いどころ: 提唱者自身による CAP の言い直し（2012 年）。「CP か AP か」で製品を分類する話を止める根拠。 区分の根拠: InfoQ 経由の再掲で照合した。IEEE 原版は取得しておらず、照合していない（凡例の B: 他媒体経由）。 注意: InfoQ 再掲の本文で照合した。IEEE 原版は未取得。
 
 ### S074 Martin Kleppmann「Please stop calling databases CP or AP」（批判側）
 
@@ -392,8 +368,6 @@
 
 > the term "Strangler Fig" is now often used to describe a gradual approach to legacy modernization.
 
-> Like the fig, it begins with small additions, often new features, that are built on top of, yet separate to the legacy code base. As we do this we move bits of behavior from the legacy system into the new code base.
-
 - 媒体・日付: martinfowler.com bliki、頁表示 2024 年 8 月 22 日（2004 年の原記事「Strangler Application」を改稿した版。2001 年のオーストラリアの旅行に由来すると頁に書かれている）
 - URL: https://martinfowler.com/bliki/StranglerFigApplication.html
 - 取得日: 2026-11-20
@@ -404,13 +378,7 @@
 
 > The alternative that my colleagues and I prefer, is to do a gradual process of modernization.
 
-> Replacements seem easy to specify, but often it's hard to figure out the details of existing behavior. What's worse, much of that behavior is stuff that isn't really wanted, so building it is a waste.
-
-> This will involve identifying seams that we can insert into the system to allow it to be split
-
-> While this may appear to be a waste, the reduced risk and earlier value from the gradual approach outweigh its costs.
-
-> If there's no change in organizational culture and leadership, the new systems will end up in a similar mess.
+> What's worse, much of that behavior is stuff that isn't really wanted, so building it is a waste.
 
 - 媒体・日付: 2024-08-22
 - URL: https://martinfowler.com/bliki/StranglerFigApplication.html
@@ -421,8 +389,6 @@
 ### S082 Martin Fowler「Branch By Abstraction」
 
 > "Branch by Abstraction" is a technique for making a large-scale change to a software system in gradual way that allows you to release the system regularly while the change is still in-progress.
-
-> We create an abstraction layer that captures the interaction between one section of the client code and the current supplier.
 
 > We gradually move all client code over to use the abstraction layer until all interaction with the supplier is done by the abstraction layer.
 
@@ -475,8 +441,6 @@
 
 ### S095 Martin Fowler「Who Needs an Architect?」（IEEE Software）
 
-> Architecture is about the important stuff. Whatever that is.
-
 > Improving the development team’s ability gives an architect much greater leverage than being the sole decision maker and thus running the risk of being an architectural bottleneck.
 
 - 媒体・日付: IEEE Software 2003 年 7/8 月号（PDF 内の表示）
@@ -486,8 +450,6 @@
 - 備考: ライセンス: 短い引用のみ。PDF に「© 2003 IEEE」。短い引用に留める。 要旨（本 skill の言葉）: アーキテクチャとは、重要なことの共有された理解。アーキテクトは重要なことを気にかける人で、判断を独占するより開発者を育てるほうが効く。 使いどころ: アーキテクトの役割。決定の独占と指導の対比。「建築」の比喩への留保。PDF には「単一の頭脳が概念の統一性を保つ」という旧来像（Architectus Reloadus）への言及もある。 区分の根拠: 著者サイトが公開する PDF。
 
 ### S096 Martin Fowler, "Who Needs an Architect?"（アーキテクト像への批判）
-
-> Architectus Reloadus is the person who makes all the important decisions.
 
 > an architect’s value is inversely proportional to the number of decisions he or she makes.
 
@@ -502,8 +464,6 @@
 ### S103 DHH, "The Majestic Monolith"
 
 > It’s the essence of cargo culting.
-
-> It’s an integrated system that collapses as many unnecessary conceptual models as possible.
 
 > we have just 12 programmers
 
@@ -537,8 +497,6 @@
 
 > It has been worked on for over a decade by more than a thousand developers.
 
-> It was initially built as a monolith, meaning that all of these distinct functionalities were built into the same codebase with no boundaries between them.
-
 - 媒体・日付: Shopify Engineering, 2019 年 2 月 21 日
 - URL: https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity
 - 取得日: 2026-11-20
@@ -559,15 +517,9 @@
 
 > Moving our service to a monolith reduced our infrastructure cost by over 90%.
 
-> Microservices and serverless components are tools that do work at high scale, but whether to use them over monolith has to be made on a case-by-case basis.
-
-> We realized that distributed approach wasn’t bringing a lot of benefits in our specific use case, so we packed all of the components into a single process.
-
 > the way we used some components caused us to hit a hard scaling limit at around 5% of the expected load.
 
 > The two most expensive operations in terms of cost were the orchestration workflow and when data passed between distributed components.
-
-> we moved all components into a single process to keep the data transfer within the process memory, which also simplified the orchestration logic.
 
 - 媒体・日付: Prime Video Tech ブログ, 2023 年 3 月 22 日
 - URL: https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90（元の記事。取得時点では元のサイトに接続できず、保存先から取得）
@@ -587,8 +539,9 @@
 | Parnas 1972 の ACM Digital Library の頁 | 403 で取得不可。S008 は大学サイトの PDF の複製（B）。ACM の DOI は本文から確かめられなかった | URL は大学の PDF とし、DOI は書かない |
 | Fowler の「Strangler Application」2004 年の初出 | 取得せず。S078 は 2024 年に改稿した頁 | 2004 年の初出の文面は引かず、時点を「2024 年の改稿版」と書く |
 | Deutsch の Sun の元頁と、第 8 の誤謬の追加者 | Sun の元頁は 404（Wayback も 404）。S067 はミラー（B） | 「Deutsch が挙げた」と書き、成立の細部は断定しない |
+| CAP Twelve Years Later の IEEE 原版 | InfoQ の再掲で照合した。IEEE 原版は取得しておらず、照合していない。S070 は B（S070） | 区分 B のまま。原版へ差し替えるまで、本人の発言として逐語で示さず、要旨にする |
 | Branch by Abstraction の Paul Hammant 原典 | Fowler の頁の記述のみ。原典の頁は未取得（S082） | 原典の記述として引かず、Fowler の頁として引く |
 | Fowler の「ivory tower」（象牙の塔）の語 | "Who Needs an Architect?" に無い（原稿で 0 件。S096） | 象牙の塔批判の一次資料は別途探す。Fowler の記事の語として引かない |
 | Prime Video の元記事の現行の公開状況 | 元のドメインに接続できなかった（Internet Archive の保存で取得）。事例はいずれも各社の自称（S107） | 費用・人数の数値を一般化しない |
 | Azure Architecture Center の原稿リポジトリとライセンス | 原稿リポジトリは GitHub の API・raw・HTML のいずれも 404 で、LICENSE を確認できなかった（S017） | 逐語引用は短くし、再配布可と書かない |
-| AWS Well-Architected の原稿とライセンス | 公開の原稿リポジトリは見つからず、ライセンス表示も無い（S057・S058・S059） | 短い引用と要旨にとどめる |
+| AWS Well-Architected の原稿とライセンス | 公開の原稿リポジトリは見つからず、ライセンス表示も無い（S057・S058・S059・S061） | 短い引用と要旨にとどめる |
