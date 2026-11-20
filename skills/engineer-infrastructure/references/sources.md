@@ -202,7 +202,7 @@
 - URL: https://sre.google/workbook/alerting-on-slos/
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: CC BY-NC-ND 4.0（頁末の表示）。改変（翻訳を含む）不可。短い逐語だけにとどめ、訳を載せない。本文では要旨で使う。 要旨（本 skill の言葉）: SLO に基づく警報は、error budget の大きな割合を消費する事象（significant event）で鳴らす。警報の作り方は、precision（鳴った警報のうち意味のあったものの割合）・recall（意味のある事象のうち検知できた割合）・検知までの時間・解除までの時間の 4 つで比べる。章は 6 つの作り方を、精度の低い順に並べて検討する。Google の運用の自称を含む。 使いどころ（本 skill の整理）: SLO と警報を結ぶ。「警報が多い／少ない」を precision と recall に分けて話す。消費の速さ（burn rate）で鳴らす様式は S014。 区分の根拠・範囲: 2 つ目は「significant event」の定義の部分。原稿では語の直後に空白とコロンが入るため、定義の部分だけ引いた。3 つ目は precision の定義の文。
+- 備考: ライセンス: CC BY-NC-ND 4.0（頁末の表示）。改変（翻訳を含む）不可。短い逐語だけにとどめ、訳を載せない。本文では要旨で使う。 要旨（本 skill の言葉）: SLO に基づく警報は、error budget の大きな割合を消費する事象（significant event）で鳴らす。警報の作り方は、precision（鳴った警報のうち意味のあったものの割合）・recall（意味のある事象のうち検知できた割合）・検知までの時間・解除までの時間の 4 つで比べる。章は 6 つの作り方を、精度の低い順に並べて検討する。Google の運用の自称を含む。 使いどころ（本 skill の整理）: SLO と警報を結ぶ。「警報が多い／少ない」を precision と recall に分けて話す。消費の速さ（burn rate）で鳴らす様式は S014。 区分の根拠・範囲: 引用が言うのは、significant event の定義（引用 2）と precision の定義（引用 3）。recall の定義は引用ブロックに無く、要旨（頁の他の箇所）による。2 つ目は「significant event」の定義の部分。原稿では語の直後に空白とコロンが入るため、定義の部分だけ引いた。3 つ目は precision の定義の文。
 
 ### S014 Google SRE ワークブック「Alerting on SLOs」（多窓・多 burn rate の警報）
 
