@@ -1,6 +1,6 @@
 # engineer-architecture 出典台帳
 
-`engineer-architecture`（ソフトウェアアーキテクト）の `SKILL.md` が根拠にする出典の台帳。人物・論文・原典の一次資料、クラウド事業者の指針、決定の記録（ADR）・図・設計文書の様式、段階的な移行の手法、チームと構造の議論、批判と各社の事例から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・発言者や媒体・日付・URL・取得日・検証区分を記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。
+`engineer-architecture`（ソフトウェアアーキテクト）の `SKILL.md`・[歴史の要点](history.md)・[レビュー観点チェックリスト](review-checklist.md)が根拠にする出典の台帳。人物・論文・原典の一次資料、クラウド事業者の指針、決定の記録（ADR）・図・設計文書の様式、段階的な移行の手法、チームと構造の議論、批判と各社の事例から、これらが引く項目を主題ごとに並べた。引用原文・発言者や媒体・日付・URL・取得日・検証区分を記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。
 
 いずれの項目も逐語の引用を持つ。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
@@ -32,8 +32,20 @@
 
 - 各社・各団体の指針は自社製品・自社利用者向けの規約や考え方であり、普遍的な正解ではない。食い違い（モノリス先行と最初から分割、CAP の分類への批判など）は、両論を並べて示す
 - Conway の法則を引くとき、Conway の原文（逐語は Conway 自身の項目）と、Fowler の頁・記事が引く言い換えを取り違えない。逆コンウェイ操作の語の出どころは Fowler の頁の記述で、原本は未確認
+- Brooks の言葉は、No Silver Bullet の複製（S002。B）から逐語を引く。書籍『人月の神話』の名言を孫引きで原文扱いしない
+- 歴史上の年は、各項目の「媒体・日付」に原稿で確かめたものだけを書いた。確かめられなかった年は書かない
 
 ## 定義と本質
+
+### S002 Frederick P. Brooks, Jr.「No Silver Bullet - Essence and Accident in Software Engineering」（主張）
+
+> There is no single development, in either technology or management technique, which by itself promises even one order-of-magnitude improvement within a decade in productivity, in reliability, in simplicity.
+
+- 媒体・日付: IFIP 第 10 回世界計算機会議の予稿（1986）。複製の脚注に、The Mythical Man-Month 記念版（Addison-Wesley、1995）からの転載で、もとは同会議の予稿（Elsevier Science、1986、pp.1069-76）とある
+- URL: https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf
+- 取得日: 2026-11-20
+- 検証区分: B
+- 備考: ライセンス: 短い引用のみ。複製の PDF に著作権表示・許諾の記載は見つけられなかった。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、技術にも管理技法にも、10 年のうちに生産性・信頼性・単純さで 1 桁の改善すら約束する単独の技法は無い、という点だけ。本質の難しさと偶有の難しさの区別は引用の範囲外）: 10 年で 1 桁の改善を約束する単独の技法は無い。 使いどころ（本 skill の整理）: 新しい道具や流行りの構成で全部解決するという話への留保として、引用の言う範囲で紹介する。 区分の根拠: 個人サイト（worrydream.com）に置かれた複製で、出版社・IEEE の公式頁ではない。第三者の複製なので B。
 
 ### S006 Martin Fowler, "Who Needs an Architect?"（アーキテクチャの定義）
 
@@ -47,6 +59,17 @@
 
 ## 境界とモジュール
 
+### S007 Larry Constantine の経歴ページ（history.computer.org の Computer Pioneers）経由の、結合度と凝集度
+
+> The concept of coupling and cohesion developed by Constantine in the mid-1960s was first published in 1968 and repeated in the 1974 publication.
+
+- 媒体・日付: history.computer.org の Larry L. Constantine の項（執筆日は表示なし）。頁は 1974 年の公刊を IBM Systems Journal の論文と書く
+- URL: https://history.computer.org/pioneers/constantine.html
+- URL（原稿）: https://history.computer.org/pioneers/pdfs/C/Constantine.pdf（同じ内容の PDF 版）
+- 取得日: 2026-11-20
+- 検証区分: B
+- 備考: ライセンス: 短い引用のみ。表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉。引用が言うのは、結合度と凝集度の概念を Constantine が 1960 年代半ばに考え、1968 年に公刊し、1974 年の公刊で繰り返した、という経歴ページの記述だけ。2 つの尺度の定義・研究の件数・オブジェクト指向への継承は引用の範囲外）: 結合度と凝集度は、1960 年代半ばに考えられ、1968 年と 1974 年に公刊された。 使いどころ（本 skill の整理）: 結合度・凝集度の出どころ（年）を言うとき、原論文を読んだとは書かず、経歴ページ経由と明示する。 区分の根拠: 第三者による経歴の記述で、1974 年の原論文は取得できていない。引用は経歴ページの原文と一致。 注意: 1968 年の初出の本文も未確認。
+
 ### S008 David L. Parnas「On the Criteria To Be Used in Decomposing Systems into Modules」
 
 > Every module in the second decomposition is characterized by its knowledge of a design decision which it hides from all others. Its interface or definition was chosen to reveal as little as possible about its inner workings.
@@ -56,6 +79,16 @@
 - 取得日: 2026-11-20
 - 検証区分: B
 - 備考: ライセンス: 短い引用のみ。PDF の冒頭に「Copyright 1972, Association for Computing Machinery, Inc. General permission to republish, but not for profit, all or part of this material is granted, provided that reference is made to this publication」とある。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、2 つ目の分割では各モジュールが、他から隠す設計判断を知っていることで特徴づけられることと、インターフェースは中身をなるべく見せないように選ばれたこと。1 つ目の分割（処理の手順で分ける）との比較・変わりそうな判断や難しい判断という限定・変更に強いという評価は、引用の範囲外）: 各モジュールが、他から隠す設計判断を受け持つ。インターフェースは中身をなるべく見せないように決める。 使いどころ（本 skill の整理）: モジュール境界の切り方（情報隠蔽）。変更に強い分割の根拠としての使い方は、引用の範囲外。 注意: ACM Digital Library の頁は取得できなかった（403）。照合は大学の講義資料サイトにある PDF の複製。必要な一節だけを引用した（同じ PDF の別の箇所には OCR 由来の文字化けがあり、引用した箇所は化けていない）。DOI は本文から確認できていない。同じ PDF を A とする見方もありうるが、第三者の複製なので B にそろえた。
+
+### S010 Dijkstra, EWD447 "On the role of scientific thought"
+
+> It is what I sometimes have called "the separation of concerns", which, even if not perfectly possible, is yet the only available technique for effective ordering of one's thoughts, that I know of.
+
+- 媒体・日付: E.W. Dijkstra Archive（テキサス大学）の EWD447 転記版。原稿末尾の日付は 1974 年 8 月 30 日（転記は Richard Walker、2010 年改訂）
+- URL: https://www.cs.utexas.edu/~EWD/transcriptions/EWD04xx/EWD447.html
+- 取得日: 2026-11-20
+- 検証区分: B
+- 備考: ライセンス: 短い引用のみ。表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉。引用が言うのは、筆者が「関心の分離」と呼ぶことがあるものは、完全には可能でなくても、筆者の知るかぎり思考を効果的に整える唯一の手法である、という点だけ。「it」が指す内容は引用の範囲外）: 関心の分離は、思考を整える唯一の手法だと筆者は言う。 使いどころ（本 skill の整理）: 「関心の分離」の語の出どころとして紹介する。随筆の題は「On the role of scientific thought」で、ソフトウェア構造の設計論ではない（題による本 skill の確認）。構造設計の規範として引くときは、その旨を添える。 区分の根拠: 手書き原稿を、第三者（Richard Walker）が転記した版で、原稿との照合はしていない。第三者の写しなので B。引用は転記版の本文と一致。 注意: 語は「the separation of concerns」と明記されている。概念を Dijkstra が最初に言ったかは調べていない。
 
 ### S011 John Ousterhout『A Philosophy of Software Design』（著者のページと Clean Code との比較）
 
@@ -108,6 +141,26 @@
 - 備考: ライセンス: 短い引用のみ。Microsoft Learn の利用条件。原稿リポジトリ（MicrosoftDocs 側）は取得時点で GitHub の API と raw の双方が 404 で、ライセンス本文を確認できなかった。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉。引用は、サブシステムの間に置く翻訳の層の部分だけ。旧系・外部との関係と汚染の話は引用の範囲外）: 外部や旧系との間に翻訳の層を置き、新系のモデルを旧系・外部の設計に汚染させない。 使いどころ（本 skill の整理。引用の範囲外）: 旧系・外部 API の都合を新系に持ち込ませたくないとき。 区分の根拠: Azure Architecture Center のパターンの公式文書で、そのパターンが何であるかの一次資料なので A（(i)(ii) に当たらない。成果の主張や他の手法との比較は一般化しない）。
 
 ## 構成の選択（モノリス・マイクロサービス）
+
+### S019 Martin Fowler, "Service Oriented Ambiguity"
+
+> SOA means so many different things to different people.
+
+- 媒体・日付: martinfowler.com, 2005 年 7 月 1 日
+- URL: https://martinfowler.com/bliki/ServiceOrientedAmbiguity.html
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。頁末は「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、SOA は人によって指すものが大きく違う、という点だけ。違いの中身と、意味のない概念になりつつあるという評価は引用の範囲外）: SOA は、人によって指すものが違う。 使いどころ（本 skill の整理）: 語が人によって違う意味で使われる例として、名前でなく中身で語る根拠にする。 区分の根拠: 著者サイトの記事。語の曖昧さを述べる記事で、名指しの特定の主張・文書への反論を主題とせず、自社の事例を述べる文書でもない（(i)(ii) に当たらない）。
+
+### S020 Martin Fowler, "Microservices and the First Law of Distributed Objects"
+
+> First Law of Distributed Object Design: “don't distribute your objects”.
+
+- 媒体・日付: martinfowler.com, 2014 年 8 月 13 日（記事の書き出しに、Patterns of Enterprise Application Architecture で作った法則とある。同書の刊行年は原稿に明記なし）
+- URL: https://martinfowler.com/articles/distributed-objects-microservices.html
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。頁末は「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、「分散オブジェクトの設計の第一法則」の文言が「don't distribute your objects」だという点だけ。記事は、分散オブジェクトの考えが 90 年代後半から 2000 年代初めに流行り、その後は支持を失ったと書き、マイクロサービスがこの法則に反するのかという問いに答える。この流行と結論は、原稿の文脈による本 skill の確認で、引用の範囲外）: 第一法則の文言は「オブジェクトを分散させるな」。 使いどころ（本 skill の整理）: 分散オブジェクトの失敗の型と、マイクロサービスの違いを説明するとき、記事の記述として使う。 区分の根拠: 著者サイトの記事。自分が作った法則とマイクロサービスの関係を述べる記事で、名指しの他者の主張への反論を主題とせず、自社の事例でもない（(i)(ii) に当たらない）。
 
 ### S021 James Lewis・Martin Fowler「Microservices」
 
@@ -259,6 +312,16 @@
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。引用元の頁（docs.arc42.org）のライセンスは確認できていない。別に、arc42 のライセンス頁（https://arc42.org/license）は、テンプレートそのものを CC BY-SA 4.0 とし、クレジットの表示・ライセンスへのリンク・変更の明示を求め、組織の外へ翻案を公開するときは同じライセンスで公開する（継承）と述べる（保存原稿で確認）。この条件は、テンプレートについてのもので、本頁の引用や翻案に及ぶとは確認できていないため、本頁は短い引用のみで扱う。 要旨（本 skill の言葉。引用が言うのは、利害関係者にとって本当に重要な品質を具体的・測定可能に把握すべきこと、品質シナリオが品質要求を具体にし満たしたかを判断できるようにすること、文献に品質ツリーという考え方が述べられていること。品質ツリーや品質シナリオを使うべき、は引用の範囲外）: 品質は、具体的・測定可能に把握する。品質シナリオは、要求を具体にする。品質ツリーは、文献にある考え方。 使いどころ（本 skill の整理）: 「速く」「安全に」を測れる形にするとき。 区分の根拠: arc42 の公式文書で、arc42 が何であるかの一次資料なので A（(i)(ii) に当たらない。成果の主張や他の手法との比較は一般化しない）。
 
+### S048 SEI, ATAM: Method for Architecture Evaluation（CMU/SEI-2000-TR-004）
+
+> Because architectures are complex and involve many design tradeoffs.
+
+- 媒体・日付: 2000-08-01
+- URL: https://www.sei.cmu.edu/library/atam-method-for-architecture-evaluation/
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。頁に「Request Permission to Use SEI Materials」の導線があり、許諾の条件は確認できなかった。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、アーキテクチャは複雑で、多くの設計上のトレードオフを伴う、という理由づけだけ。抄録は「なぜアーキテクチャの分析が要るか」への答えとして書く（原稿の文脈による本 skill の確認）。ATAM の手順、品質特性との関係は引用の範囲外。報告本文の PDF は未読）: アーキテクチャは複雑で、設計上のトレードオフが多い。 使いどころ（本 skill の整理）: トレードオフを品質特性の言葉で議論する場を設けるとき、トレードオフの存在の紹介として使う。 区分の根拠: SEI（CMU）の公式の報告書頁。方法を述べる文書で、(i)(ii) に当たらない。
+
 ### S051 Neal Ford・Rebecca Parsons・Patrick Kua「Building Evolutionary Architectures」（公式サイト）
 
 > Evolutionary architectures make it explicit what "fit" means with as much automation as possible.
@@ -268,6 +331,16 @@
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。頁末は「All rights reserved」。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、進化的アーキテクチャは「適合」の意味を明示し、できる限り自動化する、という点だけ。増分で作ること・適応度関数という語・技術と業務の両方の変化に耐えることは、引用の範囲外）: 進化的アーキテクチャは、「適合」の意味を明示し、できる限り自動化する。自動で測定・検査する方法は、引用の範囲外。 使いどころ（本 skill の整理）: 構造の規則を自動で検査する論点。何を自動で測るかは、本 skill の整理（応用）。 区分の根拠: 書籍の公式サイトで、進化的アーキテクチャが何であるかの一次資料なので A（(i)(ii) に当たらない。成果の主張や他の手法との比較は一般化しない）。
+
+### S052 Thoughtworks「Fitness function-driven development」
+
+> Fitness functions describe how close an architecture is to achieving an architectural aim.
+
+- 媒体・日付: Thoughtworks の記事（Paula Paul と Rosemary Wang 著）、2019 年 1 月 11 日
+- URL: https://www.thoughtworks.com/en-us/insights/articles/fitness-function-driven-development
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。頁末に「© 2026 Thoughtworks, Inc.」とあり、ライセンスの表示は見つけられなかった。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、適応度関数は、アーキテクチャが目的にどれだけ近いかを記述する、という点だけ。テストで構造の目標を測ることは、引用の範囲外）: 適応度関数は、アーキテクチャが目的にどれだけ近いかを記述する。 使いどころ（本 skill の整理）: 適応度関数の定義の紹介。 区分の根拠: 手法を述べる記事の本文で、(i)(ii) に当たらない。記事は進化的アーキテクチャの定義を Ford・Parsons・Kua（2017）から引くが、その二次の引用は取っていない。
 
 ### S055 Martin Fowler, "Yagni"
 
@@ -328,6 +401,17 @@
 - 備考: ライセンス: 短い引用のみ。著作権は Amazon Web Services, Inc. 等に帰属（ページ末尾の Copyright 表記）。再利用の許諾条件は取得時には確認できず。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉。引用が言うのは、レジリエンスの定義だけ。信頼性の柱の中心がレジリエンスであること・ほかの柱も信頼性に効くことは、引用の範囲外）: レジリエンスは、障害からの回復、需要に応じた資源の動的な確保、設定の誤りや一時的なネットワークの問題といった障害の緩和を含む能力。数値目標はこの頁の引用範囲では確認していない。 使いどころ（本 skill の整理）: レジリエンスを、回復だけでなく、資源の確保と障害の緩和まで含めて説明するとき。可用性との関係の説明は、引用の範囲外。復旧時間は、回復の側面を測る指標の 1 つとして扱う（本 skill の整理）。 区分の根拠: Well-Architected の公式文書で、その指針が何であるかの一次資料なので A（(i)(ii) に当たらない。成果の主張や他の手法との比較は一般化しない）。
 
 ## 分散とデータ
+
+### S066 Leslie Lamport「Time, Clocks, and the Ordering of Events in a Distributed System」
+
+> The relation "happened before" is therefore only a partial ordering of the events in the system.
+
+- 媒体・日付: Communications of the ACM 21(7)、1978 年 7 月（PDF 内の巻号表示）
+- URL: https://lamport.azurewebsites.net/pubs/time-clocks.pdf（Lamport 本人のサイト）
+- 参考（引用の照合には使っていない。取得は 403 で拒否された）: https://dl.acm.org/doi/10.1145/359545.359563
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。ACM の著作権表示あり（PDF 内）。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、「先に起きた」の関係は、系の事象の部分順序にすぎない、という点だけ。論理時計による全順序への拡張は引用の範囲外）: 「先に起きた」は、部分順序にすぎない。 使いどころ（本 skill の整理）: 分散系の時刻・順序の扱い。時刻に頼る設計への注意は、本 skill の整理。 区分の根拠: 著者サイトの PDF。
 
 ### S067 Peter Deutsch「The Eight Fallacies of Distributed Computing」
 
@@ -425,6 +509,16 @@
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。© Martin Fowler。短い引用のみ。 要旨（本 skill の言葉。引用が言うのは、インターフェースの後方互換のない変更を、expand・migrate・contract の 3 つの段階に分けて安全に行うパターンであること。括弧内の説明（新旧併存・利用側を新へ・旧を除去）は引用の範囲外）: 後方互換のない変更を、拡張（新旧併存）・移行（利用側を新へ）・縮小（旧を除去）に分けて安全に行う。 使いどころ（本 skill の整理）: インターフェース（API）の後方互換のない変更。スキーマ変更への応用は、引用の範囲外。
 
+### S085 Martin Fowler「Sacrificial Architecture」
+
+> Essentially it means accepting now that in a few years time you'll (hopefully) need to throw away what you're currently building.
+
+- 媒体・日付: martinfowler.com bliki、2014 年 10 月 20 日
+- URL: https://martinfowler.com/bliki/SacrificialArchitecture.html
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。頁末は「© Martin Fowler」。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、数年後には、いま作っているものを（うまくいけば）捨てる必要が出ると、いまのうちに受け入れること、という点だけ。置き換えやすさを今から考えること、捨てる系でも価値が出ることは引用の範囲外）: 数年後に捨てると、いまのうちに受け入れる。 使いどころ（本 skill の整理）: 作り直しを前提にした設計判断。永続を前提にしない論点。 区分の根拠: 著者サイトの記事。手法の説明で、(i)(ii) に当たらない。
+
 ## チームと構造（Conway の法則）
 
 ### S086 Melvin E. Conway「How Do Committees Invent?」（Datamation）
@@ -452,6 +546,29 @@
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。© Martin Fowler。短い引用のみ。 要旨（本 skill の言葉）: 望む構造に合わせてチーム構成を意図的に変える。用語は Jonny LeRoy と Matt Simons が作ったと Fowler の頁にある。 使いどころ（本 skill の整理）: 「逆コンウェイ」の定義の言い方。
 
+### S092 MacCormack・Baldwin・Rusnak, "Exploring the duality between product and organizational architectures"
+
+> In all of the pairs we examine, the product developed by the loosely coupled organization is significantly more modular than the product from the tightly coupled organization.
+
+> Specifically, products tend to "mirror" the architectures of the organizations in which they are developed.
+
+- 媒体・日付: Research Policy 41(8), 2012 年, pp.1309-1324
+- URL: http://nrs.harvard.edu/urn-3:HUL.InstRepos:34403525（Harvard の機関リポジトリ DASH の抄録頁。この項目の引用の取得元）
+- 参考（引用の照合には使っていない。書誌の確認に使った。抄録は途中で終わり、1 つ目の引用を含まない）: https://econpapers.repec.org/RePEc:eee:respol:v:41:y:2012:i:8:p:1309-1324
+- 取得日: 2026-11-20
+- 検証区分: B
+- 備考: ライセンス: 短い引用のみ。DASH 頁の「Terms of Use」に、この論文は Open Access Policy Articles（OAP）の条件で公開されるとあるが、条件の中身は確認できなかった。 要旨（本 skill の言葉。引用が言うのは、抄録が、対ごとの比較で、緩く結合した組織の製品のほうが、密に結合した組織の製品より有意にモジュール性が高いと述べる点と、製品は、開発した組織の構造を「写す」傾向がある、という点だけ。2 つ目の引用を、抄録は多くの研究が主張する関係として書く（原稿の文脈による本 skill の確認）。標本・測り方・差の大きさは引用の範囲外。本文は未取得）: 緩く結合した組織の製品のほうが、モジュール性が高いと抄録は述べる。 使いどころ（本 skill の整理）: Conway の法則に近い主張を、実証した研究の抄録として紹介する。組織の形が製品の形に写る、という主張の抄録であり、製品の形に合わせて組織を変えれば良くなる、ことの証拠ではない（本 skill の注意。抄録の範囲外）。 区分の根拠: 機関リポジトリ（DASH）の抄録頁で、出版社の頁ではなく、本文も取得していない。第三者の写し・別の媒体なので B。 注意: DASH 頁の末尾に Creative Commons Attribution 4.0 International License（https://creativecommons.org/licenses/by/4.0/）の表示があるが、「Except where otherwise noted」付きの、サイト全体の表示である。この論文には上の OAP の条件が示されているので、CC BY としては扱わず、逐語可に入れない。
+
+### S094 Team Topologies（Key concepts）
+
+> Enabling team: helps a Stream-aligned team to overcome obstacles. Also detects missing capabilities.
+
+- 媒体・日付: 頁に日付表示なし。サイトのコピーライトは 2021-2026
+- URL: https://teamtopologies.com/key-concepts
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。All Rights Reserved（頁末）。「use of Team Topologies materials」の頁は別にあるが、取得時には条件を確認できず。短い引用のみ・要旨を基本とする。 要旨（本 skill の言葉。引用が言うのは、イネーブリングチームは、ストリームアラインのチームが障害を乗り越えるのを助け、足りない能力も検出する、という点だけ。ほかのチーム型と相互作用様式は引用の範囲外）: イネーブリングチームは、障害の克服を助け、足りない能力を検出する。 使いどころ（本 skill の整理）: チームの分け方の一例の紹介。 区分の根拠: 手法の公式サイトの頁なので A（凡例の「公式文書の扱い」と同じ考え方。成果の主張は一般化しない）。
+
 ## アーキテクトの役割
 
 ### S095 Martin Fowler「Who Needs an Architect?」（IEEE Software）
@@ -473,6 +590,30 @@
 - 取得日: 2026-11-20
 - 検証区分: A
 - 備考: ライセンス: 短い引用のみ。版権表示は IEEE。引用は短く。 要旨（本 skill の言葉。引用が言うのは、アーキテクトの価値は、本人が下す決定の数に反比例するという点だけ。重要な決定を全部下す「上から決める」型についての議論・チームの力を引き上げて決定を分ける「現場に入る」型を推すこと・筆者の所属会社の内部での見立てという限定は、引用の範囲外）: アーキテクトの価値は、本人が下す決定の数に反比例する。一般則として扱わない。 区分の根拠: 著者サイトが公開する PDF。S006・S095 と同じ文書なので、同じ区分の A（(i)(ii) に当たらない。文書の主題は役割の論考）。 使いどころ（本 skill の整理）: アーキテクトの役割の見方。この記事に "ivory tower" の語は無い（原稿で 0 件）。象牙の塔の語として引かない。 注意: 記事に「ivory tower」の語は無い（原稿で 0 件）。象牙の塔の語として引かない。
+
+## 失敗の型と法則
+
+### S098 Foote・Yoder, "Big Ball of Mud"
+
+> A BIG BALL OF MUD is haphazardly structured, sprawling, sloppy, duct-tape and bailing wire, spaghetti code jungle
+
+> Information is shared promiscuously among distant elements of the system, often to the point where nearly all the important information becomes global or duplicated.
+
+- 媒体・日付: PLoP '97 / EuroPLoP '97（1997 年 9 月）。Washington University 技術報告 WUCS-97-34（原稿の頁に表示）。原稿の頁に「Saturday, June 26, 1999」の表示があるが、何の日付かは頁に書かれていない
+- URL: http://www.laputan.org/mud/
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉。引用が言うのは、泥団子の特徴づけ（場当たりの構造など）と、遠い要素の間で情報が無秩序に共有され、重要な情報のほぼすべてがグローバルか重複になる、という点だけ。最も多い構造であること、なぜそうなるかの説明、パターン群は、論文の記述だが引用の範囲外）: 泥団子は、場当たりの構造で、情報が遠い要素の間で無秩序に共有される。 使いどころ（本 skill の整理）: 失敗の型の紹介。圧力のもとで成長した結果として説明するのは、本 skill の整理。年表は 1997 年。 区分の根拠: 公開サイト（laputan.org）にある論文の原稿。技法を述べる論文で、(i)(ii) に当たらない。 注意: 原文は句点の前に空白がある（"jungle ."）ため、1 つ目の引用では句点を落とし、前の部分だけを引いた。
+
+### S101 Hyrum Wright, Hyrum's Law
+
+> With a sufficient number of users of an API, it does not matter what you promise in the contract: all observable behaviors of your system will be depended on by somebody.
+
+- 媒体・日付: hyrumslaw.com（年は表示なし）。命名者について "credit goes to Titus Winters for actually naming it as "Hyrum's Law"" と頁が書く
+- URL: https://www.hyrumslaw.com/
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉。引用が言うのは、API の利用者が十分に多いと、契約で何を約束しても、システムの観測できる挙動はすべて誰かに当てにされる、という主張だけ。契約と実装の差が移行や変更を難しくする、は引用の範囲外）: 観測できる挙動は、利用者が多ければ誰かに当てにされる。 使いどころ（本 skill の整理）: 公開 API・内部 API の変更の難しさを言うとき、法則の紹介として使う。 区分の根拠: 本人のサイト。(i)(ii) に当たらない。 注意: 初出の年は頁に記載がなく未確認。命名者が Titus Winters であることは頁に書いてある。
 
 ## 批判と揺り戻し
 
@@ -544,12 +685,31 @@
 - 検証区分: C
 - 備考: ライセンス: 短い引用のみ。表示なし（著作権は Amazon。引用は短く）。 要旨（本 skill の言葉。引用が言うのは、サービスをモノリスへ移したらインフラ費用が 90% 超下がったこと、一部のコンポーネントの使い方のせいで想定負荷の約 5% で拡張の限界に当たったこと、費用が最も高い 2 つの操作がオーケストレーションのワークフローと分散コンポーネント間のデータの受け渡しだったこと。数千の同時ストリーム・Step Functions と Lambda・1 プロセスへの書き直し・状態遷移数・S3 の呼び出し・映像・音声の欠陥検出という対象は、引用の範囲外）: 90% 超は、同社の 1 つのサービス（記事の題名による監視サービス）のインフラ費用の削減で、開発や移行を含む総費用ではない。引用は「our service」と言い、Prime Video 全体の構成の話ではない。数値（"over 90%"）は同社チームの自称。 使いどころ（本 skill の整理）: 揺り戻しの公開事例の中心。モノリスへ移したらインフラ費用が 90% 超下がったという自称と、費用が最も高かった操作（オーケストレーションと、分散コンポーネント間のデータの受け渡し）を、同社チームの自称として示す。「サーバーレス・分散が合わないのは、データの受け渡しが多い処理」という限定は、本 skill の整理（引用は、費用が最も高い操作を述べるだけ）。「ケースごとに決める」旨と、拡張が縦方向になる代償は、引用に載せていないので、本 skill の根拠にしない。 区分の根拠: (ii)。同社チームの自称。アーカイブ版の原文と一致。元サイトの現行の記事の有無は未確認。 注意: アーカイブ版の原文と一致した。元ドメインには取得時に接続できず（名前解決できず）、元記事の現行の公開状況は未確認。
 
+### S108 Fritzsch ほか, "Resist the Hype! Practical Recommendations to Cope With Résumé-Driven Development"
+
+> we found empirical support for a tendency to overemphasize technology trends in résumés and the application process.
+
+> This phenomenon has previously been reported anecdotally and somewhat humorously under the label Résumé-Driven Development (RDD).
+
+- 媒体・日付: arXiv:2307.02850, 2023 年 7 月 6 日提出（IEEE Software 掲載版は未確認）
+- URL: https://arxiv.org/abs/2307.02850
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 短い引用のみ。arXiv の全文の HTML 版に「License: arXiv.org perpetual non-exclusive license」とある。Creative Commons の表示は見つけられなかった。短い引用に留める。 要旨（本 skill の言葉。引用が言うのは、著者らが、履歴書と応募の過程で技術の流行を過度に重視する傾向への実証的な裏づけを得たと述べる点と、この現象は以前から、履歴書駆動開発（RDD）の名で、逸話として、やや冗談めかして語られてきた、という点だけ。調査の人数・割合・標本は引用の範囲外）: 技術の流行を過度に重視する傾向に、実証的な裏づけがあると著者らは述べる。 使いどころ（本 skill の整理）: 履歴書駆動開発への批判の裏づけの 1 つとして紹介する。 区分の根拠: 著者らが提出した論文の頁（arXiv は提出の場）で、抄録を引いた。他媒体の複製ではなく、(i)(ii) に当たらない。
+
 ## 未検証・調査の限界
 
 未検証（U）の項目は番号を振らず、事実・引用として使わない。次の表は、確かめられなかったもの・取得できなかったものと、skill での扱いである。
 
 | 対象 | 状況 | 扱い |
 |------|------|------|
+| Brooks の No Silver Bullet の公式な版（IEEE Computer 1987 年 4 月号） | IEEE 頁は取得できたが本文は無く、照合に使えなかった。S002 は個人サイトの複製（B） | 公式な版へ差し替えるまで B のまま |
+| Stevens・Myers・Constantine 1974 の論文本文（IBM Systems Journal） | 取得できていない。結合度・凝集度は経歴ページ経由（S007、B）にとどまる。1968 年の初出も本文未確認 | 原論文を読んだとは書かない |
+| オブジェクト指向・SOA の歴史の一次資料 | Fowler の記事（S019・S020）にとどまる。1990 年代の CORBA などの一次資料は未取得 | Fowler の記事の記述として書く |
+| Hyrum の法則の初出の年 | hyrumslaw.com から確認できなかった。命名者が Titus Winters であることはページに書いてある（S101）。Software Engineering at Google 版は未取得 | 年は書かない |
+| 履歴書駆動開発（RDD）の語の初出 | 確認できていない。arXiv の抄録は「逸話・冗談として語られてきた」とだけ書く（S108） | 初出を書かない |
+| SEI の品質特性シナリオ（六要素）と ATAM の手順 | 書誌頁と抄録のみ確認（S048）。報告書本文は未読 | シナリオの要素や ATAM の手順は台帳に書かない |
+| MacCormack らの論文本文 | 論文の PDF は取得が拒否された。抄録の範囲のみ（S092） | 抄録の範囲で書く |
 | 逆コンウェイ操作の初出（LeRoy と Simons、Cutter IT journal、2010 年 12 月号） | Fowler の頁の記述経由のみ。原本は未確認（S090） | 「Fowler によれば」と書く |
 | Conway 原論文の掲載号の月（Datamation 1968 年 4 月とする説明） | 原稿から確認できていない（年のみ確認。S086） | 年だけ書く |
 | Parnas 1972 の ACM Digital Library の頁 | 403 で取得不可。S008 は大学サイトの PDF の複製（B）。ACM の DOI は本文から確かめられなかった | URL は大学の PDF とし、DOI は書かない |
