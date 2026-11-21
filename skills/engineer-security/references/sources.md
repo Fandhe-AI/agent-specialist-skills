@@ -2,7 +2,7 @@
 
 `engineer-security`（防御側のアプリケーションセキュリティの専門家）の `SKILL.md` と `references/` が根拠にする出典の台帳。設計の原則と原典（Saltzer と Schroeder・Kerckhoffs・Shannon・Anderson・Schneier・Shostack）、脅威モデリング、認証・認可・秘密情報・入力の実務の指針（OWASP の Cheat Sheet・ASVS・Top 10、NIST、IETF、W3C）、成果物の完全性と依存（SLSA・OpenSSF・SBOM）、脆弱性の開示、プライバシーの設計面、国内の公的資料（IPA・JPCERT/CC・デジタル庁）、歴史と批判から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・媒体と日付・URL・取得日・検証区分・ライセンスを記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。欠番は欠番のままにする（この台帳に載せていない番号は、まだ引いていない項目である。項目の「使いどころ」や「要旨」が指す未掲載の番号も同じ）。
 
-全 91 件。逐語の引用を持つ項目が 89 件（引用ブロックは 188 個。うち 1 個は書誌のみの注記で、引用ではない。引用は 187 個）、書誌のみ・要旨のみ（本文を引用しない）の項目が 2 件（S015・S066）。区分の内訳は A 78 件、B 6 件、C 5 件、R 2 件。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 90 件。逐語の引用を持つ項目が 88 件（引用ブロックは 186 個。うち 1 個は書誌のみの注記で、引用ではない。引用は 185 個）、書誌のみ・要旨のみ（本文を引用しない）の項目が 2 件（S015・S066）。区分の内訳は A 77 件、B 6 件、C 5 件、R 2 件。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
@@ -484,22 +484,6 @@
 - 使いどころ: 保存方式の見直しと移行の相談。値は出さず、頁の版と取得日を示して相談者が決める。
 - 備考: 区分の根拠・範囲: 2 つ目の引用の原文は SHA と 256 の間が非改行ハイフン。直線のハイフンに揃えて照合。
 
-### S030 IETF「RFC 9700: Best Current Practice for OAuth 2.0 Security」
-
-> Public clients MUST use PKCE [RFC7636] to this end, as motivated in Section 4.5.3.1.
-
-> clients SHOULD NOT use the implicit grant (response type token) or other response types issuing access tokens in the authorization response, unless access token injection in the authorization response is prevented and the aforementioned token leakage vectors are mitigated.
-
-- 媒体・日付: IETF、2025-01、Best Current Practice 240。RFC 6749・6750・6819 を更新する
-- URL: https://www.rfc-editor.org/rfc/rfc9700.html
-- URL（原稿）: https://www.rfc-editor.org/rfc/rfc9700.txt
-- 取得日: 2026-11-21
-- 検証区分: A
-- ライセンス: 「Copyright (c) 2025 IETF Trust」。BCP 78 と IETF Trust の法的条項に従う。短い引用に留める
-- 要旨（本 skill の言葉）: OAuth 2.0 の運用の実務で積み重なった知見を、脅威モデルと助言に反映し、一部の動作モードを非推奨にする文書。認可コード付与では、認可コードの注入を防ぐ。公開クライアントは PKCE が必須（MUST）、機密クライアントは推奨（RECOMMENDED）。暗黙的な付与と、認可応答でアクセストークンを発行するほかの応答タイプは使うべきでない（SHOULD NOT）。リダイレクトの保護・ミックスアップ・CSRF などを節に分ける。攻撃の手順は書かない。
-- 使いどころ: OAuth・OIDC の設計レビューで、「どの付与方式を選ぶか」の根拠。個別の IdP の設定は出さない。
-- 備考: 区分の根拠・範囲: 1 つ目は 2.1.1 の箇条の 1 つ。2 つ目は文の途中から。原文は行の折り返しを含むため、空白を 1 つに畳んで照合。
-
 ### S032 FIDO Alliance「Passkeys」（概要の頁）
 
 > FIDO standards use standard public key cryptography techniques to provide phishing-resistant authentication
@@ -700,8 +684,8 @@
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: 頁フッター「© 2026 The Linux Foundation, under the terms of the Community Specification License 1.0」。帰属を付けて短く引用する
-- 要旨（本 skill の言葉）: SLSA は、成果物が改ざんされていないこと、ソースへ遡れることの確信を得るための共通語彙と、段階的な改善の手引き。コードの品質（安全な書き方をしたか）、作り手が悪意を持つ場合、依存物の水準（成果物と推移的な依存を合わせた単一の水準はない）は範囲の外、と断る。頁は、過去の大きな攻撃を例に挙げて必要性を述べるが、事例の再現には使わない。
-- 使いどころ: SLSA の水準が高くても、コードの脆弱性や悪意ある作り手には効かない、という限界の説明。
+- 要旨（本 skill の言葉）: SLSA は、成果物が改ざんされていないこと、ソースへ遡れることの確信を得るための共通語彙と、段階的な改善の手引き。頁は、過去の大きな攻撃を例に挙げて必要性を述べるが、事例の再現には使わない。
+- 使いどころ: SLSA の目的の説明。
 
 ### S045 SLSA「Tracks」と「Guiding principles」
 
