@@ -1283,7 +1283,7 @@
 
 > Platform team: a grouping of other team types that provide a compelling internal product to accelerate delivery by Stream-aligned teams
 
-- 媒体・日付: teamtopologies.com の Key Concepts の頁（日付の表示なし。頁の下部に「Copyright © 2021-2026 Team Topologies group of companies」）。書籍（Skelton・Pais）の初版の年は保存した原稿では未確認。出版社（IT Revolution）の頁で第 2 版の刊行日 2025 年 9 月 23 日を確認
+- 媒体・日付: teamtopologies.com の Key Concepts の頁（日付の表示なし。頁の下部に「Copyright © 2021-2026 Team Topologies group of companies」）。書籍（Skelton・Pais）の刊行の年は未確認
 - URL: https://teamtopologies.com/key-concepts
 - 取得日: 2026-11-20
 - 検証区分: A
