@@ -369,7 +369,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-10-12
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Threat_Modeling_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/ae965343cb82e6b8f42aff1ccee57c4fa0f171c2/cheatsheets/Threat_Modeling_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
@@ -458,7 +458,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-10-04
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Authentication_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/684d6d9d9f1a0c680ad30219f46ae4e2debf9440/cheatsheets/Authentication_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0（リポジトリの LICENSE.md に SPDX 表記 CC-BY-SA-4.0）。帰属を付けて短く引用する
@@ -476,7 +476,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-10-30
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Password_Storage_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/87a1faf18a29a5c33d040b000eb3c60330c30b2c/cheatsheets/Password_Storage_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
@@ -494,7 +494,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-11-10
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Session_Management_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/bebba539c97e55439dfb998931a11fa55c57da72/cheatsheets/Session_Management_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
@@ -514,7 +514,7 @@
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: 「Copyright (c) 2025 IETF Trust」。BCP 78 と IETF Trust の法的条項に従う。短い引用に留める
-- 要旨（本 skill の言葉）: OAuth 2.0 の運用の実務で積み重なった知見を、脅威モデルと助言に反映し、一部の動作モードを非推奨にする文書。認可コード付与では、認可コードの注入を防ぐ。公開クライアントは PKCE が必須（MUST）、機密クライアントは推奨（RECOMMENDED）。暗黙的な付与（アクセストークンを認可応答で発行する方式）は、注入と漏洩を防げない限り使わない（SHOULD NOT）。リダイレクトの保護・ミックスアップ・CSRF などを節に分ける。攻撃の手順は書かない。
+- 要旨（本 skill の言葉）: OAuth 2.0 の運用の実務で積み重なった知見を、脅威モデルと助言に反映し、一部の動作モードを非推奨にする文書。認可コード付与では、認可コードの注入を防ぐ。公開クライアントは PKCE が必須（MUST）、機密クライアントは推奨（RECOMMENDED）。暗黙的な付与と、認可応答でアクセストークンを発行するほかの応答タイプは、認可応答での注入が防がれ、前述の漏洩経路が緩和されている場合を除き使わない（SHOULD NOT）。リダイレクトの保護・ミックスアップ・CSRF などを節に分ける。攻撃の手順は書かない。
 - 使いどころ: OAuth・OIDC の設計レビューで、「どの付与方式を選ぶか」の根拠。個別の IdP の設定は出さない。
 - 備考: 区分の根拠・範囲: 1 つ目は 2.1.1 の箇条の 1 つ。2 つ目は文の途中から。原文は行の折り返しを含むため、空白を 1 つに畳んで照合。
 
@@ -599,7 +599,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-10-09
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Authorization_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/cfd69aabc7e6090867afdc440f838b3a97cca21b/cheatsheets/Authorization_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
@@ -675,11 +675,11 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-11-08
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Secrets_Management_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/d6474de095dedba6caf536fdf8926d6ae53f3cfc/cheatsheets/Secrets_Management_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
-- 要旨（本 skill の言葉）: 秘密情報（API キー・DB の資格情報・SSH 鍵・証明書など）は、ソースや設定ファイルに平文で置かず、保存・配布・監査・回転を一か所で扱う。頁は、中央化と標準化、アクセス制御、回転の自動化、メモリ上の扱い、監査、作成・回転・失効・期限切れの寿命、停止時の備え（緊急用の手順・バックアップ）、CI/CD での置き場所（ツール内・秘密情報の管理系・CI/CD から触れない）、クラウド・コンテナでの注入に節を分ける。利用者の資格情報は、NIST の勧告に沿って、漏洩の疑いがあるときだけ回す（定期回転の対象外）と書く。
+- 要旨（本 skill の言葉）: 秘密情報（API キー・DB の資格情報・SSH 鍵・証明書など）は、ソースや設定ファイルに平文で置かず、保存・配布・監査・回転を一か所で扱う。頁は、中央化と標準化、アクセス制御、回転の自動化、メモリ上の扱い、監査、作成・回転・失効・期限切れの寿命、停止時の備え（緊急用の手順・バックアップ）、CI/CD での置き場所（ツール内・秘密情報の管理系・CI/CD から触れない）、クラウド・コンテナでの注入に節を分ける。
 - 使いどころ: 秘密情報の置き場所・回転・漏れたときの手順（失効）の相談。製品の選定には進まない（頁はクラウド各社のサービスの節を持つが引用しない）。
 
 ## 入力と出力
@@ -692,7 +692,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series の公式サイト。頁に公開日・版の表示は無い（項目ごとに更新される）。LICENSE.md はリポジトリ OWASP/CheatSheetSeries のもの（最新コミット 2026-11-19）。サイトの索引頁に、ASVS・MASVS・Proactive Controls・Top 10 との対応表（索引）がある
 - URL: https://cheatsheetseries.owasp.org/
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/LICENSE.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/5d79a8ac36f7706fc8b1ac45f84d30ce7be2c7e7/LICENSE.md（ライセンスの引用の原稿。1 つ目の引用は上の URL の頁の本文で照合した）
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0（頁末の表示と LICENSE.md の「Attribution-ShareAlike 4.0 International」）。本 skill の本文へ長く写すと継承条件が生じうるので、短い引用と要旨に留める
@@ -710,7 +710,7 @@
 
 - 媒体・日付: OWASP Cheat Sheet Series。頁に版番号なし。リポジトリの当該ファイルの最終コミット 2026-11-16
 - URL: https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html
-- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/cheatsheets/Input_Validation_Cheat_Sheet.md
+- URL（原稿）: https://raw.githubusercontent.com/OWASP/CheatSheetSeries/3db59175ef9bf46e8a31c72a7ca70cf00cd790cc/cheatsheets/Input_Validation_Cheat_Sheet.md
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
@@ -1413,7 +1413,7 @@
 
 > Verifiers SHOULD permit claimants to use the "paste" function when entering a password to facilitate password manager use when password autofill APIs are unavailable.
 
-- 媒体・日付: NIST SP 800-63B-4 の 3.1.1.2「Password Verifiers」の項。HTML 版は pages.nist.gov の公開版（取得時の頁のタイムスタンプは「Tue, 26 Aug 2025」。csrc の頁の表示は Date Published: July 2025）。前の版（SP 800-63B-3）の頁は、2025 年 8 月 1 日に 800-63-4 へ置き換えられたと表示する。csrc の頁の発行月（2025 年 7 月）、前の版の頁が置き換えを表示する日（2025 年 8 月 1 日）、HTML 版のタイムスタンプ（2025-08-26）は、別の出来事を指す。公式の発行日として 1 つに決めてはいない
+- 媒体・日付: NIST SP 800-63B-4 の 3.1.1.2「Password Verifiers」の項。HTML 版は pages.nist.gov の公開版（取得時の頁のタイムスタンプは「Tue, 26 Aug 2025」。csrc の頁の表示は Date Published: July 2025）。前の版（SP 800-63B-3）の頁は、2025 年 8 月 1 日に 800-63-4 へ置き換えられたと表示する。csrc の頁の発行月（2025 年 7 月）、前の版の頁が置き換えを表示する日（2025 年 8 月 1 日）、HTML 版のタイムスタンプ（2025-08-26）は、頁の表示である。日付どうしの関係は確かめていない
 - URL: https://pages.nist.gov/800-63-4/sp800-63b.html
 - 取得日: 2026-11-21
 - 検証区分: A
@@ -1502,7 +1502,7 @@
 | OWASP Cheat Sheet の頁ごとの版番号 | 頁に版番号も日付も表示されない | リポジトリの最終コミット日で代える（Git の履歴で確かめられる） |
 | SSDF 版 1.2 の確定の有無 | 確定の記述が取れなかった（確定していない、とも確かめていない） | 版 1.1 を確定版、1.2 をドラフトと書き、確定の有無は取得日の時点で未確認と明記する |
 | NIST SP 800-63 の他の部（63-4 の本体・63A・63C）と、63B-3 との差分、2013 年の 800-63-2 の本文 | 63B-4（S099）と 63B-3（S033）の引用以外は取得していない。800-63-2 は目次の確認のみ | 版の差分は、引用で示す範囲に限る |
-| NIST SP 800-63B-4 の発行に関わる日付 | csrc の頁の発行月は July 2025、前の版の頁が置き換えを表示する日は 2025-08-01、HTML 版のタイムスタンプは 2025-08-26（S099）。別の出来事で、食い違いではない | 発行月と、置き換えの表示の日と、タイムスタンプを分けて書く。項目の媒体の欄のとおり |
+| NIST SP 800-63B-4 の発行に関わる日付 | csrc の頁の発行月は July 2025、前の版の頁の置き換えの表示日は 2025-08-01、HTML 版のタイムスタンプは 2025-08-26（S099）。日付どうしの関係は確かめていない | 3 つを頁の表示として並べる。項目の媒体の欄のとおり |
 | 「一人の人物の後悔の言葉」として流通するパスワード規則の話（NIST の旧版の著者） | 流通する出どころの記事（新聞）は取得していない。規則が SHOULD NOT へ転じ、SHALL NOT へ強まったこと（S033・S099）は一次で確認した | 後悔の言葉とその文面は使わない |
 | Secure by Design への外部の批判の一次、各社の誓約の中身と履行 | 作り手に責任を寄せる方針（S010）への外部の批判の一次は取れていない。誓約の履行は事業者の自称（S012） | 外部の批判として書かない |
 | CISA の SBOM の 2025 年の更新が確定したか | 意見募集の頁（S049）のみ | 確定版は未確認と書く |
