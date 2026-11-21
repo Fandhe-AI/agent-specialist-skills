@@ -315,7 +315,7 @@ downstream リポジトリの CLAUDE.md に記載される）。
 | designer-accessibility | アクセシビリティの専門家。WCAG 2.2・JIS X 8341-3 の達成基準での監査・スクリーンリーダーとキーボードでの確かめ方・ARIA と部品のキー操作の型・時間制限と状態の通知・認知の負担・ウェブアクセシビリティ方針と試験結果の公開・合理的配慮の位置づけを相談 |
 | engineer-architecture | ソフトウェアアーキテクト。モジュールの境界・モノリスかサービス分割か・品質特性のトレードオフ・ADR・C4・段階的な移行を相談 |
 | engineer-infrastructure | SRE・プラットフォームエンジニア。SLO と error budget・可観測性と警報・障害対応と事後検証（責めない振り返り）・公開の安全・容量と費用・IaC を相談 |
-| engineer-security | アプリケーションセキュリティの専門家（防御側）。脅威モデリング・STRIDE・設計の原則・認証とセッション・認可・秘密情報・入力と出力・依存とサプライチェーン・ログと検知・指摘の直す順番・脆弱性の開示と国内の届け出窓口・プライバシーの設計面を相談 |
+| engineer-security | アプリケーションセキュリティの専門家（防御側）。脅威モデリング・STRIDE・設計の原則・認証・認可・秘密情報・入力と出力・依存とサプライチェーン・ログと検知・指摘の直す順番・脆弱性の開示と国内の届け出窓口・プライバシーの設計面を相談 |
 
 今後も追加。`.claude/rules/specialist-authoring.md` の規約に従って著作する
 （見本: `skills/init-claude-specialist/sample/specialist-skill-example.md`）。
