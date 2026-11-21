@@ -129,6 +129,8 @@ skills/                               -- スキル本体（各ディレクトリ
     SKILL.md
     references/
       sources.md                      -- 出典台帳（引用原文・発言者・媒体・日付・URL・検証区分）
+      history.md                      -- 分野の歴史の要点（見取り図・繰り返すパターン・相談の種類別の使い方）
+      review-checklist.md             -- レビュー観点（SLO・可観測性・公開の安全・事後検証。文書で判断できる項目と実測が要る項目）
 .agents/
   skills/                             -- npx skills add で vendored した開発用 CLI・参照スキル（23 件。anthropic-claude-code, commitlint, github-docs, … ）
 .claude/
