@@ -1504,5 +1504,6 @@
 | Little の法則の原論文（John D. C. Little, "A Proof for the Queuing Formula: L = λW", Operations Research, 1961 とされる） | 論文の頁は取得していない。著者・誌名・年は調査の記述で、一次で確かめていない | 教科書的な事実として要旨だけを使い（S071、R）、書誌を引用の根拠にしない |
 | AWS Builders' Library の著者の姓 | 頁の表示名（Marc・David・Colm・Mike）だけ。記事は builder.aws.com へ移転済み | 姓を記憶で補わない（S058・S063・S066〜S069） |
 | AWS Well-Architected の柱の白書の頁と、統合後の同名の BP 頁 | 旧白書の頁は「historical reference only and will be deprecated」。統合後の同名の BP 頁は 404。コスト・運用の柱の BP 頁は引用していない | S091・S092 は廃止予定の頁と断る。移転先が取れたら取り直す |
-| 年の未確認 | Team Topologies 初版、CNCF Platforms white paper の発行年、devopsdays ゲントの月日、SRE 書籍の刊行年（本文は「early 2016」の執筆とだけ）、Cook の文書の初出、Google Cloud の障害の報告（S123）の公開日 | 年を書かない |
+| devopsdays ゲントの年と月日 | 年は頁題による 2009 年。月日は確かめていない | 月日は書かない |
+| 年の未確認 | Team Topologies 初版、CNCF Platforms white paper の発行年、SRE 書籍の刊行年（本文は「early 2016」の執筆とだけ）、Cook の文書の初出、Google Cloud の障害の報告（S123）の公開日 | 年を書かない |
 | ライセンスの未確認 | Atlassian・AWS・martinfowler.com・principlesofchaos.org・IPA・Terraform の文書・個人のブログなど、著作権表示はあるが再利用の条件を確かめられないもの | 短い引用と要旨にとどめる |
