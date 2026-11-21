@@ -2,7 +2,7 @@
 
 `engineer-security`（防御側のアプリケーションセキュリティの専門家）の `SKILL.md` と `references/` が根拠にする出典の台帳。設計の原則と原典（Saltzer と Schroeder・Kerckhoffs・Shannon・Anderson・Schneier・Shostack）、脅威モデリング、認証・認可・秘密情報・入力の実務の指針（OWASP の Cheat Sheet・ASVS・Top 10、NIST、IETF、W3C）、成果物の完全性と依存（SLSA・OpenSSF・SBOM）、脆弱性の開示、プライバシーの設計面、国内の公的資料（IPA・JPCERT/CC・デジタル庁）、歴史と批判から、`SKILL.md` が引く項目を主題ごとに並べた。引用原文・媒体と日付・URL・取得日・検証区分・ライセンスを記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。欠番は欠番のままにする（この台帳に載せていない番号は、まだ引いていない項目である。項目の「使いどころ」や「要旨」が指す未掲載の番号も同じ）。
 
-全 93 件。逐語の引用を持つ項目が 92 件（引用ブロックは 193 個。うち 1 個は書誌のみの注記で、引用ではない。引用は 192 個）、書誌のみ・要旨のみ（本文を引用しない）の項目が 1 件。区分の内訳は A 81 件、B 6 件、C 5 件、R 1 件。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 93 件。逐語の引用を持つ項目が 91 件（引用ブロックは 192 個。うち 1 個は書誌のみの注記で、引用ではない。引用は 191 個）、書誌のみ・要旨のみ（本文を引用しない）の項目が 2 件（S015・S066）。区分の内訳は A 81 件、B 6 件、C 5 件、R 1 件。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
@@ -284,11 +284,7 @@
 
 ### S015 Adam Shostack のホワイトペーパー No.5「Understanding The Four-Question Framework for Threat Modeling」（2024）
 
-> Crafting these specific questions was an iterative effort between 2006 and 2014.
-
-> The questions are not technology-specific.
-
-> Threat modeling is the "measure twice, cut once" of cybersecurity.
+- 引用: なし。この文書は CC BY-NC 4.0 で、4 つの問いだけが CC BY のため、配布の台帳では要旨にした（本文の引用ブロックは載せていない）。
 
 - 媒体・日付: Shostack + Associates White Paper #5、2024 年 11 月、Adam Shostack
 - URL: https://shostack.org/files/papers/The_Four_Question_Framework.pdf
@@ -469,6 +465,10 @@
 ### S028 OWASP「Password Storage Cheat Sheet」
 
 > Passwords should never be stored in plain text.
+
+> Instead, they must be protected using strong, slow hashing algorithms such as Argon2id, bcrypt, or PBKDF2.
+
+> A unique salt must be added to each password to prevent attackers from using precomputed lookup tables like rainbow tables.
 
 > Fast hashing algorithms such as SHA-256 are not suitable for password storage because they allow attackers to perform large numbers of guesses quickly.
 
@@ -714,7 +714,7 @@
 - 取得日: 2026-11-21
 - 検証区分: A
 - ライセンス: CC BY-SA 4.0
-- 要旨（本 skill の言葉）: 入力の検証は、構文（型・形式）と意味（その操作で筋が通るか）の両方を、項目ごとの規則（許可リスト）で行う。拒否リストで悪い文字列を言い当てようとしない。パーサーの前に、要求の大きさと入れ子の深さの上限を置く。構造化データはスキーマで検証し、未知の項目の扱いを明示する。検証は SQL の呼び出しや出力の符号化の代わりにならず（パラメータ化した問い合わせ・文脈に合った出力の符号化は別に行う）、認可も別に確かめる。
+- 要旨（本 skill の言葉）: 入力の検証は、構文（型・形式）と意味（その操作で筋が通るか）の両方を、項目ごとの規則（許可リスト）で行う。拒否リストで悪い文字列を言い当てようとしない。構造化データはスキーマで検証し、未知の項目の扱いを明示する。検証は SQL の呼び出しや出力の符号化の代わりにならず（パラメータ化した問い合わせ・文脈に合った出力の符号化は別に行う）、認可も別に確かめる。
 - 使いどころ: 「入力を検証すれば安全」という誤解の訂正。検証・出力の符号化・認可を層として分けて説明する。
 - 備考: 区分の根拠・範囲: 3 つ目の引用は文の途中から。
 
@@ -1059,7 +1059,7 @@
 - 検証区分: A
 - ライセンス: コピーライトポリシー（最終更新 2026-05-12）に「特記されていない限りデジタル庁に帰属し、権利表記の記載がない限り「公共データ利用規約（第1.0版）」（PDL1.0）が適用」。出典の記載が条件、編集・加工した場合はその旨も記載する
 - 要旨（本 skill の言葉）: 政府情報システムの企画から運用まで一貫してセキュリティ対策を実施するための手引き。基本方針は 6 つ（事後でなく予防的に・全ライフサイクルを保護・初期設定で安全・システム特性に応じて過不足なく・リスクの評価と管理・利便性を損なわない）。システム仕様だけでなくサービス仕様や人的ミスに起因する事故も考える。工程は、リスク分析・要件定義・セキュア調達・設計・実装・テスト・運用準備・運用。第 2 版は、システム利用者や開発者・運用者の「人に起因する脅威」を追記した。政府情報システム向けで、民間にそのまま適用する基準ではない。
-- 使いどころ: 国内で、設計段階からのセキュリティ（セキュリティ・バイ・デザイン）を説明するときの公的な一次。CISA の Secure by Design（S010・S011・S012・S010）との対応の根拠。
+- 使いどころ: 国内で、設計段階からのセキュリティ（セキュリティ・バイ・デザイン）を説明するときの公的な一次。CISA の Secure by Design（S010・S011・S012）との対応の根拠。
 - 備考: 区分の根拠・範囲: 3 つの引用は 2.3「セキュリティ・バイ・デザインの基本方針」の 6 項目のうちの 3 つの見出し。PDF の改行を除いて照合。
 
 ### S068 デジタル庁 DS-202「CI/CD パイプラインにおけるセキュリティの留意点に関する技術レポート」
@@ -1461,7 +1461,7 @@
 - 検証区分: A
 - ライセンス: 頁に「© 2026 World Wide Web Consortium. W3C liability, trademark and permissive document license rules apply.」。W3C の文書ライセンスに従い、帰属を付けて短く引用する
 - 要旨（本 skill の言葉）: 公開鍵の資格情報を、依存当事者（Relying Party）ごとに範囲を限って作り、認証器に結びつけて使う API。ブラウザが認証器へのアクセスを仲介し、ユーザーの同意なしに操作は行われない。同期される多機器の資格情報（いわゆる「同期パスキー」）による、フィッシングに強いサインインの利用場面を 1 章で示す。頁が示す登録の流れでは、既存の方法（パスワードを含む）でログインした後に、パスキーの作成を勧める。認証器の機能と証明（attestation）の仕様も含む。
-- 使いどころ: パスキーの技術的な土台の説明。「パスキー ＝ WebAuthn の資格情報」という対応と、依存当事者ごとに範囲が限られる設計。
+- 使いどころ: パスキーの技術的な土台の説明。WebAuthn はパスキーを支える仕様、という位置づけ。依存当事者ごとに範囲が限られる設計。
 - 備考: 区分の根拠・範囲: 原文は「scoped」にリンクが付く。リンク記号を除き、空白を原文に合わせた。照合の注記: 空白と、強調記号・リンク記号・商標記号を除いて比較して一致した引用がある（タグや記号が入る位置の空白の差）。
 
 ### S103 Ross Anderson『Security Engineering』の版と公開の扱い（著者の頁）
