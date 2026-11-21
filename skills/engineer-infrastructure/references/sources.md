@@ -1283,11 +1283,11 @@
 
 > Platform team: a grouping of other team types that provide a compelling internal product to accelerate delivery by Stream-aligned teams
 
-- 媒体・日付: teamtopologies.com の Key Concepts の頁（日付の表示なし。頁の下部に「Copyright © 2021-2026 Team Topologies group of companies」）。書籍（Skelton・Pais）の刊行の年は未確認
+- 媒体・日付: 引用は書籍の本文ではなく、teamtopologies.com の Key Concepts の頁のもの（日付の表示なし。頁の下部に「Copyright © 2021-2026 Team Topologies group of companies」）。書籍（Skelton・Pais）の第 2 版は、出版社 IT Revolution の頁（https://itrevolution.com/product/team-topologies-second-edition/）で刊行日 2025-09-23（頁の表記は「Publication Date September 23, 2025」。ISBN は Paperback が 9781966280002、eBook が 9781966280019）。初版の刊行年は未確認（出版社の初版の頁 https://itrevolution.com/product/team-topologies/ は第 2 版の頁と同じ内容を返し、初版の刊行日は確かめられなかった）
 - URL: https://teamtopologies.com/key-concepts
-- 取得日: 2026-11-20
+- 取得日: 2026-11-20（引用の頁）。書籍の書誌（出版社の頁）は 2026-11-21
 - 検証区分: A
-- 備考: ライセンス: 「All Rights Reserved」の表示。引用は短く。 要旨（本 skill の言葉）: platform team は、流れに沿ったチーム（stream-aligned team）の配信を速めるための、魅力のある社内向けの製品を出すチームの集まり。チームの型は 4 つ、関わり方は 3 つ（協働・X as a Service・促進）とする。 使いどころ（本 skill の整理）: プラットフォームエンジニアリングの時代区分の組織の前提。「基盤を社内の製品として出す」の出どころ。チームの型の分け方は architecture の持ち分と重なるので、運用側（基盤を製品として扱う）の論点だけ使う。 区分の根拠・範囲: 概念の定義の頁。書誌は R。
+- 備考: ライセンス: 「All Rights Reserved」の表示。引用は短く。 要旨（本 skill の言葉）: platform team は、流れに沿ったチーム（stream-aligned team）の配信を速めるための、魅力のある社内向けの製品を出すチームの集まり。チームの型は 4 つ、関わり方は 3 つ（協働・X as a Service・促進）とする。 使いどころ（本 skill の整理）: プラットフォームエンジニアリングの時代区分の組織の前提。「基盤を社内の製品として出す」の出どころ。チームの型の分け方は architecture の持ち分と重なるので、運用側（基盤を製品として扱う）の論点だけ使う。 区分の根拠・範囲: 概念の定義の頁。書誌は R。引用の出どころ（Key Concepts の頁）と書籍の版（第 2 版）は別で、引用が第 2 版の本文と同じ文言かは確かめていない。
 
 ### S114 CNCF TAG App Delivery「CNCF Platforms White Paper」
 
