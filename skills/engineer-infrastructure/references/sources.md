@@ -1,14 +1,14 @@
 # engineer-infrastructure 出典台帳
 
-`engineer-infrastructure`（SRE・プラットフォームエンジニアの相談役）の `SKILL.md` が根拠にする出典の台帳。SRE の書籍とワークブックの公開版、人物・原典の一次資料、計測と警報の公開仕様、事故対応の公開文書、公開の安全・容量・費用・IaC・復旧の指針、配信の指標、公開された事後検証、国内の公的資料から、SKILL.md が引く項目を主題ごとに並べた。引用原文・媒体と日付・URL・取得日・検証区分・ライセンスを記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。欠番は欠番のままにする（この台帳に載せていない番号は、まだ引いていない項目である）。
+`engineer-infrastructure`（SRE・プラットフォームエンジニアの相談役）の `SKILL.md` と `references/` が根拠にする出典の台帳。SRE の書籍とワークブックの公開版、人物・原典の一次資料、計測と警報の公開仕様、事故対応の公開文書、公開の安全・容量・費用・IaC・復旧の指針、配信の指標、公開された事後検証、歴史・組織の出典（DevOps・Platform の資料）、国内の公的資料から、`SKILL.md` と `references/` が引く項目を主題ごとに並べた。引用原文・媒体と日付・URL・取得日・検証区分・ライセンスを記す。台帳は通読せず、番号で検索して該当の項目だけ読む。番号は振り直さない。欠番は欠番のままにする（この台帳に載せていない番号は、まだ引いていない項目である）。
 
-全 117 件。逐語の引用を持つ項目が 112 件（引用ブロックは 198 件）、書誌のみ・要旨のみ（本文を引用しない）の項目が 5 件。区分の内訳は A 100 件、C 12 件、R 5 件（B は該当なし）。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
+全 119 件。逐語の引用を持つ項目が 114 件（引用ブロックは 205 個。うち 5 個は書誌のみの注記で、引用ではない。引用は 200 個）、書誌のみ・要旨のみ（本文を引用しない）の項目が 5 件。区分の内訳は A 102 件、B 0 件、C 12 件、R 5 件。未検証の項目は番号を振らず、末尾の「未検証・調査の限界」に表で置いた。
 
 ## 凡例
 
 - 検証区分
   - A: 原典・公式ページ・著者本人のサイト・発行元の頁の原稿（HTML・Markdown・PDF）、または原典の保存コピー（Internet Archive の Wayback Machine）を取得し、引用文が逐語で含まれることを、タグ除去と空白の正規化のうえで部分一致により照合した。日本語の PDF は抽出で文字間に空白が入るため、空白を除いて比較した（S125・S126・S127・S128）。引用が取得日の時点でページにあることの確認であり、主張の正しさの保証ではない
-  - B: 第三者の複製・解説頁、他媒体経由で引いた文。引用文が、その頁の本文と一致することは確かめたが、原典そのものとの照合ではない（この台帳には該当する項目が無い）
+  - B: 第三者の複製・解説頁、他媒体経由で引いた文。引用文が、その頁の本文と一致することは確かめたが、原典そのものとの照合ではない（この台帳に B の項目は無い。Wikipedia だけを根拠にした項目は使わない）
   - C: 批判・留保・評価の側の主張。引用が逐語であることのみを確認し、主張の正しさ・因果は確認していない
   - R: 書誌（書名・著者・出版社・年・版）だけを出版社頁などで確かめた項目、または教科書的な事実を要旨だけで書いた項目（S071）。本文を引用しない
   - U: 未検証。事実・引用として使わない。末尾の表に集め、番号を振らない
@@ -1234,6 +1234,27 @@
 - 検証区分: A
 - 備考: ライセンス: 「© ACM, Inc」の表示のみ。引用は短く。 要旨（本 skill の言葉）: 開発が作ったものを運用へ壁越しに投げる従来の型をやめ、作ったチームが運用までを受け持つ。開発者が日々の運用と顧客に触れることで、サービスの質が上がったと語る（Amazon の自称）。 使いどころ（本 skill の整理）: 「作った人が運用する」の早い時期の公開の発言（2006 年）。DevOps の語より前にあることを年表で示す。Amazon の規模・社内の組織が前提で、一般化しない。 区分の根拠・範囲: 保存版の原文と一致。元サイトの現行の頁は 403 で未確認。
 
+### S109 John Allspaw・Paul Hammond「10+ Deploys Per Day: Dev and Ops Cooperation at Flickr」（Velocity 2009 の講演概要）
+
+> Operations and development are disciplines that historically have been limited to a predictable list of responsibilities and have suffered from a culture of finger-pointyness.
+
+- 媒体・日付: O'Reilly Velocity 2009（San Jose）の講演頁。2009 年 6 月 23 日（火）13:00 の枠（頁の表示 "1:00pm Tuesday, 06/23/2009" で確認）
+- URL: http://en.oreilly.com/velocity2009/public/schedule/detail/7641（元の頁は http。直接は取得していない）
+- URL（原稿）: https://web.archive.org/web/20100110115647/http://en.oreilly.com/velocity2009/public/schedule/detail/7641（Internet Archive の保存版）
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 表示なし（著作権は各権利者。引用は短く）。 要旨（本 skill の言葉）: 開発と運用は、決まった責任の範囲に閉じ、互いを責め合う文化に苦しんできた。Flickr で両者の役割が混ざって良くなった理由と方法（一押しのデプロイ、アプリのログ、容量の把握、障害対応）を話す、という概要。概要の冒頭は Flickr の開発ブログの「1 週間で 18 人が 496 件の変更を 67 回デプロイ」の引用（Flickr の自称）。 使いどころ（本 skill の整理）: DevOps の起点として語られる講演の一次（概要）。「1 日 10 回以上のデプロイ」は数値の目標ではなく、協力の結果として語られた点を押さえる。 区分の根拠・範囲: 講演の概要文。スライド本体は取得できていない。
+
+### S110 最初の devopsdays（ゲント、2009）
+
+> The first devopsdays happened in Belgium - Ghent and was a great success.
+
+- 媒体・日付: devopsdays の旧サイトの「Devopsdays Ghent 2009」の頁（頁に日付の表示なし。年は頁題の「2009」）。月日は未確認
+- URL: https://legacy.devopsdays.org/events/2009-ghent/
+- 取得日: 2026-11-20
+- 検証区分: A
+- 備考: ライセンス: 旧サイトは表示なし（引用は短く）。 要旨（本 skill の言葉）: 2009 年にベルギーのゲントで最初の devopsdays が開かれた。以後、各国に広がったことは、引用の範囲外で使わない。 使いどころ（本 skill の整理）: 年表の 2009 年。最初の devopsdays が開かれた時点（2009 年、頁題による）の根拠にとどめる。開催の月日は書かない（未確認）。 区分の根拠・範囲: 主催側の頁の原文。年は頁題のみ。創設者の記述は使わない。
+
 ### S111 Benjamin Treynor Sloss「Introduction」（Site Reliability Engineering、Google）— SRE の成り立ちと DevOps との関係
 
 > SRE is what happens when you ask a software engineer to design an operations team.
@@ -1262,7 +1283,7 @@
 
 > Platform team: a grouping of other team types that provide a compelling internal product to accelerate delivery by Stream-aligned teams
 
-- 媒体・日付: teamtopologies.com の Key Concepts の頁（日付の表示なし。頁の下部に「Copyright © 2021-2026 Team Topologies group of companies」）。書籍（Skelton・Pais）の初版の年は保存した原稿では未確認。出版社（IT Revolution）の頁で第 2 版の刊行日 2025 年 9 月 23 日を確認
+- 媒体・日付: teamtopologies.com の Key Concepts の頁（日付の表示なし。頁の下部に「Copyright © 2021-2026 Team Topologies group of companies」）。書籍（Skelton・Pais）の刊行の年は未確認
 - URL: https://teamtopologies.com/key-concepts
 - 取得日: 2026-11-20
 - 検証区分: A
@@ -1279,7 +1300,7 @@
 - URL（原稿）: https://github.com/cncf/tag-app-delivery/raw/main/platforms-whitepaper/v1/assets/platforms-def-v1.0.pdf
 - 取得日: 2026-11-20
 - 検証区分: A
-- 備考: ライセンス: CC BY 4.0（頁の表示 "Documentation Distributed under CC BY 4.0"）。 要旨（本 skill の言葉）: platform engineering は、DevOps が約束した部門横断の協力を明示的な形にしたものとして、企業の中に出てきた（CNCF の見方）。製品チームが基盤の責任を背負いすぎて認知負荷が増えたことが動機。課題として、基盤を製品として扱い利用者と一緒に作ること、最初の機能と相手のチームを選ぶこと、経営の支持を得ることを挙げ、利用者の声を聞かずに上からの命令で使わせる基盤は、反発を受けて価値を逃すと書く。 使いどころ（本 skill の整理）: プラットフォームエンジニアリングの時代区分と、その失敗の型（命令で使わせる基盤）。「DevOps から生まれた」は CNCF の位置づけとして書き、因果の事実として書かない。
+- 備考: ライセンス: CC BY 4.0（頁の表示 "Documentation Distributed under CC BY 4.0"）。 要旨（本 skill の言葉）: platform engineering は、DevOps が約束した部門横断の協力を明示的な形にしたものとして、企業の中に出てきた（CNCF の見方）。製品チームが基盤の責任を背負いすぎて認知負荷が増えたことが動機。課題として、基盤を製品として扱い利用者と一緒に作ること、最初の機能と相手のチームを選ぶこと、経営の支持を得ることを挙げ、利用者の声を聞かない、または上からの命令に頼って採用させる基盤は、ほぼ確実に反発を受け、約束された価値の多くを逃すと書く。 使いどころ（本 skill の整理）: プラットフォームエンジニアリングの時代区分と、その失敗の型（命令で使わせる基盤）。「DevOps から生まれた」は CNCF の位置づけとして書き、因果の事実として書かない。
 
 
 ## 批判と食い違い（推進側の留保・平均の指標への批判・運用の前提）
@@ -1483,5 +1504,6 @@
 | Little の法則の原論文（John D. C. Little, "A Proof for the Queuing Formula: L = λW", Operations Research, 1961 とされる） | 論文の頁は取得していない。著者・誌名・年は調査の記述で、一次で確かめていない | 教科書的な事実として要旨だけを使い（S071、R）、書誌を引用の根拠にしない |
 | AWS Builders' Library の著者の姓 | 頁の表示名（Marc・David・Colm・Mike）だけ。記事は builder.aws.com へ移転済み | 姓を記憶で補わない（S058・S063・S066〜S069） |
 | AWS Well-Architected の柱の白書の頁と、統合後の同名の BP 頁 | 旧白書の頁は「historical reference only and will be deprecated」。統合後の同名の BP 頁は 404。コスト・運用の柱の BP 頁は引用していない | S091・S092 は廃止予定の頁と断る。移転先が取れたら取り直す |
+| devopsdays ゲントの年と月日 | 年は頁題による 2009 年。月日は確かめていない | 月日は書かない |
 | 年の未確認 | Team Topologies 初版、CNCF Platforms white paper の発行年、SRE 書籍の刊行年（本文は「early 2016」の執筆とだけ）、Cook の文書の初出、Google Cloud の障害の報告（S123）の公開日 | 年を書かない |
 | ライセンスの未確認 | Atlassian・AWS・martinfowler.com・principlesofchaos.org・IPA・Terraform の文書・個人のブログなど、著作権表示はあるが再利用の条件を確かめられないもの | 短い引用と要旨にとどめる |
